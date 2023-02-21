@@ -178,4 +178,23 @@ function M.load(autocmds)
   return collector
 end
 
+--- Sets autocmds.
+---@param autocmds DeltaVim.Autocmd.Mapped[]
+function M.set(autocmds)
+  local au = vim.api.nvim_create_autocmd
+  for _, autocmd in ipairs(autocmds) do
+    local cmd = autocmd[2]
+    local opts = {}
+    if type(cmd) == "string" then
+      opts.command = cmd
+    else
+      opts.callback = cmd
+    end
+    for k, v in pairs(autocmd.opts) do
+      opts[k] = v
+    end
+    au(autocmd[1], opts)
+  end
+end
+
 return M
