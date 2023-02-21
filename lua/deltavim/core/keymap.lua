@@ -22,8 +22,8 @@
 ---@field mode? string|string[]
 
 ---@class DeltaVim.Keymap: DeltaVim.Keymap.Options
---- Key
----@field [1] string
+--- Key or boolean value to enable a source
+---@field [1] string|boolean
 --- Callback function, command or source starts with '@'
 ---@field [2] string|fun()
 --- Description
@@ -169,38 +169,37 @@ M.Collector = Collector.new
 
 --- Adds a mapping.
 ---@param mapping DeltaVim.Keymap.Unmapped
-function M.extend1(mapping)
+local function add(mapping)
   local source = mapping[2]
   UNMAPPED[source] = table.insert(UNMAPPED[source] or {}, source)
-  return M
 end
 
---- Adds many mappings.
----@param mappings DeltaVim.Keymap.Unmapped[]
-function M.extend(mappings)
-  for _, m in ipairs(mappings) do
-    M.extend1(m)
-  end
-  return M
-end
+--- Removes a mapping.
+---@param name string
+local function remove(name) UNMAPPED[name] = nil end
 
 --- Loads keymaps.
 ---@param mappings DeltaVim.Keymap[]
 function M.load(mappings)
   local collector = Collector.new()
   for _, mapping in ipairs(mappings) do
+    local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
     if type(rhs) == "string" and rhs:sub(1, 2) == "@" then
-      M.extend1({
-        mapping[1],
-        rhs,
-        mode = get_mode(mapping.mode, {}),
-        desc = desc,
-      })
-    else
+      if type(key) == "string" then
+        add({
+          key,
+          rhs,
+          mode = get_mode(mapping.mode, {}),
+          desc = desc,
+        })
+      elseif key == false then
+        remove(rhs)
+      end
+    elseif type(key) ~= "boolean" then
       collector:extend1({
-        mapping[1],
+        key,
         rhs,
         mode = get_mode(mapping.mode),
         opts = get_opts(mapping, { desc = desc }),

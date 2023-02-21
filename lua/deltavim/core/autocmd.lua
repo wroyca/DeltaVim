@@ -20,10 +20,10 @@
 ---@field data any
 
 ---@class DeltaVim.Autocmd: DeltaVim.Autocmd.Options
---- Events
+--- Events or source starts with '@'
 ---@field [1] string|string[]
---- Command or callback function
----@field [2] string|DeltaVim.Autocmd.Callback
+--- Command, callback function or boolean value to enable a source
+---@field [2] string|DeltaVim.Autocmd.Callback|boolean
 --- Description
 ---@field [3]? string
 
@@ -42,10 +42,8 @@
 ---@field opts DeltaVim.Autocmd.Options
 
 ---@class DeltaVim.Autocmd.Unmapped
---- Events
----@field [1] string|string[]
 --- Source name
----@field [2] string
+---@field [1] string
 ---@field desc? string
 ---@field args table<string,any>
 
@@ -138,38 +136,36 @@ function Collector:collect() return self._mapped end
 
 --- Adds an autocmd.
 ---@param autocmd DeltaVim.Autocmd.Unmapped
-function M.extend1(autocmd)
+local function add(autocmd)
   local name = autocmd[2]
   UNMAPPED[name] = autocmd
-  return M
 end
 
---- Adds many autocmds.
----@param autocmds DeltaVim.Autocmd.Unmapped[]
-function M.extend(autocmds)
-  for _, autocmd in ipairs(autocmds) do
-    M.extend1(autocmd)
-  end
-  return M
-end
+--- Removes a source.
+---@param name string
+local function remove(name) UNMAPPED[name] = nil end
 
 --- Loads auto commands.
 ---@param autocmds DeltaVim.Autocmd[]
 function M.load(autocmds)
   local collector = Collector.new()
   for _, autocmd in ipairs(autocmds) do
+    local event = autocmd[1]
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
-    if type(cmd) == "string" and cmd:sub(1, 2) == "@" then
-      M.extend1({
-        autocmd[1],
-        cmd,
-        desc = desc,
-        args = get_args(autocmd),
-      })
-    else
+    if type(event) == "string" and event:sub(1, 2) == "@" then
+      if cmd == true then
+        add({
+          event,
+          desc = desc,
+          args = get_args(autocmd),
+        })
+      elseif cmd == false then
+        remove(event)
+      end
+    elseif type(cmd) ~= "boolean" then
       collector:extend1({
-        autocmd[1],
+        event,
         cmd,
         opts = get_opts(autocmd, { desc = desc }),
       })
