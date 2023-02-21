@@ -1,5 +1,3 @@
-local Log = require("deltavim.core.log")
-
 -- Manage auto commands.
 
 ---@class DeltaVim.Autocmd.Options
