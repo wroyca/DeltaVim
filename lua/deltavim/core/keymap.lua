@@ -210,4 +210,13 @@ function M.load(mappings)
   return collector
 end
 
+--- Sets keymaps.
+---@param keymaps DeltaVim.Keymap.Mapped[]
+function M.set(keymaps)
+  local map = vim.keymap.set
+  for _, keymap in ipairs(keymaps) do
+    map(keymap.mode, keymap[1], keymap[2], keymap.opts)
+  end
+end
+
 return M
