@@ -68,16 +68,6 @@ local DEFAULT_OPTS = {
 ---@type table<string,DeltaVim.Keymap.Unmapped[]>
 local UNMAPPED = {}
 
---- Collects and maps keymaps.
----@class DeltaVim.Keymap.Collector
----@field private _mapped DeltaVim.Keymap.Mapped[]
-local Collector = {}
-
-function Collector.new()
-  local self = setmetatable({ _mapped = {} }, { __index = Collector })
-  return self
-end
-
 --- Collects modes
 ---@param mode string|string[]|nil
 ---@param default? string[]
@@ -96,10 +86,60 @@ end
 local function get_opts(source, init)
   ---@type DeltaVim.Keymap.Options
   local opts = {}
-  for k, v in pairs(DEFAULT_OPTS) do
-    opts[k] = init[k] == nil and (source[k] or v[1]) or init[k]
+  for k in pairs(DEFAULT_OPTS) do
+    opts[k] = init[k] or source[k]
   end
   return opts
+end
+
+--- Adds a mapping.
+---@param mapping DeltaVim.Keymap.Unmapped
+local function add(mapping)
+  local source = mapping[2]
+  UNMAPPED[source] = table.insert(UNMAPPED[source] or {}, source)
+end
+
+--- Removes a mapping.
+---@param name string
+local function remove(name) UNMAPPED[name] = nil end
+
+---@param collector DeltaVim.Keymap.Collector
+---@param keymaps DeltaVim.Keymap[]
+local function load_keymaps(collector, keymaps)
+  for _, mapping in ipairs(keymaps) do
+    local key = mapping[1]
+    local rhs = mapping[2]
+    local desc = mapping[3] or mapping.desc
+    if type(rhs) == "string" and rhs:sub(1, 2) == "@" then
+      if type(key) == "string" then
+        add({
+          key,
+          rhs,
+          mode = get_mode(mapping.mode, {}),
+          desc = desc,
+        })
+      elseif key == false then
+        remove(rhs)
+      end
+    elseif type(key) ~= "boolean" then
+      collector:extend1({
+        key,
+        rhs,
+        mode = get_mode(mapping.mode),
+        opts = get_opts(mapping, { desc = desc }),
+      })
+    end
+  end
+end
+
+--- Collects and maps keymaps.
+---@class DeltaVim.Keymap.Collector
+---@field private _mapped DeltaVim.Keymap.Mapped[]
+local Collector = {}
+
+function Collector.new()
+  local self = setmetatable({ _mapped = {} }, { __index = Collector })
+  return self
 end
 
 --- Adds a mapping.
@@ -167,54 +207,34 @@ function Collector:collect() return self._mapped end
 
 M.Collector = Collector.new
 
---- Adds a mapping.
----@param mapping DeltaVim.Keymap.Unmapped
-local function add(mapping)
-  local source = mapping[2]
-  UNMAPPED[source] = table.insert(UNMAPPED[source] or {}, source)
+--- Loads keymaps.
+---@param keymaps DeltaVim.Keymap[]
+function M.load(keymaps)
+  local collector = Collector.new()
+  load_keymaps(collector, keymaps)
+  return collector
 end
 
---- Removes a mapping.
----@param name string
-local function remove(name) UNMAPPED[name] = nil end
+local km = vim.keymap.set
 
---- Loads keymaps.
----@param mappings DeltaVim.Keymap[]
-function M.load(mappings)
-  local collector = Collector.new()
-  for _, mapping in ipairs(mappings) do
-    local key = mapping[1]
-    local rhs = mapping[2]
-    local desc = mapping[3] or mapping.desc
-    if type(rhs) == "string" and rhs:sub(1, 2) == "@" then
-      if type(key) == "string" then
-        add({
-          key,
-          rhs,
-          mode = get_mode(mapping.mode, {}),
-          desc = desc,
-        })
-      elseif key == false then
-        remove(rhs)
-      end
-    elseif type(key) ~= "boolean" then
-      collector:extend1({
-        key,
-        rhs,
-        mode = get_mode(mapping.mode),
-        opts = get_opts(mapping, { desc = desc }),
-      })
-    end
+--- Sets a keymap.
+---@param mode string|string[]
+---@param lhs string
+---@param rhs string|fun()
+---@param opts DeltaVim.Keymap.Options
+function M.set1(mode, lhs, rhs, opts)
+  local o = {}
+  for k, v in pairs(DEFAULT_OPTS) do
+    o[k] = opts[k] or v[1]
   end
-  return collector
+  km(mode, lhs, rhs, o)
 end
 
 --- Sets keymaps.
 ---@param keymaps DeltaVim.Keymap.Mapped[]
 function M.set(keymaps)
-  local map = vim.keymap.set
   for _, keymap in ipairs(keymaps) do
-    map(keymap.mode, keymap[1], keymap[2], keymap.opts)
+    M.set1(keymap.mode, keymap[1], keymap[2], keymap.opts)
   end
 end
 
