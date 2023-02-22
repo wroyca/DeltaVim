@@ -1,5 +1,3 @@
--- TODO: use `preset` instead of `source`
-
 -- Manage auto commands.
 
 ---@class DeltaVim.Autocmd.Options
@@ -22,32 +20,32 @@
 ---@field data any
 
 ---@class DeltaVim.Autocmd: DeltaVim.Autocmd.Options
---- Events or source starts with '@'
+--- Events or a preset name starts with '@'
 ---@field [1] string|string[]
---- Command, callback function or boolean value to enable a source
+--- Command, callback function or boolean value to enable a preset
 ---@field [2] string|DeltaVim.Autocmd.Callback|boolean
 --- Description
 ---@field [3]? string
 
----@class DeltaVim.Autocmd.Source: DeltaVim.Keymap.Options
---- Source name
+---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
+--- Preset name
 ---@field [1] string
 --- Events or a function return a autocmd
 ---@field [2] string|string[]|DeltaVim.Autocmd.Map
 --- Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string
 
----@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Unmapped):DeltaVim.Autocmd?,DeltaVim.Autocmd.Mapped[]?
+---@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd?,DeltaVim.Autocmd.Output[]?
 
----@class DeltaVim.Autocmd.Mapped
+---@class DeltaVim.Autocmd.Output
 --- Events
 ---@field [1] string|string[]
 --- Command or callback function
 ---@field [2] string|DeltaVim.Autocmd.Callback
 ---@field opts DeltaVim.Autocmd.Options
 
----@class DeltaVim.Autocmd.Unmapped
---- Source name
+---@class DeltaVim.Autocmd.Input
+--- Preset name
 ---@field [1] string
 ---@field desc? string
 ---@field args table<string,any>
@@ -65,41 +63,40 @@ local DEFAULT_OPTS = {
 }
 
 --- Collects options and arguments.
----@param source table
+---@param src table
 ---@param init DeltaVim.Autocmd.Options
-local function get_opts(source, init)
+local function get_opts(src, init)
   ---@type DeltaVim.Autocmd.Options
   local opts = {}
   for k in pairs(DEFAULT_OPTS) do
-    opts[k] = init[k] or source[k]
+    opts[k] = init[k] or src[k]
   end
   return opts
 end
 
 --- Collects arguments.
----@param source table
-local function get_args(source)
+---@param src table
+local function get_args(src)
   ---@type table<string,any>
   local args = {}
-  for k, v in pairs(source) do
+  for k, v in pairs(src) do
     if type(k) == "string" and DEFAULT_OPTS[k] == nil then args[k] = v end
   end
   return args
 end
 
----@type table<string,DeltaVim.Autocmd.Unmapped>
-local UNMAPPED = {}
+--- Preset inputs shared by all collectors.
+---@type table<string,DeltaVim.Autocmd.Input>
+local INPUT = {}
 
---- Adds an autocmd.
----@param autocmd DeltaVim.Autocmd.Unmapped
-local function add(autocmd)
+---@param autocmd DeltaVim.Autocmd.Input
+local function add_input(autocmd)
   local name = autocmd[2]
-  UNMAPPED[name] = autocmd
+  INPUT[name] = autocmd
 end
 
---- Removes a source.
 ---@param name string
-local function remove(name) UNMAPPED[name] = nil end
+local function remove_input(name) INPUT[name] = nil end
 
 ---@param collector DeltaVim.Autocmd.Collector
 ---@param autocmds DeltaVim.Autocmd[]
@@ -110,13 +107,13 @@ local function load_autocmds(collector, autocmds)
     local desc = autocmd[3] or autocmd.desc
     if type(event) == "string" and event:sub(1, 2) == "@" then
       if cmd == true then
-        add({
+        add_input({
           event,
           desc = desc,
           args = get_args(autocmd),
         })
       elseif cmd == false then
-        remove(event)
+        remove_input(event)
       end
     elseif type(cmd) ~= "boolean" then
       collector:extend1({
@@ -129,23 +126,22 @@ local function load_autocmds(collector, autocmds)
 end
 
 ---@class DeltaVim.Autocmd.Collector
----@field private _mapped DeltaVim.Autocmd.Mapped[]
+---@field private _output DeltaVim.Autocmd.Output[]
 local Collector = {}
 
 function Collector.new()
-  local self = setmetatable({ _mapped = {} }, { __index = Collector })
+  local self = setmetatable({ _output = {} }, { __index = Collector })
   return self
 end
 
---- Adds a autocmd.
----@param autocmd DeltaVim.Autocmd.Mapped
+---@param autocmd DeltaVim.Autocmd.Output
 function Collector:extend1(autocmd)
-  table.insert(self._mapped, autocmd)
+  table.insert(self._output, autocmd)
   return self
 end
 
---- Adds many autocmds.
----@param autocmds DeltaVim.Autocmd.Mapped[]
+--- Adds autocmds.
+---@param autocmds DeltaVim.Autocmd.Output[]
 function Collector:extend(autocmds)
   for _, autocmd in ipairs(autocmds) do
     self:extend1(autocmd)
@@ -153,13 +149,12 @@ function Collector:extend(autocmds)
   return self
 end
 
---- Maps a source.
----@param source DeltaVim.Autocmd.Source
-function Collector:map1(source)
-  local src = UNMAPPED[source[1]]
+---@param preset DeltaVim.Autocmd.Preset
+function Collector:map1(preset)
+  local src = INPUT[preset[1]]
   if src == nil then return self end
-  local f = source[2]
-  ---@type DeltaVim.Autocmd.Mapped
+  local f = preset[2]
+  ---@type DeltaVim.Autocmd.Output
   local autocmd
   if type(f) == "function" then
     local r1, r2 = f(src)
@@ -169,25 +164,25 @@ function Collector:map1(source)
   else
     autocmd = {
       f,
-      source[3],
+      preset[3],
       opts = get_opts(src, {}),
     }
   end
-  table.insert(self._mapped, autocmd)
+  table.insert(self._output, autocmd)
   return self
 end
 
---- Maps many sources.
----@param sources DeltaVim.Autocmd.Source[]
-function Collector:map(sources)
-  for _, source in ipairs(sources) do
-    self:map1(source)
+--- Constructs autocmds from preset inputs.
+---@param presets DeltaVim.Autocmd.Preset[]
+function Collector:map(presets)
+  for _, preset in ipairs(presets) do
+    self:map1(preset)
   end
   return self
 end
 
---- Collects mapped autocmds.
-function Collector:collect() return self._mapped end
+--- Collects output autocmds.
+function Collector:collect() return self._output end
 
 --- Loads auto commands.
 ---@param autocmds DeltaVim.Autocmd[]
@@ -217,7 +212,7 @@ function M.set1(events, cmd, opts)
 end
 
 --- Sets autocmds.
----@param autocmds DeltaVim.Autocmd.Mapped[]
+---@param autocmds DeltaVim.Autocmd.Output[]
 function M.set(autocmds)
   for _, autocmd in ipairs(autocmds) do
     M.set1(autocmd[1], autocmd[2], autocmd.opts)

@@ -12,8 +12,8 @@
 ---@field unique? boolean
 ---@field desc? string
 
----@class DeltaVim.Keymap.Source: DeltaVim.Keymap.Options
---- Source name
+---@class DeltaVim.Keymap.Preset: DeltaVim.Keymap.Options
+--- Preset name
 ---@field [1] string
 --- Mapped value
 ---@field [2] any
@@ -22,15 +22,15 @@
 ---@field mode? string|string[]
 
 ---@class DeltaVim.Keymap: DeltaVim.Keymap.Options
---- Key or boolean value to enable a source
+--- Key or boolean value to enable a preset
 ---@field [1] string|boolean
---- Callback function, command or source starts with '@'
+--- Callback function, command or a preset name starts with '@'
 ---@field [2] string|fun()
 --- Description
 ---@field [3]? string
 ---@field mode? string|string[]
 
----@class DeltaVim.Keymap.Mapped
+---@class DeltaVim.Keymap.Output
 --- Key
 ---@field [1] string
 --- Mapped value
@@ -38,10 +38,10 @@
 ---@field mode string[]
 ---@field opts DeltaVim.Keymap.Options
 
----@class DeltaVim.Keymap.Unmapped
+---@class DeltaVim.Keymap.Input
 --- Key
 ---@field [1] string
---- Source name
+--- Preset name
 ---@field [2] string
 ---@field mode string[]
 ---@field desc? string
@@ -64,11 +64,11 @@ local DEFAULT_OPTS = {
   desc = {},
 }
 
---- Unmapped sources shared by all collectors.
----@type table<string,DeltaVim.Keymap.Unmapped[]>
-local UNMAPPED = {}
+--- Preset inputs shared by all collectors.
+---@type table<string,DeltaVim.Keymap.Input[]>
+local INPUT = {}
 
---- Collects modes
+--- Collects modes.
 ---@param mode string|string[]|nil
 ---@param default? string[]
 local function get_mode(mode, default)
@@ -80,28 +80,26 @@ local function get_mode(mode, default)
   return mode
 end
 
---- Collects options
----@param source DeltaVim.Keymap.Options
+--- Collects options.
+---@param src DeltaVim.Keymap.Options
 ---@param init DeltaVim.Keymap.Options
-local function get_opts(source, init)
+local function get_opts(src, init)
   ---@type DeltaVim.Keymap.Options
   local opts = {}
   for k in pairs(DEFAULT_OPTS) do
-    opts[k] = init[k] or source[k]
+    opts[k] = init[k] or src[k]
   end
   return opts
 end
 
---- Adds a mapping.
----@param mapping DeltaVim.Keymap.Unmapped
-local function add(mapping)
-  local source = mapping[2]
-  UNMAPPED[source] = table.insert(UNMAPPED[source] or {}, source)
+---@param mapping DeltaVim.Keymap.Input
+local function add_input(mapping)
+  local name = mapping[2]
+  INPUT[name] = table.insert(INPUT[name] or {}, name)
 end
 
---- Removes a mapping.
 ---@param name string
-local function remove(name) UNMAPPED[name] = nil end
+local function remove_input(name) INPUT[name] = nil end
 
 ---@param collector DeltaVim.Keymap.Collector
 ---@param keymaps DeltaVim.Keymap[]
@@ -112,14 +110,14 @@ local function load_keymaps(collector, keymaps)
     local desc = mapping[3] or mapping.desc
     if type(rhs) == "string" and rhs:sub(1, 2) == "@" then
       if type(key) == "string" then
-        add({
+        add_input({
           key,
           rhs,
           mode = get_mode(mapping.mode, {}),
           desc = desc,
         })
       elseif key == false then
-        remove(rhs)
+        remove_input(rhs)
       end
     elseif type(key) ~= "boolean" then
       collector:extend1({
@@ -134,43 +132,41 @@ end
 
 --- Collects and maps keymaps.
 ---@class DeltaVim.Keymap.Collector
----@field private _mapped DeltaVim.Keymap.Mapped[]
+---@field private _output DeltaVim.Keymap.Output[]
 local Collector = {}
 
 function Collector.new()
-  local self = setmetatable({ _mapped = {} }, { __index = Collector })
+  local self = setmetatable({ _output = {} }, { __index = Collector })
   return self
 end
 
---- Adds a mapping.
----@param mapping DeltaVim.Keymap.Mapped
-function Collector:extend1(mapping)
-  table.insert(self._mapped, mapping)
+---@param output DeltaVim.Keymap.Output
+function Collector:extend1(output)
+  table.insert(self._output, output)
   return self
 end
 
---- Adds many mappings.
----@param mappings DeltaVim.Keymap.Mapped[]
-function Collector:extend(mappings)
-  for _, m in ipairs(mappings) do
+--- Adds outputs which will be extended to the collected result.
+---@param output DeltaVim.Keymap.Output[]
+function Collector:extend(output)
+  for _, m in ipairs(output) do
     self:extend1(m)
   end
   return self
 end
 
---- Maps a source.
----@param source DeltaVim.Keymap.Source
-function Collector:map1(source)
-  local name = source[1]
-  for _, mapping in ipairs(UNMAPPED[name] or {}) do
+---@param preset DeltaVim.Keymap.Preset
+function Collector:map1(preset)
+  local name = preset[1]
+  for _, mapping in ipairs(INPUT[name] or {}) do
     ---@type string[]
     local mode
-    --- If no modes are specified, uses modes defined by the source.
+    --- If no modes are specified, uses modes defined by the preset.
     if #mapping.mode == 0 then
-      mode = get_mode(source.mode)
+      mode = get_mode(preset.mode)
     --- Otherwise, only supported modes will be mapped.
     else
-      local supported = get_mode(source.mode, {})
+      local supported = get_mode(preset.mode, {})
       -- Empty value means all modes are supported.
       if #supported == 0 then
         mode = mapping.mode
@@ -183,31 +179,32 @@ function Collector:map1(source)
         if #mode == 0 then return self end
       end
     end
-    table.insert(self._mapped, {
+    table.insert(self._output, {
       mapping[1],
-      source[2],
+      preset[2],
       mode = mode,
-      opts = get_opts(source, { desc = mapping.desc or source[3] }),
+      opts = get_opts(preset, { desc = mapping.desc or preset[3] }),
     })
   end
   return self
 end
 
---- Adds many sources.
----@param sources DeltaVim.Keymap.Source[]
-function Collector:map(sources)
-  for _, source in ipairs(sources) do
-    self:map1(source)
+--- Converts preset inputs to the output.
+---@param presets DeltaVim.Keymap.Preset[]
+function Collector:map(presets)
+  for _, preset in ipairs(presets) do
+    self:map1(preset)
   end
   return self
 end
 
---- Collects mappings from sources.
-function Collector:collect() return self._mapped end
+--- Collects mappings from presets.
+function Collector:collect() return self._output end
 
 M.Collector = Collector.new
 
---- Loads keymaps.
+--- Loads keymaps. Preset inputs will be added to the global storage and other
+--- keymaps will be extended into the returned collector.
 ---@param keymaps DeltaVim.Keymap[]
 function M.load(keymaps)
   local collector = Collector.new()
@@ -231,7 +228,7 @@ function M.set1(mode, lhs, rhs, opts)
 end
 
 --- Sets keymaps.
----@param keymaps DeltaVim.Keymap.Mapped[]
+---@param keymaps DeltaVim.Keymap.Output[]
 function M.set(keymaps)
   for _, keymap in ipairs(keymaps) do
     M.set1(keymap.mode, keymap[1], keymap[2], keymap.opts)
