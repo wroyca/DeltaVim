@@ -1,3 +1,5 @@
+-- TODO: use `preset` instead of `source`
+
 -- Manage auto commands.
 
 ---@class DeltaVim.Autocmd.Options
@@ -27,12 +29,15 @@
 --- Description
 ---@field [3]? string
 
----@class DeltaVim.Autocmd.Source
+---@class DeltaVim.Autocmd.Source: DeltaVim.Keymap.Options
 --- Source name
 ---@field [1] string
----@field [2] fun(src:DeltaVim.Autocmd.Unmapped):DeltaVim.Autocmd.Mapped
---- Description
----@field [3]? string
+--- Events or a function return a autocmd
+---@field [2] string|string[]|DeltaVim.Autocmd.Map
+--- Callback or command
+---@field [3]? DeltaVim.Autocmd.Callback|string
+
+---@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Unmapped):DeltaVim.Autocmd?,DeltaVim.Autocmd.Mapped[]?
 
 ---@class DeltaVim.Autocmd.Mapped
 --- Events
@@ -49,6 +54,7 @@
 
 local M = {}
 
+---@type table<string,{[1]:any}>
 local DEFAULT_OPTS = {
   group = {},
   buffer = {},
@@ -64,8 +70,8 @@ local DEFAULT_OPTS = {
 local function get_opts(source, init)
   ---@type DeltaVim.Autocmd.Options
   local opts = {}
-  for k, v in pairs(DEFAULT_OPTS) do
-    opts[k] = init[k] == nil and (source[k] or v[1]) or init[k]
+  for k in pairs(DEFAULT_OPTS) do
+    opts[k] = init[k] or source[k]
   end
   return opts
 end
@@ -83,6 +89,44 @@ end
 
 ---@type table<string,DeltaVim.Autocmd.Unmapped>
 local UNMAPPED = {}
+
+--- Adds an autocmd.
+---@param autocmd DeltaVim.Autocmd.Unmapped
+local function add(autocmd)
+  local name = autocmd[2]
+  UNMAPPED[name] = autocmd
+end
+
+--- Removes a source.
+---@param name string
+local function remove(name) UNMAPPED[name] = nil end
+
+---@param collector DeltaVim.Autocmd.Collector
+---@param autocmds DeltaVim.Autocmd[]
+local function load_autocmds(collector, autocmds)
+  for _, autocmd in ipairs(autocmds) do
+    local event = autocmd[1]
+    local cmd = autocmd[2]
+    local desc = autocmd[3] or autocmd.desc
+    if type(event) == "string" and event:sub(1, 2) == "@" then
+      if cmd == true then
+        add({
+          event,
+          desc = desc,
+          args = get_args(autocmd),
+        })
+      elseif cmd == false then
+        remove(event)
+      end
+    elseif type(cmd) ~= "boolean" then
+      collector:extend1({
+        event,
+        cmd,
+        opts = get_opts(autocmd, { desc = desc }),
+      })
+    end
+  end
+end
 
 ---@class DeltaVim.Autocmd.Collector
 ---@field private _mapped DeltaVim.Autocmd.Mapped[]
@@ -113,12 +157,23 @@ end
 ---@param source DeltaVim.Autocmd.Source
 function Collector:map1(source)
   local src = UNMAPPED[source[1]]
-  if src ~= nil then
-    local autocmd = source[2](src)
-    local opts = autocmd.opts
-    opts.desc = opts.desc or source[3]
-    table.insert(self._mapped, autocmd)
+  if src == nil then return self end
+  local f = source[2]
+  ---@type DeltaVim.Autocmd.Mapped
+  local autocmd
+  if type(f) == "function" then
+    local r1, r2 = f(src)
+    local autocmds = r2 or {}
+    if r1 ~= nil then table.insert(autocmds, r1) end
+    load_autocmds(self, autocmds)
+  else
+    autocmd = {
+      f,
+      source[3],
+      opts = get_opts(src, {}),
+    }
   end
+  table.insert(self._mapped, autocmd)
   return self
 end
 
@@ -134,63 +189,41 @@ end
 --- Collects mapped autocmds.
 function Collector:collect() return self._mapped end
 
---- Adds an autocmd.
----@param autocmd DeltaVim.Autocmd.Unmapped
-local function add(autocmd)
-  local name = autocmd[2]
-  UNMAPPED[name] = autocmd
-end
-
---- Removes a source.
----@param name string
-local function remove(name) UNMAPPED[name] = nil end
-
 --- Loads auto commands.
 ---@param autocmds DeltaVim.Autocmd[]
 function M.load(autocmds)
   local collector = Collector.new()
-  for _, autocmd in ipairs(autocmds) do
-    local event = autocmd[1]
-    local cmd = autocmd[2]
-    local desc = autocmd[3] or autocmd.desc
-    if type(event) == "string" and event:sub(1, 2) == "@" then
-      if cmd == true then
-        add({
-          event,
-          desc = desc,
-          args = get_args(autocmd),
-        })
-      elseif cmd == false then
-        remove(event)
-      end
-    elseif type(cmd) ~= "boolean" then
-      collector:extend1({
-        event,
-        cmd,
-        opts = get_opts(autocmd, { desc = desc }),
-      })
-    end
-  end
+  load_autocmds(collector, autocmds)
   return collector
+end
+
+local au = vim.api.nvim_create_autocmd
+
+--- Sets a autocmd.
+---@param events string|string[]
+---@param cmd string|DeltaVim.Autocmd.Callback
+---@param opts DeltaVim.Autocmd.Options
+function M.set1(events, cmd, opts)
+  local o = {}
+  if type(cmd) == "string" then
+    o.command = cmd
+  else
+    o.callback = cmd
+  end
+  for k, v in pairs(DEFAULT_OPTS) do
+    o[k] = opts[k] or v[1]
+  end
+  au(events, o)
 end
 
 --- Sets autocmds.
 ---@param autocmds DeltaVim.Autocmd.Mapped[]
 function M.set(autocmds)
-  local au = vim.api.nvim_create_autocmd
   for _, autocmd in ipairs(autocmds) do
-    local cmd = autocmd[2]
-    local opts = {}
-    if type(cmd) == "string" then
-      opts.command = cmd
-    else
-      opts.callback = cmd
-    end
-    for k, v in pairs(autocmd.opts) do
-      opts[k] = v
-    end
-    au(autocmd[1], opts)
+    M.set1(autocmd[1], autocmd[2], autocmd.opts)
   end
 end
+
+M.Collector = Collector.new
 
 return M
