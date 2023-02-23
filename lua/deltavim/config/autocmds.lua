@@ -13,12 +13,10 @@ local DEFAULT = {
   { "@trim_spaces", true },
 }
 
----@type DeltaVim.Autocmd[]?
+---@type DeltaVim.Autocmd[]
 local CONFIG
 
-function M.load()
-  if not CONFIG then CONFIG = Util.load_table("config.autocmds") or {} end
-end
+function M.init() CONFIG = Util.load_table("config.autocmds") or {} end
 
 ---@type DeltaVim.Autocmd.Map
 local function quit(src)
@@ -59,7 +57,7 @@ local function rulers(src)
 end
 
 function M.setup()
-  Autocmd.load(Util.merge_lists({}, DEFAULT, CONFIG or {}))
+  Autocmd.load(Util.merge_lists({}, DEFAULT, CONFIG))
     :map({
       {
         "@auto_resize",

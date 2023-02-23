@@ -61,18 +61,16 @@ local function default()
   end
 end
 
----@type fun()?
+---@type fun()
 local CONFIG
 
-function M.load()
-  if not CONFIG then
-    CONFIG = Util.load_function("config.options") or function() end
-  end
+function M.init()
+  CONFIG = Util.load_function("config.options") or function() end
 end
 
 function M.setup()
   default()
-  if CONFIG then CONFIG() end
+  CONFIG()
 end
 
 return M
