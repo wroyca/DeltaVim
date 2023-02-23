@@ -28,35 +28,46 @@ end
 function M.has_module(mod) return require("lazy.core.cache").find(mod) ~= nil end
 
 --- Loads a module.
+---@generic T
 ---@param mod string
----@return boolean, any
-function M.load_module(mod)
-  return M.try(function()
+---@param ty? string
+---@return T?
+function M.load_module(mod, ty)
+  local ok, ret = M.try(function()
     ---@diagnostic disable-next-line:missing-return
     if M.has_module(mod) then return require(mod) end
   end, ("Failed to load module '%s'"):format(mod))
+  if not ok then return end
+  if ty then
+    if type(ret) == ty then return ret end
+    Log.error("Module '%s' should return a '%s'", mod, ty)
+  else
+    return ret
+  end
 end
 
---- Loads a config module.
+--- Loads a module that returns a table.
+---@param mod string
 ---@return table?
-function M.load_config(mod)
-  local ok, config = M.load_module(mod)
-  if not ok then return end
-  if type(config) == "table" then return config end
-  Log.error("Module '%s' should return a table", mod)
-end
+function M.load_table(mod) return M.load_module(mod, "table") end
+
+--- Loads a module that returns a function.
+---@param mod string
+---@return function?
+function M.load_function(mod) return M.load_module(mod, "function") end
 
 --- Merge lists into a signle list.
+--- Note: This mutates the first table!
 ---@generic T
----@param list T[]
+---@param dst T[]
 ---@param ... T[]
-function M.merge_lists(list, ...)
+function M.merge_lists(dst, ...)
   for _, val in ipairs({ ... }) do
     for _, t in ipairs(val) do
-      table.insert(list, t)
+      table.insert(dst, t)
     end
   end
-  return list
+  return dst
 end
 
 return M

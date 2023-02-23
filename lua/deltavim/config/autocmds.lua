@@ -4,8 +4,7 @@ local Util = require("deltavim.util")
 
 local M = {}
 
----@type DeltaVim.Autocmd[]
-local CONFIG = {
+local DEFAULT = {
   { "@auto_resize", true },
   { "@sync_time", true },
   { "@highlight_yank", true },
@@ -14,11 +13,11 @@ local CONFIG = {
   { "@trim_spaces", true },
 }
 
-local did_load = false
+---@type DeltaVim.Autocmd[]?
+local CONFIG
+
 function M.load()
-  if not did_load then
-    CONFIG = Util.merge_lists(CONFIG, Util.load_config("config.autocmds") or {})
-  end
+  if not CONFIG then CONFIG = Util.load_table("config.autocmds") or {} end
 end
 
 ---@type DeltaVim.Autocmd.Map
@@ -60,7 +59,7 @@ local function rulers(src)
 end
 
 function M.setup()
-  Autocmd.load(CONFIG)
+  Autocmd.load(Util.merge_lists({}, DEFAULT, CONFIG or {}))
     :map({
       {
         "@auto_resize",
