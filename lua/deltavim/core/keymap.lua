@@ -1,3 +1,5 @@
+local Util = require("deltavim.util")
+
 -- Manage keymaps.
 
 ---@class DeltaVim.Keymap.Options
@@ -20,6 +22,7 @@
 --- Description
 ---@field [3]? string
 ---@field mode? string|string[]
+---@field with? fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap ...
 
 ---@class DeltaVim.Keymap: DeltaVim.Keymap.Options
 --- Key or boolean value to enable a preset
@@ -157,34 +160,37 @@ end
 
 ---@param preset DeltaVim.Keymap.Preset
 function Collector:map1(preset)
-  local name = preset[1]
-  for _, mapping in ipairs(INPUT[name] or {}) do
-    ---@type string[]
-    local mode
-    --- If no modes are specified, uses modes defined by the preset.
-    if #mapping.mode == 0 then
-      mode = get_mode(preset.mode)
-    --- Otherwise, only supported modes will be mapped.
-    else
-      local supported = get_mode(preset.mode, {})
-      -- Empty value means all modes are supported.
-      if #supported == 0 then
-        mode = mapping.mode
-      -- Otherwise, finds common modes.
+  for _, mapping in ipairs(INPUT[preset[1]] or {}) do
+    if preset.with then
+      load_keymaps(self, { preset.with(mapping) })
+    elseif preset[2] then
+      ---@type string[]
+      local mode
+      --- If no modes are specified, uses modes defined by the preset.
+      if #mapping.mode == 0 then
+        mode = get_mode(preset.mode)
+      --- Otherwise, only supported modes will be mapped.
       else
-        mode = {}
-        for _, m in ipairs(mapping.mode) do
-          if vim.tbl_contains(supported, m) then table.insert(mode, m) end
+        local supported = get_mode(preset.mode, {})
+        -- Empty value means all modes are supported.
+        if #supported == 0 then
+          mode = mapping.mode
+        -- Otherwise, finds common modes.
+        else
+          mode = {}
+          for _, m in ipairs(mapping.mode) do
+            if vim.tbl_contains(supported, m) then table.insert(mode, m) end
+          end
+          if #mode == 0 then return self end
         end
-        if #mode == 0 then return self end
       end
+      table.insert(self._output, {
+        mapping[1],
+        preset[2],
+        mode = mode,
+        opts = get_opts(preset, { desc = mapping.desc or preset[3] }),
+      })
     end
-    table.insert(self._output, {
-      mapping[1],
-      preset[2],
-      mode = mode,
-      opts = get_opts(preset, { desc = mapping.desc or preset[3] }),
-    })
   end
   return self
 end
@@ -200,6 +206,24 @@ end
 
 --- Collects mappings from presets.
 function Collector:collect() return self._output end
+
+function Collector:collect_and_set() M.set(self:collect()) end
+
+function Collector:collect_lazy()
+  ---@type table[]
+  local keymaps = {}
+  for _, keymap in ipairs(self:collect()) do
+    table.insert(
+      keymaps,
+      Util.merge_tables({
+        keymap[1],
+        keymap[2],
+        mode = keymap.mode,
+      }, keymap.opts)
+    )
+  end
+  return keymaps
+end
 
 M.Collector = Collector.new
 

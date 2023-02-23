@@ -31,11 +31,12 @@
 --- Preset name
 ---@field [1] string
 --- Events or a function return a autocmd
----@field [2] string|string[]|DeltaVim.Autocmd.Map
+---@field [2]? string|string[]
 --- Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string
+---@field with? DeltaVim.Autocmd.Map
 
----@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd?,DeltaVim.Autocmd.Output[]?
+---@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd ...
 
 ---@class DeltaVim.Autocmd.Output
 --- Events
@@ -153,22 +154,15 @@ end
 function Collector:map1(preset)
   local src = INPUT[preset[1]]
   if src == nil then return self end
-  local f = preset[2]
-  ---@type DeltaVim.Autocmd.Output
-  local autocmd
-  if type(f) == "function" then
-    local r1, r2 = f(src)
-    local autocmds = r2 or {}
-    if r1 ~= nil then table.insert(autocmds, r1) end
-    load_autocmds(self, autocmds)
-  else
-    autocmd = {
-      f,
+  if preset.with then
+    load_autocmds(self, { preset.with(src) })
+  elseif preset[2] then
+    table.insert(self._output, {
+      preset[2],
       preset[3],
       opts = get_opts(src, {}),
-    }
+    })
   end
-  table.insert(self._output, autocmd)
   return self
 end
 
