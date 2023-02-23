@@ -225,6 +225,26 @@ function Collector:collect_lazy()
   return keymaps
 end
 
+--- Constructs a table of mapped values indexed by the input keys.
+function Collector:collect_lhs_table()
+  ---@type table<string,any>
+  local tbl = {}
+  for _, keymap in ipairs(self:collect()) do
+    tbl[keymap[1]] = tbl[keymap[2]]
+  end
+  return tbl
+end
+
+--- Constructs a table of input keys indexed by mapped values.
+function Collector:collect_rhs_table()
+  ---@type table<string,any>
+  local tbl = {}
+  for _, keymap in ipairs(self:collect()) do
+    tbl[keymap[2]] = tbl[keymap[1]]
+  end
+  return tbl
+end
+
 M.Collector = Collector.new
 
 --- Loads keymaps. Preset inputs will be added to the global storage and other
