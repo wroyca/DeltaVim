@@ -24,6 +24,10 @@ function M.try(f, opts)
   return false
 end
 
+---Registers a callback on the VeryLazy event.
+---@param cb DeltaVim.Autocmd.Callback
+function M.on_very_lazy(cb) Autocmd.set1("User", cb, { pattern = "VeryLazy" }) end
+
 ---Checks whether the given module is present.
 ---@param mod string
 function M.has_module(mod) return require("lazy.core.cache").find(mod) ~= nil end
