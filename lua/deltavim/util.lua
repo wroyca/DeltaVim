@@ -1,3 +1,4 @@
+local Autocmd = require("deltavim.core.autocmd")
 local LazyUtil = require("lazy.core.util")
 local Log = require("deltavim.core.log")
 
@@ -23,11 +24,11 @@ function M.try(f, opts)
   return false
 end
 
---- Checks whether the given module is present.
+---Checks whether the given module is present.
 ---@param mod string
 function M.has_module(mod) return require("lazy.core.cache").find(mod) ~= nil end
 
---- Loads a module.
+---Loads a module.
 ---@generic T
 ---@param mod string
 ---@param ty? string
@@ -46,18 +47,18 @@ function M.load_module(mod, ty)
   end
 end
 
---- Loads a module that returns a table.
+---Loads a module that returns a table.
 ---@param mod string
 ---@return table?
 function M.load_table(mod) return M.load_module(mod, "table") end
 
---- Loads a module that returns a function.
+---Loads a module that returns a function.
 ---@param mod string
 ---@return function?
 function M.load_function(mod) return M.load_module(mod, "function") end
 
---- Merge lists into a signle list.
---- Note: This mutates the first table!
+---Merge lists into a single list.
+---Note: This mutates the first list.
 ---@generic T
 ---@param dst T[]
 ---@param ... T[]
@@ -65,6 +66,21 @@ function M.merge_lists(dst, ...)
   for _, val in ipairs({ ... }) do
     for _, t in ipairs(val) do
       table.insert(dst, t)
+    end
+  end
+  return dst
+end
+
+---Merge tables into a signle table.
+---Note: This mutates the first table.
+---@generic T
+---@param dst T
+---@param ... T
+---@return T
+function M.merge_tables(dst, ...)
+  for _, val in ipairs({ ... }) do
+    for k, v in pairs(val) do
+      if dst[k] == nil then dst[k] = v end
     end
   end
   return dst

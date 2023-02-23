@@ -15,36 +15,36 @@ local Util = require("deltavim.util")
 ---@field desc? string
 
 ---@class DeltaVim.Keymap.Preset: DeltaVim.Keymap.Options
---- Preset name
+---Preset name
 ---@field [1] string
---- Mapped value
+---Mapped value
 ---@field [2] any
---- Description
+---Description
 ---@field [3]? string
 ---@field mode? string|string[]
 ---@field with? fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap ...
 
 ---@class DeltaVim.Keymap: DeltaVim.Keymap.Options
---- Key or boolean value to enable a preset
+---Key or boolean value to enable a preset
 ---@field [1] string|boolean
---- Callback function, command or a preset name starts with '@'
+---Callback function, command or a preset name starts with '@'
 ---@field [2] string|fun()
---- Description
+---Description
 ---@field [3]? string
 ---@field mode? string|string[]
 
 ---@class DeltaVim.Keymap.Output
---- Key
+---Key
 ---@field [1] string
---- Mapped value
+---Mapped value
 ---@field [2] any
 ---@field mode string[]
 ---@field opts DeltaVim.Keymap.Options
 
 ---@class DeltaVim.Keymap.Input
---- Key
+---Key
 ---@field [1] string
---- Preset name
+---Preset name
 ---@field [2] string
 ---@field mode string[]
 ---@field desc? string
@@ -67,11 +67,11 @@ local DEFAULT_OPTS = {
   desc = {},
 }
 
---- Preset inputs shared by all collectors.
+---Preset inputs shared by all collectors.
 ---@type table<string,DeltaVim.Keymap.Input[]>
 local INPUT = {}
 
---- Collects modes.
+---Collects modes.
 ---@param mode string|string[]|nil
 ---@param default? string[]
 local function get_mode(mode, default)
@@ -83,7 +83,7 @@ local function get_mode(mode, default)
   return mode
 end
 
---- Collects options.
+---Collects options.
 ---@param src DeltaVim.Keymap.Options
 ---@param init DeltaVim.Keymap.Options
 local function get_opts(src, init)
@@ -133,7 +133,7 @@ local function load_keymaps(collector, keymaps)
   end
 end
 
---- Collects and maps keymaps.
+---Collects and maps keymaps.
 ---@class DeltaVim.Keymap.Collector
 ---@field private _output DeltaVim.Keymap.Output[]
 local Collector = {}
@@ -149,7 +149,7 @@ function Collector:extend1(output)
   return self
 end
 
---- Adds outputs which will be extended to the collected result.
+---Adds outputs which will be extended to the collected result.
 ---@param output DeltaVim.Keymap.Output[]
 function Collector:extend(output)
   for _, m in ipairs(output) do
@@ -166,10 +166,10 @@ function Collector:map1(preset)
     elseif preset[2] then
       ---@type string[]
       local mode
-      --- If no modes are specified, uses modes defined by the preset.
+      ---If no modes are specified, uses modes defined by the preset.
       if #mapping.mode == 0 then
         mode = get_mode(preset.mode)
-      --- Otherwise, only supported modes will be mapped.
+      ---Otherwise, only supported modes will be mapped.
       else
         local supported = get_mode(preset.mode, {})
         -- Empty value means all modes are supported.
@@ -195,7 +195,7 @@ function Collector:map1(preset)
   return self
 end
 
---- Converts preset inputs to the output.
+---Converts preset inputs to the output.
 ---@param presets DeltaVim.Keymap.Preset[]
 function Collector:map(presets)
   for _, preset in ipairs(presets) do
@@ -204,7 +204,7 @@ function Collector:map(presets)
   return self
 end
 
---- Collects mappings from presets.
+---Collects mappings from presets.
 function Collector:collect() return self._output end
 
 function Collector:collect_and_set() M.set(self:collect()) end
@@ -225,7 +225,7 @@ function Collector:collect_lazy()
   return keymaps
 end
 
---- Constructs a table of mapped values indexed by the input keys.
+---Constructs a table of mapped values indexed by the input keys.
 function Collector:collect_lhs_table()
   ---@type table<string,any>
   local tbl = {}
@@ -235,7 +235,7 @@ function Collector:collect_lhs_table()
   return tbl
 end
 
---- Constructs a table of input keys indexed by mapped values.
+---Constructs a table of input keys indexed by mapped values.
 function Collector:collect_rhs_table()
   ---@type table<string,any>
   local tbl = {}
@@ -247,8 +247,8 @@ end
 
 M.Collector = Collector.new
 
---- Loads keymaps. Preset inputs will be added to the global storage and other
---- keymaps will be extended into the returned collector.
+---Loads keymaps. Preset inputs will be added to the global storage and other
+---keymaps will be extended into the returned collector.
 ---@param keymaps DeltaVim.Keymap[]
 function M.load(keymaps)
   local collector = Collector.new()
@@ -258,7 +258,7 @@ end
 
 local km = vim.keymap.set
 
---- Sets a keymap.
+---Sets a keymap.
 ---@param mode string|string[]
 ---@param lhs string
 ---@param rhs string|fun()
@@ -271,7 +271,7 @@ function M.set1(mode, lhs, rhs, opts)
   km(mode, lhs, rhs, o)
 end
 
---- Sets keymaps.
+---Sets keymaps.
 ---@param keymaps DeltaVim.Keymap.Output[]
 function M.set(keymaps)
   for _, keymap in ipairs(keymaps) do

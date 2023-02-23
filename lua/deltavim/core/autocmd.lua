@@ -20,33 +20,33 @@
 ---@field data any
 
 ---@class DeltaVim.Autocmd: DeltaVim.Autocmd.Options
---- Events or a preset name starts with '@'
+---Events or a preset name starts with '@'
 ---@field [1] string|string[]
---- Command, callback function or boolean value to enable a preset
+---Command, callback function or boolean value to enable a preset
 ---@field [2] string|DeltaVim.Autocmd.Callback|boolean
---- Description
+---Description
 ---@field [3]? string
 
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
---- Preset name
+---Preset name
 ---@field [1] string
---- Events or a function return a autocmd
+---Events or a function return a autocmd
 ---@field [2]? string|string[]
---- Callback or command
+---Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string
 ---@field with? DeltaVim.Autocmd.Map
 
 ---@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd ...
 
 ---@class DeltaVim.Autocmd.Output
---- Events
+---Events
 ---@field [1] string|string[]
---- Command or callback function
+---Command or callback function
 ---@field [2] string|DeltaVim.Autocmd.Callback
 ---@field opts DeltaVim.Autocmd.Options
 
 ---@class DeltaVim.Autocmd.Input
---- Preset name
+---Preset name
 ---@field [1] string
 ---@field desc? string
 ---@field args table<string,any>
@@ -63,7 +63,7 @@ local DEFAULT_OPTS = {
   desc = {},
 }
 
---- Collects options and arguments.
+---Collects options and arguments.
 ---@param src table
 ---@param init DeltaVim.Autocmd.Options
 local function get_opts(src, init)
@@ -75,7 +75,7 @@ local function get_opts(src, init)
   return opts
 end
 
---- Collects arguments.
+---Collects arguments.
 ---@param src table
 local function get_args(src)
   ---@type table<string,any>
@@ -86,7 +86,7 @@ local function get_args(src)
   return args
 end
 
---- Preset inputs shared by all collectors.
+---Preset inputs shared by all collectors.
 ---@type table<string,DeltaVim.Autocmd.Input>
 local INPUT = {}
 
@@ -141,7 +141,7 @@ function Collector:extend1(autocmd)
   return self
 end
 
---- Adds autocmds.
+---Adds autocmds.
 ---@param autocmds DeltaVim.Autocmd.Output[]
 function Collector:extend(autocmds)
   for _, autocmd in ipairs(autocmds) do
@@ -166,7 +166,7 @@ function Collector:map1(preset)
   return self
 end
 
---- Constructs autocmds from preset inputs.
+---Constructs autocmds from preset inputs.
 ---@param presets DeltaVim.Autocmd.Preset[]
 function Collector:map(presets)
   for _, preset in ipairs(presets) do
@@ -175,12 +175,12 @@ function Collector:map(presets)
   return self
 end
 
---- Collects output autocmds.
+---Collects output autocmds.
 function Collector:collect() return self._output end
 
 function Collector:collect_and_set() M.set(self:collect()) end
 
---- Loads auto commands.
+---Loads auto commands.
 ---@param autocmds DeltaVim.Autocmd[]
 function M.load(autocmds)
   local collector = Collector.new()
@@ -190,7 +190,7 @@ end
 
 local au = vim.api.nvim_create_autocmd
 
---- Sets a autocmd.
+---Sets a autocmd.
 ---@param events string|string[]
 ---@param cmd string|DeltaVim.Autocmd.Callback
 ---@param opts DeltaVim.Autocmd.Options
@@ -207,7 +207,7 @@ function M.set1(events, cmd, opts)
   au(events, o)
 end
 
---- Sets autocmds.
+---Sets autocmds.
 ---@param autocmds DeltaVim.Autocmd.Output[]
 function M.set(autocmds)
   for _, autocmd in ipairs(autocmds) do
