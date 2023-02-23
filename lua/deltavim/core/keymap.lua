@@ -1,3 +1,4 @@
+local Log = require("deltavim.core.log")
 local Util = require("deltavim.util")
 
 -- Manage keymaps.
@@ -158,39 +159,46 @@ function Collector:extend(output)
   return self
 end
 
+---@private
+---@param preset DeltaVim.Keymap.Preset
+---@param input DeltaVim.Keymap.Input
+function Collector:_map_preset(preset, input)
+  if preset.with then
+    load_keymaps(self, { preset.with(input) })
+  elseif preset[2] then
+    ---@type string[]
+    local mode
+    ---If no modes are specified, uses modes defined by the preset.
+    if #input.mode == 0 then
+      mode = get_mode(preset.mode)
+      ---Otherwise, only supported modes will be mapped.
+    else
+      local supported = get_mode(preset.mode, {})
+      -- Empty value means all modes are supported.
+      if #supported == 0 then
+        mode = input.mode
+        -- Otherwise, finds common modes.
+      else
+        mode = {}
+        for _, m in ipairs(input.mode) do
+          if vim.tbl_contains(supported, m) then table.insert(mode, m) end
+        end
+        if #mode == 0 then return end
+      end
+    end
+    table.insert(self._output, {
+      input[1],
+      preset[2],
+      mode = mode,
+      opts = get_opts(preset, { desc = input.desc or preset[3] }),
+    })
+  end
+end
+
 ---@param preset DeltaVim.Keymap.Preset
 function Collector:map1(preset)
-  for _, mapping in ipairs(INPUT[preset[1]] or {}) do
-    if preset.with then
-      load_keymaps(self, { preset.with(mapping) })
-    elseif preset[2] then
-      ---@type string[]
-      local mode
-      ---If no modes are specified, uses modes defined by the preset.
-      if #mapping.mode == 0 then
-        mode = get_mode(preset.mode)
-      ---Otherwise, only supported modes will be mapped.
-      else
-        local supported = get_mode(preset.mode, {})
-        -- Empty value means all modes are supported.
-        if #supported == 0 then
-          mode = mapping.mode
-        -- Otherwise, finds common modes.
-        else
-          mode = {}
-          for _, m in ipairs(mapping.mode) do
-            if vim.tbl_contains(supported, m) then table.insert(mode, m) end
-          end
-          if #mode == 0 then return self end
-        end
-      end
-      table.insert(self._output, {
-        mapping[1],
-        preset[2],
-        mode = mode,
-        opts = get_opts(preset, { desc = mapping.desc or preset[3] }),
-      })
-    end
+  for _, input in ipairs(INPUT[preset[1]] or {}) do
+    self:_map_preset(preset, input)
   end
   return self
 end
@@ -200,6 +208,27 @@ end
 function Collector:map(presets)
   for _, preset in ipairs(presets) do
     self:map1(preset)
+  end
+  return self
+end
+
+---@param preset DeltaVim.Keymap.Preset
+function Collector:map1_unique(preset)
+  local inputs = INPUT[preset[1]] or {}
+  if #inputs >= 1 then
+    if #inputs > 1 then
+      Log.warn("Only the first key of '%s' will be set.", preset[1])
+    end
+    self:_map_preset(preset, inputs[1])
+  end
+  return self
+end
+
+---Similar as `Collector:map`, but more than one inputs will be ignored.
+---@param presets DeltaVim.Keymap.Preset[]
+function Collector:map_unique(presets)
+  for _, preset in ipairs(presets) do
+    self:map1_unique(preset)
   end
   return self
 end
