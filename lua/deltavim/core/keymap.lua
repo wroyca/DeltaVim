@@ -1,5 +1,4 @@
 -- Manage keymaps.
--- TODO: define default key in presets
 
 local Log = require("deltavim.core.log")
 local Util = require("deltavim.util")
@@ -25,6 +24,8 @@ local Util = require("deltavim.util")
 ---@field [3]? string
 ---@field mode? string|string[]
 ---@field with? fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap ...
+---Default key to be set
+---@field key? string
 
 ---@class DeltaVim.Keymap: DeltaVim.Keymap.Options
 ---Key or boolean value to enable a preset
@@ -45,7 +46,7 @@ local Util = require("deltavim.util")
 
 ---@class DeltaVim.Keymap.Input
 ---Key
----@field [1] string
+---@field [1]? string
 ---Preset name
 ---@field [2] string
 ---@field mode string[]
@@ -124,9 +125,10 @@ local function load_keymaps(collector, keymaps)
       elseif key == false then
         remove_input(rhs)
       end
-    elseif type(key) ~= "boolean" then
+    elseif key ~= false then
       collector:extend1({
-        key,
+        ---@diagnostic disable-next-line:assign-type-mismatch
+        key == true and nil or key,
         rhs,
         mode = get_mode(mapping.mode),
         opts = get_opts(mapping, { desc = desc }),
@@ -167,6 +169,8 @@ function Collector:_map_preset(preset, input)
   if preset.with then
     load_keymaps(self, { preset.with(input) })
   elseif preset[2] then
+    local key = input[1] or preset.key
+    if key == nil then return end
     ---@type string[]
     local mode
     ---If no modes are specified, uses modes defined by the preset.
@@ -188,7 +192,7 @@ function Collector:_map_preset(preset, input)
       end
     end
     table.insert(self._output, {
-      input[1],
+      key,
       preset[2],
       mode = mode,
       opts = get_opts(preset, { desc = input.desc or preset[3] }),
