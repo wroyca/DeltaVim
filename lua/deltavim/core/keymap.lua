@@ -243,9 +243,10 @@ function Collector:collect() return self._output end
 
 function Collector:collect_and_set() M.set(self:collect()) end
 
-function Collector:collect_lazy()
-  ---@type table[]
-  local keymaps = {}
+---Constructs a list of tables that could be used as keys of `lazy.nvim`.
+---@param init? table[]
+function Collector:collect_lazy(init)
+  local keymaps = init or {}
   for _, keymap in ipairs(self:collect()) do
     table.insert(
       keymaps,
@@ -260,9 +261,9 @@ function Collector:collect_lazy()
 end
 
 ---Constructs a table of mapped values indexed by the input keys.
-function Collector:collect_lhs_table()
-  ---@type table<string,any>
-  local tbl = {}
+---@param init? table<string,any>
+function Collector:collect_lhs_table(init)
+  local tbl = init or {}
   for _, keymap in ipairs(self:collect()) do
     tbl[keymap[1]] = tbl[keymap[2]]
   end
@@ -270,9 +271,9 @@ function Collector:collect_lhs_table()
 end
 
 ---Constructs a table of input keys indexed by mapped values.
-function Collector:collect_rhs_table()
-  ---@type table<string,any>
-  local tbl = {}
+---@param init? table<any,string>
+function Collector:collect_rhs_table(init)
+  local tbl = init or {}
   for _, keymap in ipairs(self:collect()) do
     tbl[keymap[2]] = tbl[keymap[1]]
   end
