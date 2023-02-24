@@ -3,8 +3,8 @@ local Util = require("deltavim.util")
 local M = {}
 
 ---Creates autocmds with the default.
----@param custom DeltaVim.Autocmd[]
----@return DeltaVim.Autocmd[]
+---@param custom DeltaVim.Autocmds
+---@return DeltaVim.Autocmds
 function M.autocmds(custom)
   return Util.merge_lists(
     {},
@@ -14,8 +14,8 @@ function M.autocmds(custom)
 end
 
 ---Creates keymaps with the default.
----@param custom DeltaVim.Keymap[]
----@return DeltaVim.Keymap[]
+---@param custom DeltaVim.Keymaps
+---@return DeltaVim.Keymaps
 function M.keymaps(custom)
   return Util.merge_lists(
     {},
@@ -25,12 +25,16 @@ function M.keymaps(custom)
 end
 
 ---Sets options with the default.
----@param custom fun()
----@return fun()
+---@param custom DeltaVim.Options
+---@return DeltaVim.Options
 function M.options(custom)
-  return function()
-    require("deltavim.config.autocmds").DEFAULT()
-    custom()
+  return function(cfg)
+    require("deltavim.config.options").DEFAULT()
+    if type(custom) == "function" then
+      return custom(cfg)
+    else
+      return custom
+    end
   end
 end
 

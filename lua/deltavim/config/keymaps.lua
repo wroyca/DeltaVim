@@ -3,6 +3,8 @@
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
+---@alias DeltaVim.Keymaps DeltaVim.Keymap[]
+
 local M = {}
 
 ---@type DeltaVim.Keymap[]
@@ -16,7 +18,7 @@ M.DEFAULT = {
   { true, "@enhanced.esc" },
 }
 
----@type DeltaVim.Keymap[]
+---@type DeltaVim.Keymaps
 local CONFIG
 
 function M.init() CONFIG = Util.load_table("config.keymaps") or M.DEFAULT end

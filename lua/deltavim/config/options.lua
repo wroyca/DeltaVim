@@ -1,4 +1,7 @@
+local Config = require("deltavim.config")
 local Util = require("deltavim.util")
+
+---@alias DeltaVim.Options DeltaVim.Config|fun(cfg:DeltaVim.Config):DeltaVim.Config?
 
 local M = {}
 
@@ -61,11 +64,17 @@ M.DEFAULT = function()
   end
 end
 
----@type fun()
+---@type DeltaVim.Options
 local CONFIG
 
 function M.init() CONFIG = Util.load_function("config.options") or M.DEFAULT end
 
-function M.setup() CONFIG() end
+function M.setup()
+  if type(CONFIG) == "function" then
+    Config.update(CONFIG(Config) or Config)
+  else
+    Config.update(CONFIG)
+  end
+end
 
 return M

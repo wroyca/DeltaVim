@@ -2,6 +2,8 @@ local Autocmd = require("deltavim.core.autocmd")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
+---@alias DeltaVim.Autocmds DeltaVim.Autocmd[]
+
 local M = {}
 
 ---@type DeltaVim.Autocmd[]

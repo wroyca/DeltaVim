@@ -1,4 +1,5 @@
 local Autocmds = require("deltavim.config.autocmds")
+local Config = require("deltavim.config")
 local Keymaps = require("deltavim.config.keymaps")
 local Options = require("deltavim.config.options")
 local Util = require("deltavim.util")
@@ -29,6 +30,18 @@ function M.setup()
     Autocmds.setup()
     Keymaps.setup()
   end
+
+  Util.try(function()
+    local colorscheme = Config.colorscheme
+    if type(colorscheme) == "function" then
+      colorscheme()
+    else
+      vim.cmd.colorscheme(colorscheme)
+    end
+  end, {
+    msg = "Could not load your colorscheme",
+    on_error = function() vim.cmd.colorscheme("habamax") end,
+  })
 end
 
 return M
