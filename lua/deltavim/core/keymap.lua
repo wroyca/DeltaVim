@@ -114,7 +114,7 @@ local function load_keymaps(collector, keymaps)
     local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
-    if type(rhs) == "string" and rhs:sub(1, 2) == "@" then
+    if type(rhs) == "string" and Util.starts_with(rhs, "@") then
       if type(key) == "string" then
         add_input({
           key,

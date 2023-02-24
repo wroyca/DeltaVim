@@ -1,5 +1,7 @@
 -- Manage auto commands.
 
+local Util = require("deltavim.util")
+
 ---@class DeltaVim.Autocmd.Options
 ---@field group? string|integer
 ---@field buffer? integer
@@ -106,7 +108,7 @@ local function load_autocmds(collector, autocmds)
     local event = autocmd[1]
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
-    if type(event) == "string" and event:sub(1, 2) == "@" then
+    if type(event) == "string" and Util.starts_with(event, "@") then
       if cmd == true then
         add_input({
           event,

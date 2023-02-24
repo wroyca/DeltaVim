@@ -62,6 +62,11 @@ function M.load_table(mod) return M.load_module(mod, "table") end
 ---@return function?
 function M.load_function(mod) return M.load_module(mod, "function") end
 
+---Checks if a string starts with another.
+---@param s string
+---@param pat string
+function M.starts_with(s, pat) return s:sub(1, #pat) == pat end
+
 ---Merge lists into a single list.
 ---Note: This mutates the first list.
 ---@generic T
