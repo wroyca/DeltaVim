@@ -4,7 +4,8 @@ local Util = require("deltavim.util")
 
 local M = {}
 
-local DEFAULT = {
+---@type DeltaVim.Autocmd[]
+M.DEFAULT = {
   { "@auto_resize", true },
   { "@sync_time", true },
   { "@highlight_yank", true },
@@ -16,7 +17,7 @@ local DEFAULT = {
 ---@type DeltaVim.Autocmd[]
 local CONFIG
 
-function M.init() CONFIG = Util.load_table("config.autocmds") or {} end
+function M.init() CONFIG = Util.load_table("config.autocmds") or M.DEFAULT end
 
 ---@type DeltaVim.Autocmd.Map
 local function quit(src)
@@ -53,11 +54,11 @@ local function rulers(src)
     local function cb(ev) vim.bo[ev.buf].colorcolumn = cc end
     table.insert(autocmds, { "FileType", cb, group = group, pattern = ft })
   end
-  return nil, autocmds
+  return unpack(autocmds)
 end
 
 function M.setup()
-  Autocmd.load(Util.merge_lists({}, DEFAULT, CONFIG))
+  Autocmd.load(CONFIG)
     :map({
       {
         "@auto_resize",
@@ -74,8 +75,8 @@ function M.setup()
         "TextYankPost",
         function() vim.highlight.on_yank() end,
       },
-      { "@quit", quit },
-      { "@rulers", rulers },
+      { "@quit", with = quit },
+      { "@rulers", with = rulers },
       {
         "@trim_spaces",
         "BufWritePre",

@@ -2,9 +2,9 @@ local Util = require("deltavim.util")
 
 local M = {}
 
-local function default()
-  -- https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
-
+---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+---@type fun()
+M.DEFAULT = function()
   local g = vim.g
   local opt = vim.opt
 
@@ -64,13 +64,8 @@ end
 ---@type fun()
 local CONFIG
 
-function M.init()
-  CONFIG = Util.load_function("config.options") or function() end
-end
+function M.init() CONFIG = Util.load_function("config.options") or M.DEFAULT end
 
-function M.setup()
-  default()
-  CONFIG()
-end
+function M.setup() CONFIG() end
 
 return M

@@ -1,7 +1,8 @@
+-- Manage keymaps.
+-- TODO: define default key in presets
+
 local Log = require("deltavim.core.log")
 local Util = require("deltavim.util")
-
--- Manage keymaps.
 
 ---@class DeltaVim.Keymap.Options
 ---@field buffer? integer
