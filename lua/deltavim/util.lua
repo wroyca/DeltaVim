@@ -7,20 +7,21 @@ local M = {
 }
 
 ---@generic T
----@param f fun():T
+---@param f fun():T?
 ---@param opts? {msg?:string,on_error?:fun(err:any)}|string
 ---@return boolean, T|nil
 function M.try(f, opts)
   if type(opts) == "string" then
     opts = { msg = opts }
   else
-    opts = opts or {}
+    opts = opts or { msg = "An error occurs: %s" }
   end
-  local msg = opts.msg or "An error occurs: %s"
-  local on_error = opts.msg or function(err) Log.error(msg:format(err)) end
+  local msg = opts.msg
+  local on_error = opts.on_error
   local ok, ret = pcall(f)
   if ok then return true, ret end
-  on_error(ret)
+  if msg then Log.error(msg, ret) end
+  if on_error then on_error(ret) end
   return false
 end
 
