@@ -83,8 +83,19 @@ function M.try(f, opts)
 end
 
 ---Registers a callback on the VeryLazy event.
----@param cb DeltaVim.Autocmd.Callback
-function M.on_very_lazy(cb) Autocmd.set1("User", cb, { pattern = "VeryLazy" }) end
+---@param cb fun(buffer:integer)
+function M.on_very_lazy(cb)
+  M.autocmd("User", function(ev) cb(ev.buf) end, { pattern = "VeryLazy" })
+end
+
+---Registers a callback on the LspAttach event.
+---@param cb fun(client:any,buffer:integer)
+function M.on_lsp_attach(cb)
+  M.autocmd(
+    "LspAttach",
+    function(ev) cb(vim.lsp.get_client_by_id(ev.data.client_id), ev.buf) end
+  )
+end
 
 ---Checks whether the given module is present.
 ---@param mod string
