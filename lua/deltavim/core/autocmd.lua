@@ -10,9 +10,9 @@ local Util = require("deltavim.util")
 ---@field nested? boolean
 ---@field desc? string
 
----@alias DeltaVim.Autocmd.Callback fun(args:DeltaVim.Autocmd.CallbackArgs)
+---@alias DeltaVim.Autocmd.Callback fun(ev:DeltaVim.Autocmd.Event)
 
----@class DeltaVim.Autocmd.CallbackArgs
+---@class DeltaVim.Autocmd.Event
 ---@field id number
 ---@field number string
 ---@field group? number
