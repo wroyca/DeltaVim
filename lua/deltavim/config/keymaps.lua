@@ -71,7 +71,6 @@ function M.setup()
     -- Session
     { "@session.quit", "<Cmd>qa<CR>", "Quit" },
   }
-
   Keymap.load(CONFIG):map(presets):collect_and_set()
 end
 

@@ -6,22 +6,14 @@ local M = {}
 ---@param custom DeltaVim.Autocmds
 ---@return DeltaVim.Autocmds
 function M.autocmds(custom)
-  return Util.merge_lists(
-    {},
-    require("deltavim.config.autocmds").DEFAULT,
-    custom
-  )
+  return Util.concat({}, require("deltavim.config.autocmds").DEFAULT, custom)
 end
 
 ---Creates keymaps with the default.
 ---@param custom DeltaVim.Keymaps
 ---@return DeltaVim.Keymaps
 function M.keymaps(custom)
-  return Util.merge_lists(
-    {},
-    require("deltavim.config.keymaps").DEFAULT,
-    custom
-  )
+  return Util.concat({}, require("deltavim.config.keymaps").DEFAULT, custom)
 end
 
 ---Sets options with the default.

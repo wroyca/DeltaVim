@@ -141,7 +141,7 @@ function M.starts_with(s, pat) return s:sub(1, #pat) == pat end
 ---@generic T
 ---@param dst T[]
 ---@param ... T[]
-function M.merge_lists(dst, ...)
+function M.concat(dst, ...)
   for _, val in ipairs({ ... }) do
     for _, t in ipairs(val) do
       table.insert(dst, t)
@@ -156,7 +156,7 @@ end
 ---@param dst T
 ---@param ... T
 ---@return T
-function M.merge_tables(dst, ...)
+function M.merge(dst, ...)
   for _, val in ipairs({ ... }) do
     for k, v in pairs(val) do
       if dst[k] == nil then dst[k] = v end

@@ -100,7 +100,7 @@ local function remove_input(name) INPUT[name] = nil end
 local function load_keymaps(collector, keymaps)
   local gopts = get_opts(keymaps, {})
   for _, mapping in ipairs(keymaps) do
-    mapping = Util.merge_tables({}, mapping, gopts)
+    mapping = Util.merge({}, mapping, gopts)
     local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
@@ -203,7 +203,7 @@ end
 function Collector:map(presets)
   local gopts = get_opts(presets, {})
   for _, preset in ipairs(presets) do
-    self:map1(Util.merge_tables({}, preset, gopts))
+    self:map1(Util.merge({}, preset, gopts))
   end
   return self
 end
@@ -225,7 +225,7 @@ end
 function Collector:map_unique(presets)
   local gopts = get_opts(presets, {})
   for _, preset in ipairs(presets) do
-    self:map1_unique(Util.merge_tables({}, preset, gopts))
+    self:map1_unique(Util.merge({}, preset, gopts))
   end
   return self
 end
@@ -242,7 +242,7 @@ function Collector:collect_lazy(init)
   for _, keymap in ipairs(self:collect()) do
     table.insert(
       keymaps,
-      Util.merge_tables({
+      Util.merge({
         keymap[1],
         keymap[2],
         mode = keymap.mode,
@@ -292,7 +292,7 @@ function M.set(keymaps, opts)
       keymap.mode,
       keymap[1],
       keymap[2],
-      Util.merge_tables({}, opts, keymap.opts)
+      Util.merge({}, opts, keymap.opts)
     )
   end
 end

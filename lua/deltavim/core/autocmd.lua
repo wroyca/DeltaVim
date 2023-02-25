@@ -100,7 +100,7 @@ local function remove_input(name) INPUT[name] = nil end
 local function load_autocmds(collector, autocmds)
   local gopts = get_opts(autocmds, {})
   for _, autocmd in ipairs(autocmds) do
-    autocmd = Util.merge_tables({}, autocmd, gopts)
+    autocmd = Util.merge({}, autocmd, gopts)
     local event = autocmd[1]
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
@@ -169,7 +169,7 @@ end
 function Collector:map(presets)
   local gopts = get_opts(presets, {})
   for _, preset in ipairs(presets) do
-    self:map1(Util.merge_tables({}, preset, gopts))
+    self:map1(Util.merge({}, preset, gopts))
   end
   return self
 end
