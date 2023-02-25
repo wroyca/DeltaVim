@@ -214,4 +214,20 @@ function M.get_cwd()
   return vim.loop.cwd() --[[@as string]]
 end
 
+---@param cmd string
+---@param args? table
+function M.telescope(cmd, args) require("telescope.builtin")[cmd](args) end
+
+---Open `git_files` or `find_files` depending on `.git`.
+---@param opts? table
+function M.telescope_files(opts)
+  opts = opts or { cwd = M.get_cwd() }
+  local cmd = "find_files"
+  if vim.loop.fs_stat(opts.cwd .. "/.git") then
+    opts.show_untracked = true
+    cmd = "git_files"
+  end
+  M.telescope(cmd, opts)
+end
+
 return M
