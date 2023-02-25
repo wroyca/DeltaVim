@@ -1,4 +1,3 @@
-local Autocmd = require("deltavim.core.autocmd")
 local LazyUtil = require("lazy.core.util")
 local Log = require("deltavim.core.log")
 
@@ -27,8 +26,9 @@ M.KEYMAP_OPTS = {
 ---@param mode string|string[]
 ---@param lhs string
 ---@param rhs string|fun()
----@param opts DeltaVim.Keymap.Options
+---@param opts? DeltaVim.Keymap.Options
 function M.keymap(mode, lhs, rhs, opts)
+  opts = opts or {}
   local o = {}
   for k, v in pairs(M.KEYMAP_OPTS) do
     o[k] = opts[k] or v[1]
@@ -49,8 +49,9 @@ M.AUTOCMD_OPTS = {
 ---Sets a autocmd.
 ---@param events string|string[]
 ---@param cmd string|DeltaVim.Autocmd.Callback
----@param opts DeltaVim.Autocmd.Options
+---@param opts? DeltaVim.Autocmd.Options
 function M.autocmd(events, cmd, opts)
+  opts = opts or {}
   local o = {}
   if type(cmd) == "string" then
     o.command = cmd
