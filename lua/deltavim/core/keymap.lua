@@ -294,9 +294,15 @@ end
 
 ---Sets keymaps.
 ---@param keymaps DeltaVim.Keymap.Output[]
-function M.set(keymaps)
+---@param opts? DeltaVim.Keymap.Options
+function M.set(keymaps, opts)
   for _, keymap in ipairs(keymaps) do
-    Util.keymap(keymap.mode, keymap[1], keymap[2], keymap.opts)
+    Util.keymap(
+      keymap.mode,
+      keymap[1],
+      keymap[2],
+      Util.merge_tables({}, opts, keymap.opts)
+    )
   end
 end
 
