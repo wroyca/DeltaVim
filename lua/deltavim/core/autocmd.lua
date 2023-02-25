@@ -82,19 +82,6 @@ local function get_args(src)
   return args
 end
 
----@generic T: DeltaVim.Autocmd.Options
----@param presets T[]|DeltaVim.Autocmd.Options
----@return T[]
-local function inherit_opts(presets)
-  local opts = get_opts(presets, {})
-  for _, preset in ipairs(presets) do
-    for k, v in pairs(opts) do
-      preset[k] = preset[k] or v
-    end
-  end
-  return presets
-end
-
 ---Preset inputs shared by all collectors.
 ---@type table<string,DeltaVim.Autocmd.Input>
 local INPUT = {}
@@ -111,7 +98,9 @@ local function remove_input(name) INPUT[name] = nil end
 ---@param collector DeltaVim.Autocmd.Collector
 ---@param autocmds DeltaVim.Autocmds
 local function load_autocmds(collector, autocmds)
-  for _, autocmd in ipairs(inherit_opts(autocmds)) do
+  local gopts = get_opts(autocmds, {})
+  for _, autocmd in ipairs(autocmds) do
+    autocmd = Util.merge_tables({}, autocmd, gopts)
     local event = autocmd[1]
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
@@ -178,8 +167,9 @@ end
 ---Constructs autocmds from preset inputs.
 ---@param presets DeltaVim.Autocmd.Presets
 function Collector:map(presets)
-  for _, preset in ipairs(inherit_opts(presets)) do
-    self:map1(preset)
+  local gopts = get_opts(presets, {})
+  for _, preset in ipairs(presets) do
+    self:map1(Util.merge_tables({}, preset, gopts))
   end
   return self
 end

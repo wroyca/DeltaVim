@@ -86,19 +86,6 @@ local function get_opts(src, init)
   return opts
 end
 
----@generic T: DeltaVim.Keymap.Options
----@param presets T[]|DeltaVim.Keymap.Options
----@return T[]
-local function inherit_opts(presets)
-  local opts = get_opts(presets, {})
-  for _, preset in ipairs(presets) do
-    for k, v in pairs(opts) do
-      preset[k] = preset[k] or v
-    end
-  end
-  return presets
-end
-
 ---@param mapping DeltaVim.Keymap.Input
 local function add_input(mapping)
   local name = mapping[2]
@@ -111,7 +98,9 @@ local function remove_input(name) INPUT[name] = nil end
 ---@param collector DeltaVim.Keymap.Collector
 ---@param keymaps DeltaVim.Keymaps
 local function load_keymaps(collector, keymaps)
-  for _, mapping in ipairs(inherit_opts(keymaps)) do
+  local gopts = get_opts(keymaps, {})
+  for _, mapping in ipairs(keymaps) do
+    mapping = Util.merge_tables({}, mapping, gopts)
     local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
@@ -212,8 +201,9 @@ end
 ---Converts preset inputs to the output.
 ---@param presets DeltaVim.Keymap.Presets
 function Collector:map(presets)
-  for _, preset in ipairs(inherit_opts(presets)) do
-    self:map1(preset)
+  local gopts = get_opts(presets, {})
+  for _, preset in ipairs(presets) do
+    self:map1(Util.merge_tables({}, preset, gopts))
   end
   return self
 end
@@ -233,8 +223,9 @@ end
 ---Similar as `Collector:map`, but more than one inputs will be ignored.
 ---@param presets DeltaVim.Keymap.Presets
 function Collector:map_unique(presets)
-  for _, preset in ipairs(inherit_opts(presets)) do
-    self:map1_unique(preset)
+  local gopts = get_opts(presets, {})
+  for _, preset in ipairs(presets) do
+    self:map1_unique(Util.merge_tables({}, preset, gopts))
   end
   return self
 end
