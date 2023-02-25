@@ -21,6 +21,8 @@ local Util = require("deltavim.util")
 ---@field file string
 ---@field data any
 
+---@alias DeltaVim.Autocmds DeltaVim.Autocmd[]|DeltaVim.Autocmd.Options
+
 ---@class DeltaVim.Autocmd: DeltaVim.Autocmd.Options
 ---Events or a preset name starts with '@'
 ---@field [1] string|string[]
@@ -28,6 +30,8 @@ local Util = require("deltavim.util")
 ---@field [2] string|DeltaVim.Autocmd.Callback|boolean
 ---Description
 ---@field [3]? string
+
+---@alias DeltaVim.Autocmd.Presets DeltaVim.Autocmd.Preset[]|DeltaVim.Autocmd.Options
 
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
@@ -78,6 +82,19 @@ local function get_args(src)
   return args
 end
 
+---@generic T: DeltaVim.Autocmd.Options
+---@param presets T[]|DeltaVim.Autocmd.Options
+---@return T[]
+local function inherit_opts(presets)
+  local opts = get_opts(presets, {})
+  for _, preset in ipairs(presets) do
+    for k, v in pairs(opts) do
+      preset[k] = preset[k] or v
+    end
+  end
+  return presets
+end
+
 ---Preset inputs shared by all collectors.
 ---@type table<string,DeltaVim.Autocmd.Input>
 local INPUT = {}
@@ -92,9 +109,9 @@ end
 local function remove_input(name) INPUT[name] = nil end
 
 ---@param collector DeltaVim.Autocmd.Collector
----@param autocmds DeltaVim.Autocmd[]
+---@param autocmds DeltaVim.Autocmds
 local function load_autocmds(collector, autocmds)
-  for _, autocmd in ipairs(autocmds) do
+  for _, autocmd in ipairs(inherit_opts(autocmds)) do
     local event = autocmd[1]
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
@@ -159,9 +176,9 @@ function Collector:map1(preset)
 end
 
 ---Constructs autocmds from preset inputs.
----@param presets DeltaVim.Autocmd.Preset[]
+---@param presets DeltaVim.Autocmd.Presets
 function Collector:map(presets)
-  for _, preset in ipairs(presets) do
+  for _, preset in ipairs(inherit_opts(presets)) do
     self:map1(preset)
   end
   return self
@@ -173,7 +190,7 @@ function Collector:collect() return self._output end
 function Collector:collect_and_set() M.set(self:collect()) end
 
 ---Loads auto commands.
----@param autocmds DeltaVim.Autocmd[]
+---@param autocmds DeltaVim.Autocmds
 function M.load(autocmds)
   local collector = Collector.new()
   load_autocmds(collector, autocmds)

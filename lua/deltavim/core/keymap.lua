@@ -15,6 +15,8 @@ local Util = require("deltavim.util")
 ---@field unique? boolean
 ---@field desc? string
 
+---@alias DeltaVim.Keymap.Presets DeltaVim.Keymap.Preset[]|DeltaVim.Keymap.Options
+
 ---@class DeltaVim.Keymap.Preset: DeltaVim.Keymap.Options
 ---Preset name
 ---@field [1] string
@@ -26,6 +28,8 @@ local Util = require("deltavim.util")
 ---@field with? fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap ...
 ---Default key to be set
 ---@field key? string
+
+---@alias DeltaVim.Keymaps DeltaVim.Keymap[]|DeltaVim.Keymap.Options
 
 ---@class DeltaVim.Keymap: DeltaVim.Keymap.Options
 ---Key or boolean value to enable a preset
@@ -82,6 +86,19 @@ local function get_opts(src, init)
   return opts
 end
 
+---@generic T: DeltaVim.Keymap.Options
+---@param presets T[]|DeltaVim.Keymap.Options
+---@return T[]
+local function inherit_opts(presets)
+  local opts = get_opts(presets, {})
+  for _, preset in ipairs(presets) do
+    for k, v in pairs(opts) do
+      preset[k] = preset[k] or v
+    end
+  end
+  return presets
+end
+
 ---@param mapping DeltaVim.Keymap.Input
 local function add_input(mapping)
   local name = mapping[2]
@@ -92,9 +109,9 @@ end
 local function remove_input(name) INPUT[name] = nil end
 
 ---@param collector DeltaVim.Keymap.Collector
----@param keymaps DeltaVim.Keymap[]
+---@param keymaps DeltaVim.Keymaps
 local function load_keymaps(collector, keymaps)
-  for _, mapping in ipairs(keymaps) do
+  for _, mapping in ipairs(inherit_opts(keymaps)) do
     local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
@@ -193,9 +210,9 @@ function Collector:map1(preset)
 end
 
 ---Converts preset inputs to the output.
----@param presets DeltaVim.Keymap.Preset[]
+---@param presets DeltaVim.Keymap.Presets
 function Collector:map(presets)
-  for _, preset in ipairs(presets) do
+  for _, preset in ipairs(inherit_opts(presets)) do
     self:map1(preset)
   end
   return self
@@ -214,9 +231,9 @@ function Collector:map1_unique(preset)
 end
 
 ---Similar as `Collector:map`, but more than one inputs will be ignored.
----@param presets DeltaVim.Keymap.Preset[]
+---@param presets DeltaVim.Keymap.Presets
 function Collector:map_unique(presets)
-  for _, preset in ipairs(presets) do
+  for _, preset in ipairs(inherit_opts(presets)) do
     self:map1_unique(preset)
   end
   return self
@@ -268,7 +285,7 @@ M.Collector = Collector.new
 
 ---Loads keymaps. Preset inputs will be added to the global storage and other
 ---keymaps will be extended into the returned collector.
----@param keymaps DeltaVim.Keymap[]
+---@param keymaps DeltaVim.Keymaps
 function M.load(keymaps)
   local collector = Collector.new()
   load_keymaps(collector, keymaps)
