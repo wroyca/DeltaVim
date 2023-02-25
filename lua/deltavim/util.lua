@@ -152,15 +152,58 @@ end
 
 ---Merge tables into a signle table.
 ---Note: This mutates the first table.
----@generic T
+---@generic T: table
 ---@param dst T
 ---@param ... T
 ---@return T
 function M.merge(dst, ...)
   for _, val in ipairs({ ... }) do
     for k, v in pairs(val) do
-      if dst[k] == nil then dst[k] = v end
+      if v == vim.NIL then
+        dst[k] = nil
+      else
+        dst[k] = v
+      end
     end
+  end
+  return dst
+end
+
+---@param tbl table
+function M.is_list(tbl)
+  local i = 1
+  for _ in pairs(tbl) do
+    if tbl[i] == nil then return false end
+    i = i + 1
+  end
+  return true
+end
+
+local function is_table(t) return type(t) == "table" and not M.is_list(t) end
+
+---@generic T: table
+---@param dst T
+local function deep_merge(dst, tbl)
+  for k, v in pairs(tbl) do
+    if is_table(dst[k]) and is_table(v) then
+      deep_merge(dst[k], v)
+    elseif v == vim.NIL then
+      dst[k] = nil
+    else
+      dst[k] = v
+    end
+  end
+end
+
+---Recursively merge tables into a signle table.
+---Note: This mutates the first table.
+---@generic T: table
+---@param dst T
+---@param ... T
+---@return T
+function M.deep_merge(dst, ...)
+  for _, val in ipairs({ ... }) do
+    deep_merge(dst, val)
   end
   return dst
 end
@@ -229,5 +272,8 @@ function M.telescope_files(opts)
   end
   M.telescope(cmd, opts)
 end
+
+---@param plugin string
+function M.has(plugin) return require("lazy.core.config").plugins[plugin] ~= nil end
 
 return M
