@@ -6,6 +6,63 @@ local M = {
   try = LazyUtil.try,
 }
 
+---@type string[]
+M.KEYMAP_MODE = { "n" }
+
+---@type table<string,{[1]:any}>
+M.KEYMAP_OPTS = {
+  buffer = {},
+  noremap = { true },
+  remap = { false },
+  nowait = {},
+  silent = { true },
+  script = {},
+  expr = {},
+  replace_keycodes = {},
+  unique = {},
+  desc = {},
+}
+
+---Sets a keymap.
+---@param mode string|string[]
+---@param lhs string
+---@param rhs string|fun()
+---@param opts DeltaVim.Keymap.Options
+function M.keymap(mode, lhs, rhs, opts)
+  local o = {}
+  for k, v in pairs(M.KEYMAP_OPTS) do
+    o[k] = opts[k] or v[1]
+  end
+  vim.keymap.set(mode, lhs, rhs, o)
+end
+
+---@type table<string,{[1]:any}>
+M.AUTOCMD_OPTS = {
+  group = {},
+  buffer = {},
+  pattern = {},
+  once = {},
+  nested = {},
+  desc = {},
+}
+
+---Sets a autocmd.
+---@param events string|string[]
+---@param cmd string|DeltaVim.Autocmd.Callback
+---@param opts DeltaVim.Autocmd.Options
+function M.autocmd(events, cmd, opts)
+  local o = {}
+  if type(cmd) == "string" then
+    o.command = cmd
+  else
+    o.callback = cmd
+  end
+  for k, v in pairs(M.AUTOCMD_OPTS) do
+    o[k] = opts[k] or v[1]
+  end
+  vim.api.nvim_create_autocmd(events, o)
+end
+
 ---@generic T
 ---@param f fun():T?
 ---@param opts? {msg?:string,on_error?:fun(err:any)}|string

@@ -54,22 +54,6 @@ local Util = require("deltavim.util")
 
 local M = {}
 
----@type string[]
-local DEFAULT_MODE = { "n" }
----@type table<string,{[1]:any}>
-local DEFAULT_OPTS = {
-  buffer = {},
-  noremap = { true },
-  remap = { false },
-  nowait = {},
-  silent = { true },
-  script = {},
-  expr = {},
-  replace_keycodes = {},
-  unique = {},
-  desc = {},
-}
-
 ---Preset inputs shared by all collectors.
 ---@type table<string,DeltaVim.Keymap.Input[]>
 local INPUT = {}
@@ -81,7 +65,7 @@ local function get_mode(mode, default)
   if type(mode) == "string" then
     mode = { mode }
   elseif type(mode) ~= "table" then
-    mode = default or DEFAULT_MODE
+    mode = default or Util.KEYMAP_MODE
   end
   return mode
 end
@@ -92,7 +76,7 @@ end
 local function get_opts(src, init)
   ---@type DeltaVim.Keymap.Options
   local opts = {}
-  for k in pairs(DEFAULT_OPTS) do
+  for k in pairs(Util.KEYMAP_OPTS) do
     opts[k] = init[k] or src[k]
   end
   return opts
@@ -291,26 +275,11 @@ function M.load(keymaps)
   return collector
 end
 
-local km = vim.keymap.set
-
----Sets a keymap.
----@param mode string|string[]
----@param lhs string
----@param rhs string|fun()
----@param opts DeltaVim.Keymap.Options
-function M.set1(mode, lhs, rhs, opts)
-  local o = {}
-  for k, v in pairs(DEFAULT_OPTS) do
-    o[k] = opts[k] or v[1]
-  end
-  km(mode, lhs, rhs, o)
-end
-
 ---Sets keymaps.
 ---@param keymaps DeltaVim.Keymap.Output[]
 function M.set(keymaps)
   for _, keymap in ipairs(keymaps) do
-    M.set1(keymap.mode, keymap[1], keymap[2], keymap.opts)
+    Util.keymap(keymap.mode, keymap[1], keymap[2], keymap.opts)
   end
 end
 

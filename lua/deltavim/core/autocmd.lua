@@ -55,23 +55,13 @@ local Util = require("deltavim.util")
 
 local M = {}
 
----@type table<string,{[1]:any}>
-local DEFAULT_OPTS = {
-  group = {},
-  buffer = {},
-  pattern = {},
-  once = {},
-  nested = {},
-  desc = {},
-}
-
 ---Collects options and arguments.
 ---@param src table
 ---@param init DeltaVim.Autocmd.Options
 local function get_opts(src, init)
   ---@type DeltaVim.Autocmd.Options
   local opts = {}
-  for k in pairs(DEFAULT_OPTS) do
+  for k in pairs(Util.AUTOCMD_OPTS) do
     opts[k] = init[k] or src[k]
   end
   return opts
@@ -83,7 +73,7 @@ local function get_args(src)
   ---@type table<string,any>
   local args = {}
   for k, v in pairs(src) do
-    if type(k) == "string" and DEFAULT_OPTS[k] == nil then args[k] = v end
+    if type(k) == "string" and Util.AUTOCMD_OPTS[k] == nil then args[k] = v end
   end
   return args
 end
@@ -190,30 +180,11 @@ function M.load(autocmds)
   return collector
 end
 
-local au = vim.api.nvim_create_autocmd
-
----Sets a autocmd.
----@param events string|string[]
----@param cmd string|DeltaVim.Autocmd.Callback
----@param opts DeltaVim.Autocmd.Options
-function M.set1(events, cmd, opts)
-  local o = {}
-  if type(cmd) == "string" then
-    o.command = cmd
-  else
-    o.callback = cmd
-  end
-  for k, v in pairs(DEFAULT_OPTS) do
-    o[k] = opts[k] or v[1]
-  end
-  au(events, o)
-end
-
 ---Sets autocmds.
 ---@param autocmds DeltaVim.Autocmd.Output[]
 function M.set(autocmds)
   for _, autocmd in ipairs(autocmds) do
-    M.set1(autocmd[1], autocmd[2], autocmd.opts)
+    Util.autocmd(autocmd[1], autocmd[2], autocmd.opts)
   end
 end
 
