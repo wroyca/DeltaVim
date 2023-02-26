@@ -208,6 +208,23 @@ function M.deep_merge(dst, ...)
   return dst
 end
 
+---Constructs a table from the given table, `false` values will be removed and
+---`true` values will be replaced with empty tables.
+---@generic K
+---@param tbl table<K,any>
+---@return table<K,any>
+function M.copy_as_table(tbl)
+  local ret = {}
+  for k, v in pairs(tbl) do
+    if v == true then
+      ret[k] = {}
+    elseif v then
+      ret[k] = v
+    end
+  end
+  return ret
+end
+
 M.ROOT_PATTERNS = { ".git" }
 
 ---Returns the root directory based on:
