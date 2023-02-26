@@ -1,3 +1,4 @@
+local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 
 return {
@@ -108,7 +109,7 @@ return {
         }),
         formatting = {
           format = function(_, item)
-            local icons = require("lazyvim.config").icons.kinds
+            local icons = Config.icons.kind
             if icons[item.kind] then
               item.kind = icons[item.kind] .. item.kind
             end
