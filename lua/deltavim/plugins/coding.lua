@@ -66,7 +66,7 @@ return {
   -- Auto completion
   {
     "hrsh7th/nvim-cmp",
-    version = false, -- last release is way too old
+    version = false, -- Last release is way too old
     event = "InsertEnter",
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
@@ -215,14 +215,5 @@ return {
       }
     end,
     config = function(_, opts) require("mini.ai").setup(opts) end,
-  },
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    init = function()
-      -- No need to load the plugin, since we only need its queries
-      require("lazy.core.loader").disable_rtp_plugin(
-        "nvim-treesitter-textobjects"
-      )
-    end,
   },
 }
