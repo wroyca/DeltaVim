@@ -1,9 +1,6 @@
-local LazyUtil = require("lazy.core.util")
 local Log = require("deltavim.core.log")
 
-local M = {
-  try = LazyUtil.try,
-}
+local M = {}
 
 ---@type string[]
 M.KEYMAP_MODE = { "n" }
