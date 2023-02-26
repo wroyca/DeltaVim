@@ -232,7 +232,7 @@ M.ROOT_PATTERNS = { ".git" }
 ---* lsp root_dir
 ---* root pattern of filename of the current buffer
 ---* root pattern of cwd
----Credit: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
+---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
 ---@return string
 function M.get_root()
   ---@type string?
@@ -279,6 +279,7 @@ end
 function M.telescope(cmd, args) require("telescope.builtin")[cmd](args) end
 
 ---Open `git_files` or `find_files` depending on `.git`.
+---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
 ---@param opts? table
 function M.telescope_files(opts)
   opts = opts or { cwd = M.get_cwd() }
@@ -292,5 +293,40 @@ end
 
 ---@param plugin string
 function M.has(plugin) return require("lazy.core.config").plugins[plugin] ~= nil end
+
+---Delay notifications till vim.notify was replaced.
+---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
+---@param timeout? number
+function M.lazy_notify(timeout)
+  timeout = timeout or 500
+  ---@type table[]
+  local notifications = {}
+  local function temp(...) table.insert(notifications, vim.F.pack_len(...)) end
+
+  local orig = vim.notify
+  vim.notify = temp
+
+  local timer = vim.loop.new_timer() --[[@as uv.uv_timer_t]]
+  local check = vim.loop.new_check() --[[@as uv.uv_check_t]]
+
+  local replay = function()
+    timer:stop()
+    check:stop()
+    -- Put back the original notify if needed
+    if vim.notify == temp then vim.notify = orig end
+    vim.schedule(function()
+      for _, args in ipairs(notifications) do
+        vim.notify(vim.F.unpack_len(args))
+      end
+    end)
+  end
+
+  -- Wait till vim.notify has been replaced
+  check:start(function()
+    if vim.notify ~= temp then replay() end
+  end)
+  -- Or if it reached timeout, then something went wrong
+  timer:start(timeout, 0, replay)
+end
 
 return M

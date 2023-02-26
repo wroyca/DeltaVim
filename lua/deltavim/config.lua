@@ -69,7 +69,7 @@ local CONFIG = {
       timeout_ms = nil,
     },
     ---LSP Server Settings
-    ---@type lspconfig.options|table<string,boolean>
+    ---@type lspconfig.options|table<string,table|boolean>
     servers = {
       jsonls = {},
       lua_ls = {
