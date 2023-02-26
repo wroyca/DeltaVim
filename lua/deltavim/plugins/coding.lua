@@ -168,13 +168,23 @@ return {
   {
     "echasnovski/mini.comment",
     event = "VeryLazy",
-    opts = {
-      hooks = {
-        pre = function()
-          require("ts_context_commentstring.internal").update_commentstring({})
-        end,
-      },
-    },
+    opts = function()
+      local mappings = Keymap.Collector()
+        :map_unique({
+          { "@comment.toggle", "comment" },
+          { "@comment.toggle", "text_object" },
+          { "@comment.toggle_line", "comment_line" },
+        })
+        :collect_rhs_table()
+      return {
+        mappings = mappings,
+        hooks = {
+          pre = function()
+            require("ts_context_commentstring.internal").update_commentstring({})
+          end,
+        },
+      }
+    end,
     config = function(_, opts) require("mini.comment").setup(opts) end,
   },
   { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
