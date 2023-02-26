@@ -206,4 +206,13 @@ return {
     end,
     config = function(_, opts) require("mini.ai").setup(opts) end,
   },
+  {
+    "nvim-treesitter/nvim-treesitter-textobjects",
+    init = function()
+      -- No need to load the plugin, since we only need its queries
+      require("lazy.core.loader").disable_rtp_plugin(
+        "nvim-treesitter-textobjects"
+      )
+    end,
+  },
 }
