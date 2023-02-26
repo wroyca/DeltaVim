@@ -17,6 +17,8 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Keymap.Presets DeltaVim.Keymap.Preset[]|DeltaVim.Keymap.Options
 
+---@alias DeltaVim.Keymap.Map fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap ...
+
 ---@class DeltaVim.Keymap.Preset: DeltaVim.Keymap.Options
 ---Preset name
 ---@field [1] string
@@ -25,7 +27,7 @@ local Util = require("deltavim.util")
 ---Description
 ---@field [3]? string
 ---@field mode? string|string[]
----@field with? fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap ...
+---@field with? DeltaVim.Keymap.Map
 ---Default key to be set
 ---@field key? string
 

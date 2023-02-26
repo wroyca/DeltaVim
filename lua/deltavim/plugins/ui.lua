@@ -1,0 +1,423 @@
+local Config = require("deltavim.config")
+local Keymap = require("deltavim.core.keymap")
+local Util = require("deltavim.util")
+
+return {
+  -- Better `vim.notify()`
+  {
+    "rcarriga/nvim-notify",
+    keys = function()
+      local function clear()
+        require("notify").dismiss({ silent = true, pending = true })
+      end
+
+      return Keymap.Collector()
+        :map({
+          { "@notify.clear", clear, "Delete all notifications" },
+        })
+        :collect_lazy()
+    end,
+    opts = {
+      timeout = 3000,
+      max_height = function() return math.floor(vim.o.lines * 0.75) end,
+      max_width = function() return math.floor(vim.o.columns * 0.75) end,
+    },
+    init = function()
+      -- Install notify when `noice` is disabled
+      if not Util.has("noice.nvim") then
+        Util.on_very_lazy(function() vim.notify = require("notify") end)
+      end
+    end,
+  },
+
+  -- Better vim.ui
+  {
+    "stevearc/dressing.nvim",
+    lazy = true,
+    init = function()
+      ---@diagnostic disable-next-line:duplicate-set-field
+      vim.ui.select = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.select(...)
+      end
+      ---@diagnostic disable-next-line:duplicate-set-field
+      vim.ui.input = function(...)
+        require("lazy").load({ plugins = { "dressing.nvim" } })
+        return vim.ui.input(...)
+      end
+    end,
+  },
+
+  -- Bufferline
+  {
+    "akinsho/bufferline.nvim",
+    event = "VeryLazy",
+    keys = function()
+      -- stylua: ignore
+      ---@type DeltaVim.Keymap.Presets
+      local presets = {
+        { "@buffer.next", "<Cmd>BufferLineCycleNext<CR>", "Next buffer" },
+        { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
+        { "@buffer.pin", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
+        { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
+        { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
+        { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
+      }
+      return Keymap.Collector():map(presets):collect_lazy()
+    end,
+    -- TODO: use mini.bufremove to close
+    opts = {
+      options = {
+        diagnostics = "nvim_lsp",
+        always_show_bufferline = false,
+        diagnostics_indicator = function(_, _, diag)
+          local icons = Config.icons.diagnostics
+          ---@type string[]
+          local s = {}
+          if diag.error then table.insert(s, icons.Error .. diag.error) end
+          if diag.warning then table.insert(s, icons.Warn .. diag.warning) end
+          return table.concat(s, " ")
+        end,
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "Explorer",
+            highlight = "Directory",
+            text_align = "left",
+          },
+        },
+      },
+    },
+  },
+  {
+    "echasnovski/mini.bufremove",
+    keys = function()
+      ---@param force boolean
+      local function close(force)
+        return function() require("mini.bufremove").delete(0, force) end
+      end
+
+      -- stylua: ignore
+      local presets = {
+        { "@buffer.close", close(false), "Delete buffer" },
+        { "@buffer.close_force", close(true), "Delete buffer (force)" },
+      }
+      return Keymap.Collector():map(presets):collect_lazy()
+    end,
+    config = function(_, opts) require("mini.bufremove").setup(opts) end,
+  },
+
+  -- Statusline
+  {
+    "nvim-lualine/lualine.nvim",
+    event = "VeryLazy",
+    opts = function()
+      local icons = Config.icons
+
+      local function fg(name)
+        return function()
+          ---@type {foreground?:number}?
+          local hl = vim.api.nvim_get_hl_by_name(name, true)
+          return hl
+            and hl.foreground
+            and { fg = string.format("#%06x", hl.foreground) }
+        end
+      end
+
+      return {
+        options = {
+          theme = "auto",
+          globalstatus = true,
+          disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = { "branch" },
+          lualine_c = {
+            {
+              "diagnostics",
+              symbols = {
+                error = icons.diagnostics.Error,
+                warn = icons.diagnostics.Warn,
+                info = icons.diagnostics.Info,
+                hint = icons.diagnostics.Hint,
+              },
+            },
+            {
+              "filetype",
+              icon_only = true,
+              separator = "",
+              padding = { left = 1, right = 0 },
+            },
+            {
+              "filename",
+              path = 1,
+              symbols = { modified = "  ", readonly = "", unnamed = "" },
+            },
+            -- TODO: auto hide
+            {
+              function() return require("nvim-navic").get_location() end,
+              cond = function() return require("nvim-navic").is_available() end,
+            },
+          },
+          lualine_x = {
+            {
+              function() return require("noice").api.status.command.get() end,
+              cond = function()
+                return package.loaded["noice"]
+                  and require("noice").api.status.command.has()
+              end,
+              color = fg("Statement"),
+            },
+            {
+              function() return require("noice").api.status.mode.get() end,
+              cond = function()
+                return package.loaded["noice"]
+                  and require("noice").api.status.mode.has()
+              end,
+              color = fg("Constant"),
+            },
+            {
+              require("lazy.status").updates,
+              cond = require("lazy.status").has_updates,
+              color = fg("Special"),
+            },
+            {
+              "diff",
+              symbols = {
+                added = icons.git.added,
+                modified = icons.git.modified,
+                removed = icons.git.removed,
+              },
+            },
+          },
+          lualine_y = {
+            { "progress", separator = " ", padding = { left = 1, right = 0 } },
+            { "location", padding = { left = 0, right = 1 } },
+          },
+          lualine_z = {
+            function() return " " .. os.date("%R") end,
+          },
+        },
+        extensions = { "neo-tree" },
+      }
+    end,
+  },
+
+  -- Indent guides
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      char = "│",
+      filetype_exclude = {
+        "help",
+        "alpha",
+        "dashboard",
+        "neo-tree",
+        "Trouble",
+        "lazy",
+      },
+      show_trailing_blankline_indent = false,
+      show_current_context = false,
+    },
+  },
+
+  -- Active indent guide
+  {
+    "echasnovski/mini.indentscope",
+    version = false, -- wait till new 0.7.0 release to put it back on semver
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      symbol = "│",
+      options = { try_as_border = true },
+      disabled = {
+        "help",
+        "alpha",
+        "dashboard",
+        "neo-tree",
+        "Trouble",
+        "lazy",
+        "mason",
+      },
+    },
+    config = function(_, opts)
+      Util.autocmd(
+        "FileType",
+        function() vim.b.miniindentscope_disable = true end,
+        { pattern = opts.disabled }
+      )
+      require("mini.indentscope").setup(opts)
+    end,
+  },
+
+  -- Noicer UI
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {
+      lsp = {
+        override = {
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          ["vim.lsp.util.stylize_markdown"] = true,
+        },
+      },
+      presets = {
+        bottom_search = true,
+        command_palette = true,
+        long_message_to_split = true,
+      },
+    },
+    keys = function()
+      ---@param name string
+      local function cmd(name)
+        return function() require("noice").cmd(name) end
+      end
+
+      local function redirect() require("noice").redirect(vim.fn.getcmdline()) end
+
+      ---@param offset integer
+      ---@param desc string
+      ---@return DeltaVim.Keymap.Map
+      local function scroll(offset, desc)
+        return function(src)
+          local key = src[1]
+          return {
+            key,
+            function()
+              if not require("noice.lsp").scroll(offset) then return key end
+            end,
+            desc,
+            mode = { "i", "s" },
+            expr = true,
+          }
+        end
+      end
+
+      -- stylua: ignore
+      ---@type DeltaVim.Keymap.Presets
+      local presets = {
+        { "@notify.redirect", redirect, mode = "c", "Redirect to notification" },
+        { "@notify.last", cmd("last"), "Last notification" },
+        { "@notify.history", cmd("history"), "Notification history" },
+        { "@notify.all", cmd("all"), "All notifications" },
+        { "@cmp.scroll_down", with = scroll(4, "Scroll down") },
+        { "@cmp.scroll_up", with = scroll(-4, "Scroll up") },
+      }
+      return Keymap.Collector():map(presets):collect_lazy()
+    end,
+  },
+
+  -- Dashboard
+  {
+    "goolord/alpha-nvim",
+    event = "VimEnter",
+    opts = function()
+      local dashboard = require("alpha.themes.dashboard")
+      local logo = {
+        "██████╗ ███████╗██╗  ████████╗ █████╗ ██╗   ██╗██╗███╗   ███╗",
+        "██╔══██╗██╔════╝██║  ╚══██╔══╝██╔══██╗██║   ██║██║████╗ ████║",
+        "██║  ██║█████╗  ██║     ██║   ███████║██║   ██║██║██╔████╔██║",
+        "██║  ██║██╔══╝  ██║     ██║   ██╔══██║╚██╗ ██╔╝██║██║╚██╔╝██║",
+        "██████╔╝███████╗███████╗██║   ██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║",
+        "╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝",
+      }
+
+      ---@param key string
+      ---@param icon string
+      ---@param desc string
+      ---@param action string|function
+      local function button(key, icon, desc, action)
+        local opts = { noremap = true, silent = true, nowait = true }
+        if type(action) == "function" then
+          opts.callback = action
+          action = ""
+        end
+        local btn = dashboard.button(key, icon .. " " .. desc, action, opts)
+        btn.opts.hl = "AlphaButtons"
+        btn.opts.hl_shortcut = "AlphaShortcut"
+        return btn
+      end
+
+      local function files() Util.telescope_files({ cwd = Util.get_cwd() }) end
+
+      local function telescope(builtin)
+        return function() Util.telescope(builtin) end
+      end
+
+      local function restore() require("persistence").load() end
+
+      -- header
+      dashboard.section.header.val = logo
+      dashboard.section.header.opts.hl = "AlphaHeader"
+      -- body
+      dashboard.section.buttons.val = {
+        button("f", " ", " Find file", files),
+        button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
+        button("r", " ", " Recent files", ":Telescope oldfiles <CR>"),
+        button("g", " ", " Find text", telescope("live_grep")),
+        button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
+        button("s", "勒", " Restore session", restore),
+        button("l", "鈴", " Lazy", "<Cmd>Lazy<CR>"),
+        button("q", " ", " Quit", "<Cmd>qa<CR>"),
+      }
+      dashboard.section.buttons.opts.hl = "AlphaButtons"
+      -- footer
+      -- stylua: ignore
+      dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
+      dashboard.section.footer.opts.hl = "Type"
+      dashboard.opts.layout[1].val = 8
+      return dashboard
+    end,
+    config = function(_, dashboard)
+      -- Close Lazy and re-open when the dashboard is ready
+      if vim.o.filetype == "lazy" then
+        vim.cmd.close()
+        Util.autocmd(
+          "User",
+          function() require("lazy").show() end,
+          { pattern = "AlphaReady" }
+        )
+      end
+
+      require("alpha").setup(dashboard.opts)
+
+      -- Show plugins summary
+      Util.autocmd("User", function()
+        local stats = require("lazy").stats()
+        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+        -- stylua: ignore
+        dashboard.section.footer.val = ("⚡ Neovim loaded %s plugins in %d ms"):format(stats.count, ms)
+        pcall(vim.cmd.AlphaRedraw)
+      end, { pattern = "LazyVimStarted" })
+    end,
+  },
+
+  -- Lsp symbol navigation for lualine
+  {
+    "SmiteshP/nvim-navic",
+    lazy = true,
+    init = function()
+      vim.g.navic_silence = true
+      Util.on_lsp_attach(function(client, buffer)
+        if client.server_capabilities.documentSymbolProvider then
+          require("nvim-navic").attach(client, buffer)
+        end
+      end)
+    end,
+    opts = function()
+      return {
+        separator = " ",
+        highlight = true,
+        depth_limit = 5,
+        icons = Config.icons.kinds,
+      }
+    end,
+  },
+
+  -- Icons
+  { "nvim-tree/nvim-web-devicons", lazy = true },
+
+  -- UI components
+  { "MunifTanjim/nui.nvim", lazy = true },
+}

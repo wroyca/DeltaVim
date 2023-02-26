@@ -31,7 +31,7 @@ return {
 
       local function quit_silently()
         require("persistence").stop()
-        vim.cmd("qa")
+        vim.cmd.qa()
       end
 
       -- stylua: ignore

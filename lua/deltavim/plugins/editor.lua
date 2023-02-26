@@ -339,27 +339,7 @@ return {
     end,
   },
 
-  -- TODO: move to plugins.ui
-  -- buffer remove
-  {
-    "echasnovski/mini.bufremove",
-    keys = function()
-      ---@param force boolean
-      local function delete(force)
-        return function() require("mini.bufremove").delete(0, force) end
-      end
-
-      -- stylua: ignore
-      local presets = {
-        { "@buffer.delete", delete(false), "Delete buffer" },
-        { "@buffer.delete_force", delete(true), "Delete buffer (force)" },
-      }
-      return Keymap.Collector():map(presets):collect_lazy()
-    end,
-    config = function(_, opts) require("mini.bufremove").setup(opts) end,
-  },
-
-  -- better diagnostics list and others
+  -- Better diagnostics list
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
