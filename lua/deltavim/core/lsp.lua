@@ -24,7 +24,8 @@ end
 function M.autoformat(client, buffer)
   -- Don't format if client disabled it
   if
-    client.config
+    Config.lsp.autoformat
+    and client.config
     and client.config.capabilities
     and client.config.capabilities["documentFormattingProvider"] == false
   then
@@ -32,9 +33,11 @@ function M.autoformat(client, buffer)
   end
 
   if client.server_capabilities["documentFormattingProvider"] then
-    Util.autocmd("BufWritePre", function()
-      if Config.lsp.autoformat then M.format(buffer) end
-    end, { buffer = buffer })
+    Util.autocmd(
+      "BufWritePre",
+      function() M.format(buffer) end,
+      { buffer = buffer }
+    )
   end
 end
 

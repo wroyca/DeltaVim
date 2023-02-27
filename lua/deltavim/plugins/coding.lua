@@ -77,19 +77,55 @@ return {
     },
     opts = function()
       local cmp = require("cmp")
+      local mapping = cmp.mapping
+
+      local function has_words_before()
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0
+          and vim.api
+              .nvim_buf_get_lines(0, line - 1, line, true)[1]
+              :sub(col, col)
+              :match("%s")
+            == nil
+      end
+
+      local super_tab = mapping(function(fallback)
+        local luasnip = require("luasnip")
+        if cmp.visible() then
+          cmp.select_next_item()
+        elseif luasnip.expand_or_locally_jumpable() then
+          luasnip.expand_or_jump()
+        elseif has_words_before() then
+          cmp.complete()
+        else
+          fallback()
+        end
+      end)
+
+      local super_stab = mapping(function(fallback)
+        local luasnip = require("luasnip")
+        if cmp.visible() then
+          cmp.select_prev_item()
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
+        else
+          fallback()
+        end
+      end)
 
       -- Collect key mappings.
-      local factory = cmp.mapping
       local behavior = { behavior = cmp.SelectBehavior.Insert }
-      local mapping = Keymap.Collector()
+      local mappings = Keymap.Collector()
         :map({
-          { "@cmp.next_item", factory.select_next_item(behavior) },
-          { "@cmp.prev_item", factory.select_prev_item(behavior) },
-          { "@cmp.scroll_up", factory.scroll_docs(-4) },
-          { "@cmp.scroll_down", factory.scroll_docs(4) },
-          { "@cmp.complete", factory.complete() },
-          { "@cmp.abort", factory.abort() },
-          { "@cmp.confirm", factory.confirm({ select = true }) },
+          { "@cmp.super_tab", super_tab },
+          { "@cmp.super_stab", super_stab },
+          { "@cmp.next_item", mapping.select_next_item(behavior) },
+          { "@cmp.prev_item", mapping.select_prev_item(behavior) },
+          { "@cmp.scroll_up", mapping.scroll_docs(-4) },
+          { "@cmp.scroll_down", mapping.scroll_docs(4) },
+          { "@cmp.complete", mapping.complete({}) },
+          { "@cmp.abort", mapping.abort() },
+          { "@cmp.confirm", mapping.confirm({ select = true }) },
         })
         :collect_lhs_table()
 
@@ -100,7 +136,7 @@ return {
         snippet = {
           expand = function(args) require("luasnip").lsp_expand(args.body) end,
         },
-        mapping = mapping,
+        mapping = mappings,
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },

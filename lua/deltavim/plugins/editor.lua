@@ -279,6 +279,8 @@ return {
           -- goto
           { "@goto.next_hunk", gs("next_hunk"), "Next hunk" },
           { "@goto.prev_hunk", gs("prev_hunk"), "Prev hunk" },
+          -- toggle
+          { "@toggle.blame_line", gs("toggle_current_line_blame"), "Toggle blame line" },
           -- select
           { "@select.hunk", gs("select_hunk"), "Select hunk", mode = { "o", "x" } },
           buffer = buffer,
