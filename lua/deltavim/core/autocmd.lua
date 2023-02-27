@@ -42,7 +42,7 @@ local Util = require("deltavim.util")
 ---@field [3]? DeltaVim.Autocmd.Callback|string
 ---@field with? DeltaVim.Autocmd.Map
 
----@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd ...
+---@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd? ...
 
 ---@class DeltaVim.Autocmd.Output
 ---Events
@@ -61,8 +61,9 @@ local M = {}
 
 ---Collects options and arguments.
 ---@param src table
----@param init DeltaVim.Autocmd.Options
+---@param init? DeltaVim.Autocmd.Options
 local function get_opts(src, init)
+  init = init or {}
   ---@type DeltaVim.Autocmd.Options
   local opts = {}
   for k in pairs(Util.AUTOCMD_OPTS) do
@@ -98,7 +99,7 @@ local function remove_input(name) INPUT[name] = nil end
 ---@param collector DeltaVim.Autocmd.Collector
 ---@param autocmds DeltaVim.Autocmds
 local function load_autocmds(collector, autocmds)
-  local gopts = get_opts(autocmds, {})
+  local gopts = get_opts(autocmds)
   for _, autocmd in ipairs(autocmds) do
     autocmd = Util.merge({}, autocmd, gopts)
     local event = autocmd[1]
@@ -158,7 +159,7 @@ function Collector:map1(preset)
     table.insert(self._output, {
       preset[2],
       preset[3],
-      opts = get_opts(src, {}),
+      opts = get_opts(src),
     })
   end
   return self
@@ -167,7 +168,7 @@ end
 ---Constructs autocmds from preset inputs.
 ---@param presets DeltaVim.Autocmd.Presets
 function Collector:map(presets)
-  local gopts = get_opts(presets, {})
+  local gopts = get_opts(presets)
   for _, preset in ipairs(presets) do
     self:map1(Util.merge({}, preset, gopts))
   end
