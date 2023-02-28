@@ -1,12 +1,12 @@
 local Config = require("deltavim.config")
 local Util = require("deltavim.util")
 
----@alias DeltaVim.Options DeltaVim.Config|fun(cfg:DeltaVim.Config):DeltaVim.Config?
+---@alias DeltaVim.Options fun()
 
 local M = {}
 
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
----@type fun()
+---@type DeltaVim.Options
 M.DEFAULT = function()
   local g = vim.g
   local opt = vim.opt
@@ -67,14 +67,24 @@ end
 ---@type DeltaVim.Options
 local CONFIG
 
-function M.init() CONFIG = Util.load_function("config.options") or M.DEFAULT end
-
-function M.setup()
-  if type(CONFIG) == "function" then
-    Config.update(CONFIG(Config) or Config)
+function M.init()
+  local cfg = Util.load_config("config.options")
+  if type(cfg) == "function" then
+    CONFIG = function() cfg(M.DEFAULT) end
+  elseif cfg == false then
+    CONFIG = function() end
   else
-    Config.update(CONFIG)
+    CONFIG = function()
+      M.DEFAULT()
+      for key, val in pairs(cfg or {}) do
+        for k, v in pairs(val) do
+          vim[key][k] = v
+        end
+      end
+    end
   end
 end
+
+function M.setup() CONFIG() end
 
 return M

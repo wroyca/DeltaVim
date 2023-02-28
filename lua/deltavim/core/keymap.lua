@@ -91,11 +91,10 @@ end
 ---@param src table
 ---@param init? DeltaVim.Keymap.Options
 local function get_opts(src, init)
-  init = init or {}
   ---@type DeltaVim.Keymap.Options
-  local opts = {}
+  local opts = init or {}
   for k in pairs(Util.KEYMAP_OPTS) do
-    opts[k] = init[k] or src[k]
+    opts[k] = opts[k] or src[k]
   end
   return opts
 end
@@ -114,7 +113,8 @@ end
 ---@param mapping DeltaVim.Keymap.Input
 local function add_input(mapping)
   local name = mapping[2]
-  INPUT[name] = table.insert(INPUT[name] or {}, name)
+  if not INPUT[name] then INPUT[name] = {} end
+  table.insert(INPUT[name], mapping)
 end
 
 ---@param name string
@@ -125,26 +125,34 @@ local function remove_input(name) INPUT[name] = nil end
 local function load_keymaps(collector, keymaps)
   local gopts = get_opts(keymaps)
   for _, mapping in ipairs(keymaps) do
+    ---@type DeltaVim.Keymap
     mapping = Util.merge({}, mapping, gopts)
     local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
     if type(rhs) == "string" and Util.starts_with(rhs, "@") then
-      if type(key) == "string" then
+      if key == false then
+        remove_input(rhs)
+      else
+        ---@type string?
+        local k
+        if key == true then
+          k = nil
+        else
+          k = key --[[@as string]]
+        end
         add_input({
-          key,
+          ---@diagnostic disable-next-line:assign-type-mismatch
+          k,
           rhs,
           args = get_args(mapping),
           mode = get_mode(mapping.mode, {}),
           desc = desc,
         })
-      elseif key == false then
-        remove_input(rhs)
       end
-    elseif key ~= false then
+    elseif type(key) == "string" then
       collector:extend1({
-        ---@diagnostic disable-next-line:assign-type-mismatch
-        key == true and nil or key,
+        key,
         rhs,
         mode = get_mode(mapping.mode),
         opts = get_opts(mapping, { desc = desc }),
@@ -318,7 +326,7 @@ function M.set(keymaps, opts)
       keymap.mode,
       keymap[1],
       keymap[2],
-      Util.merge({}, opts, keymap.opts)
+      Util.merge({}, opts or {}, keymap.opts)
     )
   end
 end
@@ -330,11 +338,11 @@ function M.check(cb)
     ---@param visited boolean
     or function(name, visited)
       if not visited then
-        vim.health.report_warn("Keymap `%s` is not mapped", name)
+        vim.health.report_warn(("Keymap `%s` is not mapped"):format(name))
       end
     end
   for k, v in pairs(INPUT) do
-    cb(k, v == true)
+    cb(k, v.visited == true)
   end
 end
 

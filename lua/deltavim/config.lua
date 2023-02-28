@@ -1,3 +1,5 @@
+local Util = require("deltavim.util")
+
 local M = {}
 
 ---@class DeltaVim.Config
@@ -59,6 +61,6 @@ local CONFIG = {
 setmetatable(M, { __index = CONFIG })
 
 ---@param cfg DeltaVim.Config
-function M.update(cfg) CONFIG = cfg end
+function M.update(cfg) Util.merge(CONFIG, cfg) end
 
 return M

@@ -54,6 +54,7 @@ local Util = require("deltavim.util")
 ---@class DeltaVim.Autocmd.Input
 ---Preset name
 ---@field [1] string
+---@field [2] boolean
 ---@field desc? string
 ---@field args table<string,any>
 
@@ -63,11 +64,10 @@ local M = {}
 ---@param src table
 ---@param init? DeltaVim.Autocmd.Options
 local function get_opts(src, init)
-  init = init or {}
   ---@type DeltaVim.Autocmd.Options
-  local opts = {}
+  local opts = init or {}
   for k in pairs(Util.AUTOCMD_OPTS) do
-    opts[k] = init[k] or src[k]
+    opts[k] = opts[k] or src[k]
   end
   return opts
 end
@@ -89,7 +89,7 @@ local INPUT = {}
 
 ---@param autocmd DeltaVim.Autocmd.Input
 local function add_input(autocmd)
-  local name = autocmd[2]
+  local name = autocmd[1]
   INPUT[name] = autocmd
 end
 

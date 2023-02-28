@@ -3,7 +3,7 @@ local Util = require("deltavim.util")
 
 local M = {}
 
----@type DeltaVim.Keymap[]
+---@type DeltaVim.Keymaps
 M.DEFAULT = {
   -- enhanced
   { true, "@enhanced.j" },
@@ -91,7 +91,7 @@ M.DEFAULT = {
   { "<Leader>,", "@search.buffers_all" },
   { "<Leader>:", "@search.command_history" },
   { "<Leader>sr", "@search.replace" },
-  { "<Leader>sa", "@search.autocommand" },
+  { "<Leader>sa", "@search.autocommands" },
   { "<Leader>sb", "@search.current_buffer" },
   { "<Leader>sc", "@search.command_history" },
   { "<Leader>sC", "@search.commands" },
@@ -113,7 +113,7 @@ M.DEFAULT = {
   { "ih", "@select.hunk" },
   { "<Leader>gg", "@terminal.lazygit" },
   { "<Leader>gG", "@terminal.lazygit_cwd" },
-  { "<Leader>gc", "@search.git_comments" },
+  { "<Leader>gc", "@search.git_commits" },
   { "<Leader>gs", "@search.git_status" },
   -- hunk
   { "<Leader>ghs", "@git.stage_hunk" },
@@ -123,8 +123,8 @@ M.DEFAULT = {
   { "<Leader>ghu", "@git.undo_stage_hunk" },
   { "<Leader>ghp", "@git.preview_hunk" },
   { "<Leader>ghb", "@git.blame_line_full" },
-  { "<Leader>ghd", "@git.diff_this" },
-  { "<Leader>ghD", "@git.diff_this_last" },
+  { "<Leader>ghd", "@git.diffthis" },
+  { "<Leader>ghD", "@git.diffthis_last" },
   -- goto
   { "[[", "@goto.prev_reference" },
   { "]]", "@goto.next_reference" },
@@ -133,7 +133,6 @@ M.DEFAULT = {
   { "<Leader>xX", "@quickfix.workspace_diagnostics" },
   { "<Leader>xl", "@quickfix.location_list" },
   { "<Leader>xq", "@quickfix.quickfix_list" },
-  -- todo
   { "[t", "@goto.prev_todo" },
   { "]t", "@goto.next_todo" },
   { "<Leader>xt", "@quickfix.todo" },
@@ -176,10 +175,19 @@ M.DEFAULT = {
   { ";", "@util.undo_break_point" },
 }
 
----@type DeltaVim.Keymaps
-local CONFIG
+---@type DeltaVim.Keymap.Collector
+local KEYMAPS
 
-function M.init() CONFIG = Util.load_table("config.keymaps") or M.DEFAULT end
+function M.init()
+  local cfg = Util.load_config("config.keymaps")
+  if type(cfg) == "function" then
+    KEYMAPS = Keymap.load(cfg(M.DEFAULT))
+  elseif cfg == false then
+    KEYMAPS = Keymap.Collector()
+  else
+    KEYMAPS = Keymap.load(Util.concat({}, M.DEFAULT, cfg or {}))
+  end
+end
 
 function M.setup()
   ---@type DeltaVim.Keymap.Map
@@ -290,7 +298,7 @@ function M.setup()
   if vim.fn.has("nvim-0.9.0") == 1 then
     table.insert(presets, { "@util.show_pos", vim.show_pos, "Show position" })
   end
-  Keymap.load(CONFIG):map(presets):collect_and_set()
+  KEYMAPS:map(presets):collect_and_set()
 end
 
 return M

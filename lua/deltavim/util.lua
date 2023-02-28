@@ -100,33 +100,31 @@ end
 function M.has_module(mod) return require("lazy.core.cache").find(mod) ~= nil end
 
 ---Loads a module.
----@generic T
 ---@param mod string
----@param ty? string
----@return T?
-function M.load_module(mod, ty)
-  local ok, ret = M.try(function()
+---@return any
+function M.load_module(mod)
+  local _, ret = M.try(function()
     ---@diagnostic disable-next-line:missing-return
     if M.has_module(mod) then return require(mod) end
   end, ("Failed to load module '%s'"):format(mod))
-  if not ok then return end
-  if ty then
-    if type(ret) == ty then return ret end
-    Log.error("Module '%s' should return a '%s'", mod, ty)
-  else
-    return ret
-  end
+  return ret
 end
 
----Loads a module that returns a table.
+---Loads a config module that returns an optional table or function.
 ---@param mod string
----@return table?
-function M.load_table(mod) return M.load_module(mod, "table") end
-
----Loads a module that returns a function.
----@param mod string
----@return function?
-function M.load_function(mod) return M.load_module(mod, "function") end
+---@return table|function|false?
+function M.load_config(mod)
+  local ret = M.load_module(mod)
+  if type(ret) == "table" or type(ret) == "function" then
+    return ret
+  elseif ret == true then
+    return
+  elseif ret == false then
+    return false
+  else
+    Log.error("Module '%s' should return a function or table", mod)
+  end
+end
 
 ---Checks if a string starts with another.
 ---@param s string
