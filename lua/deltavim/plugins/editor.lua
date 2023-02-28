@@ -431,7 +431,7 @@ return {
         { "@quickfix.location_list", tb("loclist"), "Location list" },
         { "@quickfix.quickfix_list", tb("quickfix"), "Quickfix dist" },
       }
-      return Keymap.new():map(presets):collect_lazy()
+      return Keymap.Collector():map(presets):collect_lazy()
     end,
   },
 
