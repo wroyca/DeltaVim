@@ -76,13 +76,17 @@ M.DEFAULT = {
   { "<Leader>e", "@explorer.toggle" },
   { "<Leader>E", "@explorer.toggle_cwd" },
   -- file/find
-  -- TODO: float_term
-  { "<Leader>fn", "@util.new_file" },
   { "<Leader><Leader>", "@search.files" },
+  { "<Leader>fn", "@util.new_file" },
   { "<Leader>fb", "@search.buffers" },
   { "<Leader>ff", "@search.files" },
   { "<Leader>fF", "@search.files_cwd" },
   { "<Leader>fr", "@search.oldfiles" },
+  -- terminal
+  { "<C-t>", "@terminal.open" },
+  { "<C-t>", "@terminal.hide" },
+  { "<Leader>ft", "@terminal.open" },
+  { "<Leader>fT", "@terminal.open_cwd" },
   -- search
   { "<Leader>,", "@search.buffers_all" },
   { "<Leader>:", "@search.command_history" },
@@ -104,10 +108,11 @@ M.DEFAULT = {
   { "<Leader>sw", "@search.words" },
   { "<Leader>sW", "@search.words_cwd" },
   -- git
-  -- TODO: lazygit
   { "]h", "@goto.next_hunk" },
   { "[h", "@goto.prev_hunk" },
   { "ih", "@select.hunk" },
+  { "<Leader>gg", "@terminal.lazygit" },
+  { "<Leader>gG", "@terminal.lazygit_cwd" },
   { "<Leader>gc", "@search.git_comments" },
   { "<Leader>gs", "@search.git_status" },
   -- hunk

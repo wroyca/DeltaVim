@@ -54,6 +54,55 @@ return {
     },
   },
 
+  -- TODO: PR to LazyVim
+  {
+    "akinsho/toggleterm.nvim",
+    keys = function()
+      ---@param opts fun():table
+      local function create(opts)
+        return function()
+          require("toggleterm.terminal").Terminal:new(opts()):open()
+        end
+      end
+
+      ---@param dir fun():string
+      local function toggle(dir)
+        ---@diagnostic disable-line:undefined-field
+        return function() require("toggleterm").toggle(vim.v.count, nil, dir()) end
+      end
+
+      ---@param dir fun():string
+      local function lazygit(dir)
+        return create(function() return { cmd = "lazygit", dir = dir() } end)
+      end
+
+      -- stylua: ignore
+      ---@type DeltaVim.Keymap.Presets
+      local presets = {
+        { "@terminal.open", toggle(Util.get_root), "Open terminal" },
+        { "@terminal.open_cwd", toggle(Util.get_cwd), "Open terminal (cwd)" },
+        { "@terminal.lazygit", lazygit(Util.get_root), "Lazygit" },
+        { "@terminal.lazygit_cwd", lazygit(Util.get_cwd), "Lazygit (cwd)" },
+      }
+      return Keymap.Collector():map(presets):collect_lazy()
+    end,
+    opts = {
+      direction = "float",
+      ---@param term Terminal
+      on_open = function(term)
+        Keymap.Collector()
+          :map1({
+            "@terminal.hide",
+            function() term:toggle() end,
+            "Hide terminal",
+            mode = "t",
+            buffer = term.bufnr,
+          })
+          :collect_and_set()
+      end,
+    },
+  },
+
   -- Search/replace in multiple files
   {
     "windwp/nvim-spectre",
