@@ -9,6 +9,11 @@ local M = {}
 
 M.lazy_version = ">=9.1.0"
 
+---LazyVim may have overwritten options of the Lazy ui, use this to reset.
+local function fix_lazy()
+  if vim.bo.filetype == "lazy" then vim.cmd.doautocmd("VimResized") end
+end
+
 local did_init = false
 function M.init()
   if did_init then return end
@@ -24,6 +29,7 @@ function M.init()
 
   -- Load options before installing plugins
   Options.setup()
+  fix_lazy()
 end
 
 function M.setup()
@@ -35,14 +41,16 @@ function M.setup()
     error("Exiting")
   end
 
-  if vim.fn.argc(-1) == 0 then
-    Util.on_very_lazy(function()
-      Autocmds.setup()
-      Keymaps.setup()
-    end)
-  else
+  local function setup()
     Autocmds.setup()
     Keymaps.setup()
+    fix_lazy()
+  end
+
+  if vim.fn.argc(-1) == 0 then
+    Util.on_very_lazy(setup)
+  else
+    setup()
   end
 
   Util.try(function()
