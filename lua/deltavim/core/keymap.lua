@@ -50,6 +50,8 @@ local Util = require("deltavim.util")
 ---@field mode string[]
 ---@field opts DeltaVim.Keymap.Options
 
+---@alias DeltaVim.Keymap.Inputs DeltaVim.Keymap.Input[]|{visited?:boolean}
+
 ---@class DeltaVim.Keymap.Input
 ---Key
 ---@field [1]? string
@@ -62,8 +64,17 @@ local Util = require("deltavim.util")
 local M = {}
 
 ---Preset inputs shared by all collectors.
----@type table<string,DeltaVim.Keymap.Input[]>
+---@type table<string,DeltaVim.Keymap.Inputs>
+-- TODO: check if an input is visited
 local INPUT = {}
+
+---@param preset string
+---@return DeltaVim.Keymap.Inputs?
+local function get(preset)
+  local ret = INPUT[preset]
+  if ret then ret.visited = true end
+  return ret
+end
 
 ---Collects modes.
 ---@param mode string|string[]|nil
@@ -208,7 +219,7 @@ end
 
 ---@param preset DeltaVim.Keymap.Preset
 function Collector:map1(preset)
-  for _, input in ipairs(INPUT[preset[1]] or {}) do
+  for _, input in ipairs(get(preset[1]) or {}) do
     self:_map_preset(preset, input)
   end
   return self
@@ -226,7 +237,7 @@ end
 
 ---@param preset DeltaVim.Keymap.Preset
 function Collector:map1_unique(preset)
-  local inputs = INPUT[preset[1]] or {}
+  local inputs = get(preset[1]) or {}
   if #inputs >= 1 then
     if #inputs > 1 then
       Log.warn("Only the first key of '%s' will be set.", preset[1])
@@ -310,6 +321,21 @@ function M.set(keymaps, opts)
       keymap[2],
       Util.merge({}, opts, keymap.opts)
     )
+  end
+end
+
+---@param cb? fun(name:string,visited:boolean)
+function M.check(cb)
+  cb = cb
+    ---@param name string
+    ---@param visited boolean
+    or function(name, visited)
+      if not visited then
+        vim.health.report_warn("Keymap `%s` is not mapped", name)
+      end
+    end
+  for k, v in pairs(INPUT) do
+    cb(k, v == true)
   end
 end
 

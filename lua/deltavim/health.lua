@@ -29,6 +29,8 @@ function M.check()
       vim.health.report_warn(("`%s` is not installed"):format(name))
     end
   end
+
+  require("deltavim.core.keymap").check()
 end
 
 return M
