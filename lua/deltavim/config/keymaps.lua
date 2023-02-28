@@ -165,15 +165,15 @@ M.DEFAULT = {
   { "<Leader>ql", "@session.restore_last" },
   { "<Leader>qd", "@session.stop" },
   -- util
+  { "gw", "@util.search_this" },
   { "<Esc><Esc>", "@util.escape_terminal" },
   { "<A-j>", "@util.move_line_down" },
   { "<A-K>", "@util.move_line_up" },
-  { "gw", "@util.search_this" },
+  { "<C-s>", "@util.save" },
   -- undo break points
   { ",", "@util.undo_break_point" },
   { ".", "@util.undo_break_point" },
   { ";", "@util.undo_break_point" },
-  { "<C-s>", "@util.save" },
 }
 
 ---@type DeltaVim.Keymaps

@@ -12,9 +12,7 @@ return {
       end
 
       return Keymap.Collector()
-        :map({
-          { "@notify.clear", clear, "Delete all notifications" },
-        })
+        :map1({ "@notify.clear", clear, "Delete all notifications" })
         :collect_lazy()
     end,
     opts = {
@@ -301,7 +299,6 @@ return {
         { "@notify.last", cmd("last"), "Last notification" },
         { "@notify.history", cmd("history"), "Notification history" },
         { "@notify.all", cmd("all"), "All notifications" },
-        -- TODO: rename to `scroll_down_noice`
         { "@cmp.scroll_down", with = scroll(4, "Scroll down") },
         { "@cmp.scroll_up", with = scroll(-4, "Scroll up") },
       }
@@ -370,8 +367,11 @@ return {
       dashboard.opts.layout[1].val = 8
       return dashboard
     end,
-    -- TODO: add @ui.alpha
-    -- keys = {},
+    keys = function()
+      return Keymap.Collector()
+        :map1({ "@ui.alpha", "<Cmd>Alpha<CR>", "Alpha" })
+        :collect_lazy()
+    end,
     config = function(_, dashboard)
       -- Close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then

@@ -65,7 +65,6 @@ local M = {}
 
 ---Preset inputs shared by all collectors.
 ---@type table<string,DeltaVim.Keymap.Inputs>
--- TODO: check if an input is visited
 local INPUT = {}
 
 ---@param preset string

@@ -109,12 +109,10 @@ return {
     opts = {},
     keys = function()
       return Keymap.Collector()
-        :map({
-          {
-            "@search.replace",
-            function() require("spectre").open() end,
-            desc = "Replace in files",
-          },
+        :map1({
+          "@search.replace",
+          function() require("spectre").open() end,
+          desc = "Replace in files",
         })
         :collect_lazy()
     end,
