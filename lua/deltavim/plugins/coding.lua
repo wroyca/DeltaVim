@@ -1,5 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
+local Util = require("deltavim.util")
 
 return {
   -- Snippets
@@ -137,12 +138,12 @@ return {
           expand = function(args) require("luasnip").lsp_expand(args.body) end,
         },
         mapping = mappings,
-        sources = cmp.config.sources({
+        sources = {
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "buffer" },
           { name = "path" },
-        }),
+        },
         formatting = {
           format = function(_, item)
             local icons = Config.icons.kind
@@ -158,6 +159,11 @@ return {
           },
         },
       }
+    end,
+    config = function(_, opts)
+      local cmp = require("cmp")
+      local sources = cmp.config.sources(opts.sources or {})
+      cmp.setup(Util.merge({}, opts, { sources = sources }))
     end,
   },
 

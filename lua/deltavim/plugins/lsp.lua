@@ -1,5 +1,4 @@
 local Config = require("deltavim.config")
-local Lsp = require("deltavim.core.lsp")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
@@ -15,6 +14,45 @@ return {
       "mason-lspconfig.nvim",
       "cmp-nvim-lsp",
     },
+    ---@class DeltaVim.Config.Lsp
+    opts = {
+      ---Options for `vim.diagnostic.config()`
+      diagnostics = {
+        underline = true,
+        update_in_insert = false,
+        virtual_text = { spacing = 4, prefix = "●" },
+        severity_sort = true,
+      },
+      ---Automatically format on save
+      autoformat = true,
+      ---Options for `vim.lsp.buf.format()`
+      format = {
+        formatting_options = nil,
+        timeout_ms = nil,
+      },
+      ---LSP Server Settings
+      ---@type lspconfig.options|table<string,table|boolean>
+      servers = {
+        jsonls = {},
+        lua_ls = {
+          settings = {
+            Lua = {
+              workspace = {
+                checkThirdParty = false,
+              },
+              completion = {
+                callSnippet = "Replace",
+              },
+            },
+          },
+        },
+      },
+      ---Additional lsp server setup.
+      ---Return true to disable the setup of `lspconfig`.
+      ---Specify `*` to use this function as a fallback for any server
+      ---@type table<string,fun(server:string,opts:table):boolean?>
+      setup = {},
+    },
     keys = function()
       return Keymap.Collector()
         :map({
@@ -22,13 +60,15 @@ return {
         })
         :collect_lazy()
     end,
-    config = function()
-      local opts = Config.lsp
+    ---@param opts DeltaVim.Config.Lsp
+    config = function(_, opts)
+      local Lsp = require("deltavim.core.lsp")
       local servers = Util.copy_as_table(opts.servers)
 
       -- Setup autoformat and keymaps
+      Lsp.AUTOFORMAT = opts.autoformat
       Util.on_lsp_attach(function(client, buffer)
-        Lsp.autoformat(client, buffer)
+        Lsp.autoformat(client, buffer, opts.format)
         Lsp.keymaps(client, buffer)
       end)
 
@@ -98,18 +138,31 @@ return {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "mason.nvim" },
-    opts = function()
+    ---@class DeltaVim.Config.NullLs
+    opts = {
+      ---Null-ls formatters and options passed to `formatter:with(options)`.
+      ---@type table<string,table>
+      formatters = {
+        stylua = {},
+      },
+      ---Null-ls linters.
+      ---@type table<string,table|boolean>
+      linters = {
+        flake8 = {},
+      },
+    },
+    ---@param opts DeltaVim.Config.NullLs|table
+    config = function(_, opts)
       local builtins = require("null-ls").builtins
-      local opts = Config.lsp
       ---@type any[]
-      local sources = {}
+      local sources = Util.concat({}, opts.sources or {})
       for k, v in pairs(Util.copy_as_table(opts.formatters)) do
         table.insert(sources, builtins.formatting[k]:with(v))
       end
       for k, v in pairs(Util.copy_as_table(opts.linters)) do
         table.insert(sources, builtins.diagnostics[k]:with(v))
       end
-      return { sources = sources }
+      require("null-ls").setup(Util.merge({}, opts, { sources = sources }))
     end,
   },
 

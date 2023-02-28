@@ -1,11 +1,13 @@
-local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
 local M = {}
 
+M.AUTOFORMAT = true
+
 ---@param buffer integer
-function M.format(buffer)
+---@param opts? table
+function M.format(buffer, opts)
   local ft = vim.bo[buffer].filetype
   local methods = require("null-ls.methods").internal
   -- stylua: ignore
@@ -16,15 +18,18 @@ function M.format(buffer)
       if use_nls then return client.name == "null-ls" end
       return client.name ~= "null-ls"
     end,
-  }, Config.lsp.format or {}))
+  }, opts or {}))
 end
+
+function M.toggle_autoformat() M.AUTOFORMAT = not M.AUTOFORMAT end
 
 ---@param client any
 ---@param buffer integer
-function M.autoformat(client, buffer)
+---@param opts? table
+function M.autoformat(client, buffer, opts)
   -- Don't format if client disabled it
   if
-    Config.lsp.autoformat
+    M.AUTOFORMAT
     and client.config
     and client.config.capabilities
     and client.config.capabilities["documentFormattingProvider"] == false
@@ -35,7 +40,7 @@ function M.autoformat(client, buffer)
   if client.server_capabilities["documentFormattingProvider"] then
     Util.autocmd(
       "BufWritePre",
-      function() M.format(buffer) end,
+      function() M.format(buffer, opts) end,
       { buffer = buffer }
     )
   end

@@ -1,7 +1,5 @@
 -- TODO: add plugin keymaps
 
-local Config = require("deltavim.config")
-local Log = require("deltavim.core.log")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
@@ -51,10 +49,6 @@ function M.setup()
     end
   end
 
-  local function toggle_autoformat()
-    Config.lsp.autoformat = not Config.lsp.autoformat
-  end
-
   local function toggle_line_number()
     toggle_boolean("relativenumber")
     toggle_boolean("number")
@@ -99,7 +93,7 @@ function M.setup()
     -- Buffer
     { "@buffer.switch_back", "<Cmd>e #<CR>", "Switch buffer back" },
     -- Toggle UI/options
-    { "@toggle.autoformat", toggle_autoformat, "Toggle autoformat" },
+    { "@toggle.autoformat", require("deltavim.core.lsp").toggle_autoformat, "Toggle autoformat" },
     { "@toggle.spell", toggle("spell"), "Toggle spelling" },
     { "@toggle.wrap", toggle("wrap"), "Toggle word wrap" },
     { "@toggle.line_number", toggle_line_number, "Toggle line number" },
