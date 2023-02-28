@@ -1,5 +1,3 @@
--- TODO: add plugin keymaps
-
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
@@ -7,6 +5,7 @@ local M = {}
 
 ---@type DeltaVim.Keymap[]
 M.DEFAULT = {
+  -- enhanced
   { true, "@enhanced.j" },
   { true, "@enhanced.k" },
   { true, "@enhanced.n" },
@@ -14,6 +13,162 @@ M.DEFAULT = {
   { true, "@enhanced.shl" },
   { true, "@enhanced.shr" },
   { true, "@enhanced.esc" },
+  -- window
+  { "<C-h>", "@window.move_left" },
+  { "<C-j>", "@window.move_down" },
+  { "<C-k>", "@window.move_up" },
+  { "<C-l>", "@window.move_right" },
+  { "<C-Up>", "@window.increase_height" },
+  { "<C-Down>", "@window.decrease_height" },
+  { "<C-Left>", "@window.decrease_width" },
+  { "<C-Right>", "@window.increase_width" },
+  { "<Leader>ww", "@window.switch_back" },
+  { "<Leader>wd", "@window.close" },
+  { "<Leader>w-", "@window.split" },
+  { "<Leader>w|", "@window.vsplit" },
+  { "<Leader>-", "@window.split" },
+  { "<Leader>|", "@window.vsplit" },
+  -- ui
+  { "<Leader>ur", "@ui.refresh" },
+  { "<Leader>l", "@ui.lazy" },
+  { "<Leader>ui", "@util.show_pos" },
+  { "<Leader>uC", "@search.colorschemes" },
+  -- toggle
+  { "<Leader>uf", "@toggle.autoformat" },
+  { "<Leader>us", "@toggle.spell" },
+  { "<Leader>uw", "@toggle.wrap" },
+  { "<Leader>ul", "@toggle.line_number" },
+  { "<Leader>ud", "@toggle.diagnostics" },
+  { "<Leader>uc", "@toggle.conceallevel" },
+  -- tab
+  { "<Leader><Tab>l", "@tab.last" },
+  { "<Leader><Tab>f", "@tab.first" },
+  { "<Leader><Tab><Tab>", "@tab.new" },
+  { "<Leader><Tab>d", "@tab.close" },
+  { "<Leader><Tab>]", "@tab.next" },
+  { "<Leader><Tab>[", "@tab.prev" },
+  -- cmp/snippet
+  { "<Tab>", "@snippet.next_node" },
+  { "<S-Tab>", "@snippet.prev_node" },
+  { "<Down>", "@cmp.next_item" },
+  { "<Up>", "@cmp.prev_item" },
+  { "<C-y>", "@cmp.confirm" },
+  { "<C-n>", "@cmp.next_item" },
+  { "<C-p>", "@cmp.prev_item" },
+  { "<C-b>", "@cmp.scroll_up" },
+  { "<C-f>", "@cmp.scroll_down" },
+  { "<C-Space>", "@cmp.complete" },
+  { "<C-e>", "@cmp.abort" },
+  { "<CR>", "@cmp.confirm" },
+  -- surround
+  { "gza", "@surround.add" },
+  { "gzd", "@surround.delete" },
+  { "gzf", "@surround.find" },
+  { "gzF", "@surround.find_left" },
+  { "gzh", "@surround.highlight" },
+  { "gzr", "@surround.replace" },
+  { "gzn", "@surround.update_n_lines" },
+  -- comment
+  { "gc", "@comment.toggle" },
+  { "gcc", "@comment.toggle_line" },
+  { "<Leader>fe", "@explorer.toggle" },
+  { "<Leader>fE", "@explorer.toggle_cwd" },
+  { "<Leader>e", "@explorer.toggle" },
+  { "<Leader>E", "@explorer.toggle_cwd" },
+  -- file/find
+  -- TODO: float_term
+  { "<Leader>fn", "@util.new_file" },
+  { "<Leader><Leader>", "@search.files" },
+  { "<Leader>fb", "@search.buffers" },
+  { "<Leader>ff", "@search.files" },
+  { "<Leader>fF", "@search.files_cwd" },
+  { "<Leader>fr", "@search.oldfiles" },
+  -- search
+  { "<Leader>,", "@search.buffers_all" },
+  { "<Leader>:", "@search.command_history" },
+  { "<Leader>sr", "@search.replace" },
+  { "<Leader>sa", "@search.autocommand" },
+  { "<Leader>sb", "@search.current_buffer" },
+  { "<Leader>sc", "@search.command_history" },
+  { "<Leader>sC", "@search.commands" },
+  { "<Leader>sd", "@search.workspace_diagnostics" },
+  { "<Leader>sg", "@search.grep" },
+  { "<Leader>sG", "@search.grep_cwd" },
+  { "<Leader>sh", "@search.help_tags" },
+  { "<Leader>sH", "@search.highlights" },
+  { "<Leader>sk", "@search.keymaps" },
+  { "<Leader>sm", "@search.marks" },
+  { "<Leader>sM", "@search.man_pages" },
+  { "<Leader>so", "@search.options" },
+  { "<Leader>sR", "@search.resume" },
+  { "<Leader>sw", "@search.words" },
+  { "<Leader>sW", "@search.words_cwd" },
+  -- git
+  -- TODO: lazygit
+  { "]h", "@goto.next_hunk" },
+  { "[h", "@goto.prev_hunk" },
+  { "ih", "@select.hunk" },
+  { "<Leader>gc", "@search.git_comments" },
+  { "<Leader>gs", "@search.git_status" },
+  -- hunk
+  { "<Leader>ghs", "@git.stage_hunk" },
+  { "<Leader>ghr", "@git.reset_hunk" },
+  { "<Leader>ghS", "@git.stage_buffer" },
+  { "<Leader>ghR", "@git.reset_buffer" },
+  { "<Leader>ghu", "@git.undo_stage_hunk" },
+  { "<Leader>ghp", "@git.preview_hunk" },
+  { "<Leader>ghb", "@git.blame_line_full" },
+  { "<Leader>ghd", "@git.diff_this" },
+  { "<Leader>ghD", "@git.diff_this_last" },
+  -- goto
+  { "[[", "@goto.prev_reference" },
+  { "]]", "@goto.next_reference" },
+  -- quickfix
+  { "<Leader>xx", "@quickfix.document_diagnostics" },
+  { "<Leader>xX", "@quickfix.workspace_diagnostics" },
+  { "<Leader>xl", "@quickfix.location_list" },
+  { "<Leader>xq", "@quickfix.quickfix_list" },
+  -- todo
+  { "[t", "@goto.prev_todo" },
+  { "]t", "@goto.next_todo" },
+  { "<Leader>xt", "@quickfix.todo" },
+  { "<Leader>xT", "@quickfix.todo_fixme" },
+  { "<Leader>st", "@search.todo" },
+  -- treesitter
+  { "<C-Space>", "@treesitter.increase_selection" },
+  { "<BS>", "@treesitter.decrease_selection" },
+  -- notify
+  { "<Leader>un", "@notify.clear" },
+  { "<S-Enter>", "@notify.redirect" },
+  { "<Leader>snl", "@notify.last" },
+  { "<Leader>snh", "@notify.history" },
+  { "<Leader>sna", "@notify.all" },
+  -- buffer
+  { "<S-h>", "@buffer.prev" },
+  { "<S-l>", "@buffer.next" },
+  { "[b", "@buffer.prev" },
+  { "]b", "@buffer.next" },
+  { "<Leader>bb", "@buffer.switch_back" },
+  { "<Leader>`", "@buffer.switch_back" },
+  { "<Leader>bd", "@buffer.close" },
+  { "<Leader>bD", "@buffer.close_force" },
+  { "<Leader>bp", "@buffer.toggle_pin" },
+  { "<Leader>bP", "@buffer.close_ungrouped" },
+  -- session
+  { "<Leader>qq", "@session.quit" },
+  { "<Leader>qs", "@session.restore" },
+  { "<Leader>ql", "@session.restore_last" },
+  { "<Leader>qd", "@session.stop" },
+  -- util
+  { "<Esc><Esc>", "@util.escape_terminal" },
+  { "<A-j>", "@util.move_line_down" },
+  { "<A-K>", "@util.move_line_up" },
+  { "gw", "@util.search_this" },
+  -- undo break points
+  { ",", "@util.undo_break_point" },
+  { ".", "@util.undo_break_point" },
+  { ";", "@util.undo_break_point" },
+  { "<C-s>", "@util.save" },
 }
 
 ---@type DeltaVim.Keymaps
@@ -110,7 +265,8 @@ function M.setup()
     { "@util.save", "<Cmd>w<CR><Esc>", "Save file", mode = { "n", "i", "x" } },
     { "@util.new_file", "<Cmd>enew<CR>", "New file" },
     { "@util.search_this", "*N", "Search this word", mode = { "n", "x" } },
-    { "@util.escape", "<Esc>", "Escape", mode = "i" },
+    { "@util.escape_insert", "<Esc>", "Enter normal mode", mode = "i" },
+    { "@util.escape_terminal", "<C-\\><C-n>", "Enter normal mode", mode = "t" },
     { "@util.undo_break_point", with = undo_break_point, },
     -- Move line up & down
     { "@util.move_line_down", "<Cmd>m .+1<CR>==", "Move line down", mode = "n" },

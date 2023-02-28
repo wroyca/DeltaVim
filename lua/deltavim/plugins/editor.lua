@@ -151,6 +151,7 @@ return {
         { "@search.references", builtin("lsp_references"), "References" },
         { "@search.implementations", builtin("lsp_implementations"), "Implementations" },
         { "@search.type_definitions", builtin("lsp_type_definitions"), "Type definitions" },
+        -- TODO: PR to LazyVim
         { "@search.document_diagnostics", builtin("diagnostics", { bufnr = 0 }), "Document diagnostics" },
         { "@search.workspace_diagnostics", builtin("diagnostics"), "Workspace diagnostics" },
         { "@search.document_symbols", builtin("lsp_document_symbols", symbols), "Document symbols" },
@@ -276,11 +277,12 @@ return {
       ---@param buffer integer
       local function on_attach(buffer)
         ---@param name string
-        local function gs(name, ...)
-          local args = { ... }
-          return function() require("gitsigns")[name](unpack(args)) end
+        ---@param args? any
+        local function gs(name, args)
+          return function() require("gitsigns")[name](args) end
         end
 
+        local full = { full = true }
         -- stylua: ignore
         ---@type DeltaVim.Keymap.Presets
         local presets = {
@@ -292,6 +294,7 @@ return {
           { "@git.undo_stage_hunk", gs("undo_stage_hunk"), "Undo stage hunk" },
           { "@git.preview_hunk", gs("preview_hunk"), "Preview hunk" },
           { "@git.blame_line", gs("blame_line"), "Blame line" },
+          { "@git.blame_line_full", gs("blame_line", full), "Blame line" },
           { "@git.diffthis", gs("diffthis"), "Diff this" },
           { "@git.diffthis_last", gs("diffthis", "~"), "Diff this (last)" },
           -- goto
@@ -419,6 +422,7 @@ return {
       local presets = {
         { "@goto.next_todo", todo("jump_next"), "Next todo" },
         { "@goto.prev_todo", todo("jump_prev"), "Prev todo" },
+        -- TODO: PR to LazyVim
         { "@search.todo", telescope(), "Todo" },
         { "@search.todo_fixme", telescope(keywords), "Todo/Fix/Fixme" },
         { "@quickfix.todo", trouble(), "Todo" },

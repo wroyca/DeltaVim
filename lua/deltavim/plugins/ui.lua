@@ -58,7 +58,7 @@ return {
       local presets = {
         { "@buffer.next", "<Cmd>BufferLineCycleNext<CR>", "Next buffer" },
         { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
-        { "@buffer.pin", "<Cmd>BufferLineTogglePin<CR>", desc = "Toggle pin" },
+        { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
         { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
         { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
         { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
@@ -301,6 +301,7 @@ return {
         { "@notify.last", cmd("last"), "Last notification" },
         { "@notify.history", cmd("history"), "Notification history" },
         { "@notify.all", cmd("all"), "All notifications" },
+        -- TODO: rename to `scroll_down_noice`
         { "@cmp.scroll_down", with = scroll(4, "Scroll down") },
         { "@cmp.scroll_up", with = scroll(-4, "Scroll up") },
       }
@@ -369,6 +370,8 @@ return {
       dashboard.opts.layout[1].val = 8
       return dashboard
     end,
+    -- TODO: add @ui.alpha
+    -- keys = {},
     config = function(_, dashboard)
       -- Close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then

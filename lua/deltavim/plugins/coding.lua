@@ -34,28 +34,14 @@ return {
         end
       end
 
+      local function jump(dir) require("luasnip").jump(dir) end
+
       return Keymap.Collector()
         :map({
-          {
-            "@snippet.next_node",
-            with = jump_or_fallback(1),
-            mode = "i",
-          },
-          {
-            "@snippet.next_node",
-            function() require("luasnip").jump(1) end,
-            mode = "s",
-          },
-          {
-            "@snippet.prev_node",
-            with = jump_or_fallback(-1),
-            mode = "i",
-          },
-          {
-            "@snippet.prev_node",
-            function() require("luasnip").jump(-1) end,
-            mode = "s",
-          },
+          { "@snippet.next_node", with = jump_or_fallback(1), mode = "i" },
+          { "@snippet.next_node", jump(1), mode = "s" },
+          { "@snippet.prev_node", with = jump_or_fallback(-1), mode = "i" },
+          { "@snippet.prev_node", jump(-1), mode = "s" },
         })
         :collect_lazy()
     end,
@@ -161,6 +147,7 @@ return {
       }
     end,
     config = function(_, opts)
+      -- TODO: PR to LazyVim
       local cmp = require("cmp")
       local sources = cmp.config.sources(opts.sources or {})
       cmp.setup(Util.merge({}, opts, { sources = sources }))
