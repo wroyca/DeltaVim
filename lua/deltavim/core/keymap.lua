@@ -291,7 +291,7 @@ end
 function Collector:collect_lhs_table(init)
   local tbl = init or {}
   for _, keymap in ipairs(self:collect()) do
-    tbl[keymap[1]] = tbl[keymap[2]]
+    tbl[keymap[1]] = keymap[2]
   end
   return tbl
 end
@@ -301,7 +301,7 @@ end
 function Collector:collect_rhs_table(init)
   local tbl = init or {}
   for _, keymap in ipairs(self:collect()) do
-    tbl[keymap[2]] = tbl[keymap[1]]
+    tbl[keymap[2]] = keymap[1]
   end
   return tbl
 end
