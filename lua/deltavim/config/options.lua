@@ -1,90 +1,88 @@
-local Config = require("deltavim.config")
 local Util = require("deltavim.util")
-
----@alias DeltaVim.Options fun()
 
 local M = {}
 
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
----@type DeltaVim.Options
-M.DEFAULT = function()
-  local g = vim.g
-  local opt = vim.opt
-
-  g.mapleader = " "
-  g.maplocalleader = " "
-  -- Fix markdown indentation settings
-  g.markdown_recommended_style = 0
-
-  opt.autowrite = true -- Enable auto write
-  opt.clipboard = "unnamedplus" -- Sync with system clipboard
-  opt.completeopt = "menu,menuone,noselect"
-  opt.conceallevel = 3 -- Hide * markup for bold and italic
-  opt.confirm = true -- Confirm to save changes before exiting modified buffer
-  opt.cursorline = true -- Enable highlighting of the current line
-  opt.expandtab = true -- Use spaces instead of tabs
-  opt.formatoptions = "jcroqlnt" -- tcqj
-  opt.grepformat = "%f:%l:%c:%m"
-  opt.grepprg = "rg --vimgrep"
-  opt.ignorecase = true -- Ignore case
-  opt.inccommand = "nosplit" -- preview incremental substitute
-  opt.laststatus = 0
-  opt.list = true -- Show some invisible characters (tabs...
-  opt.mouse = "a" -- Enable mouse mode
-  opt.number = true -- Print line number
-  opt.pumblend = 10 -- Popup blend
-  opt.pumheight = 10 -- Maximum number of entries in a popup
-  opt.relativenumber = true -- Relative line numbers
-  opt.scrolloff = 4 -- Lines of context
-  opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize" }
-  opt.shiftround = true -- Round indent
-  opt.shiftwidth = 2 -- Size of an indent
-  opt.shortmess:append({ W = true, I = true, c = true })
-  opt.showmode = false -- Dont show mode since we have a statusline
-  opt.sidescrolloff = 8 -- Columns of context
-  opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
-  opt.smartcase = true -- Don't ignore case with capitals
-  opt.smartindent = true -- Insert indents automatically
-  opt.spelllang = { "en" }
-  opt.splitbelow = true -- Put new windows below current
-  opt.splitright = true -- Put new windows right of current
-  opt.tabstop = 2 -- Number of spaces tabs count for
-  opt.termguicolors = true -- True color support
-  opt.timeoutlen = 300
-  opt.undofile = true
-  opt.undolevels = 10000
-  opt.updatetime = 200 -- Save swap file and trigger CursorHold
-  opt.wildmode = "longest:full,full" -- Command-line completion mode
-  opt.winminwidth = 5 -- Minimum window width
-  opt.wrap = false -- Disable line wrap
-
-  if vim.fn.has("nvim-0.9.0") == 1 then
-    opt.splitkeep = "screen"
-    opt.shortmess:append({ C = true })
-  end
-end
+---@class DeltaVim.Options
+M.DEFAULT = {
+  g = {
+    mapleader = " ",
+    maplocalleader = " ",
+    markdown_recommended_style = 0, -- Fix markdown indentation settings
+  },
+  opt = {
+    autowrite = true, -- Enable auto write
+    clipboard = "unnamedplus", -- Sync with system clipboard
+    completeopt = "menu,menuone,noselect",
+    conceallevel = 3, -- Hide * markup for bold and italic
+    confirm = true, -- Confirm to save changes before exiting modified buffer
+    cursorline = true, -- Enable highlighting of the current line
+    expandtab = true, -- Use spaces instead of tabs
+    formatoptions = "jcroqlnt", -- tcqj
+    grepformat = "%f:%l:%c:%m",
+    grepprg = "rg ,--vimgrep",
+    ignorecase = true, -- Ignore case
+    inccommand = "nosplit", -- preview incremental substitute
+    laststatus = 0,
+    list = true, -- Show some invisible characters (tabs...
+    mouse = "a", -- Enable mouse mode
+    number = true, -- Print line number
+    pumblend = 10, -- Popup blend
+    pumheight = 10, -- Maximum number of entries in a popup
+    relativenumber = true, -- Relative line numbers
+    scrolloff = 4, -- Lines of context
+    sessionoptions = { "buffers", "curdir", "tabpages", "winsize" },
+    shiftround = true, -- Round indent
+    shiftwidth = 2, -- Size of an indent
+    shortmess = {},
+    showmode = false, -- Dont show mode since we have a statusline
+    sidescrolloff = 8, -- Columns of context
+    signcolumn = "yes", -- Always show the signcolumn, otherwise it would shift the text each time
+    smartcase = true, -- Don't ignore case with capitals
+    smartindent = true, -- Insert indents automatically
+    spelllang = { "en" },
+    splitbelow = true, -- Put new windows below current
+    splitright = true, -- Put new windows right of current
+    tabstop = 2, -- Number of spaces tabs count for
+    termguicolors = true, -- True color support
+    timeoutlen = 300,
+    undofile = true,
+    undolevels = 10000,
+    updatetime = 200, -- Save swap file and trigger CursorHold
+    wildmode = "longest:full,full", -- Command-line completion mode
+    winminwidth = 5, -- Minimum window width
+    wrap = false, -- Disable line wrap
+  },
+}
 
 ---@type DeltaVim.Options
 local CONFIG
 
 function M.init()
+  -- Other options.
+  vim.opt.shortmess:append({ W = true, I = true, c = true })
+  if vim.fn.has("nvim-0.9.0") == 1 then
+    vim.opt.splitkeep = "screen"
+    vim.opt.shortmess:append({ C = true })
+  end
+
   local cfg = Util.load_config("config.options")
   if type(cfg) == "function" then
-    CONFIG = function() cfg(M.DEFAULT) end
+    CONFIG = cfg(M.DEFAULT)
   elseif cfg == false then
-    CONFIG = function() end
+    CONFIG = {}
   else
-    CONFIG = function()
-      M.DEFAULT()
-      for key, val in pairs(cfg or {}) do
-        for k, v in pairs(val) do
-          vim[key][k] = v
-        end
-      end
-    end
+    CONFIG = Util.deep_merge({}, M.DEFAULT, cfg or {})
   end
 end
 
-function M.setup() CONFIG() end
+function M.setup()
+  for field, vals in pairs(CONFIG) do
+    local opts = vim[field]
+    for k, v in pairs(vals) do
+      opts[k] = v
+    end
+  end
+end
 
 return M
