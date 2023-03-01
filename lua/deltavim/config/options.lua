@@ -34,7 +34,6 @@ M.DEFAULT = {
     sessionoptions = { "buffers", "curdir", "tabpages", "winsize" },
     shiftround = true, -- Round indent
     shiftwidth = 2, -- Size of an indent
-    shortmess = {},
     showmode = false, -- Dont show mode since we have a statusline
     sidescrolloff = 8, -- Columns of context
     signcolumn = "yes", -- Always show the signcolumn, otherwise it would shift the text each time
@@ -67,12 +66,10 @@ function M.init()
   end
 
   local cfg = Util.load_config("config.options")
-  if type(cfg) == "function" then
-    CONFIG = cfg(M.DEFAULT)
-  elseif cfg == false then
+  if cfg == false then
     CONFIG = {}
   else
-    CONFIG = Util.deep_merge({}, M.DEFAULT, cfg or {})
+    CONFIG = Util.resolve_value(cfg or {}, M.DEFAULT, Util.deep_merge)
   end
 end
 

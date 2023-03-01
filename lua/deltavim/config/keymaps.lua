@@ -200,16 +200,14 @@ M.DEFAULT = {
 }
 
 ---@type DeltaVim.Keymap.Collector
-local KEYMAPS
+local CONFIG
 
 function M.init()
   local cfg = Util.load_config("config.keymaps")
-  if type(cfg) == "function" then
-    KEYMAPS = Keymap.load(cfg(M.DEFAULT))
-  elseif cfg == false then
-    KEYMAPS = Keymap.Collector()
+  if cfg == false then
+    CONFIG = Keymap.Collector()
   else
-    KEYMAPS = Keymap.load(Util.concat({}, M.DEFAULT, cfg or {}))
+    CONFIG = Keymap.load(Util.resolve_value(cfg or {}, M.DEFAULT, Util.concat))
   end
 end
 
@@ -322,7 +320,7 @@ function M.setup()
   if vim.fn.has("nvim-0.9.0") == 1 then
     table.insert(presets, { "@util.show_pos", vim.show_pos, "Show position" })
   end
-  KEYMAPS:map(presets):collect_and_set()
+  CONFIG:map(presets):collect_and_set()
 end
 
 return M

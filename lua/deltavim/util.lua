@@ -334,4 +334,16 @@ function M.lazy_notify(timeout)
   timer:start(timeout, 0, replay)
 end
 
+---@generic T
+---@param value T[]|fun(default:T[]):T[]
+---@param default T[]
+---@param update fun(init:T,default:T,new:T):T
+function M.resolve_value(value, default, update)
+  if type(value) == "function" then
+    return value(default)
+  else
+    return update({}, default, value or {})
+  end
+end
+
 return M
