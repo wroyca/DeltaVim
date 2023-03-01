@@ -33,6 +33,16 @@ function M.keymap(mode, lhs, rhs, opts)
   vim.keymap.set(mode, lhs, rhs, o)
 end
 
+---@param key string
+---@param mode? string
+function M.feedkey(key, mode)
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes(key, true, false, true),
+    mode or "n",
+    false
+  )
+end
+
 ---@type table<string,{[1]:any}>
 M.AUTOCMD_OPTS = {
   group = {},

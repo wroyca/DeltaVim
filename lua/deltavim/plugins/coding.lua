@@ -13,11 +13,10 @@ return {
     },
     keys = function()
       ---@param dir integer
+      ---@return DeltaVim.Keymap.Map
       local function jump_or_fallback(dir)
-        ---@param src DeltaVim.Keymap.Input
-        ---@return DeltaVim.Keymap ...
         return function(src)
-          local key = src[1]
+          local key = src[1] --[[@as string]]
           return {
             key,
             function()
@@ -25,22 +24,23 @@ return {
               if luasnip.locally_jumpable(dir) then
                 luasnip.jump(dir)
               else
-                return key
+                Util.feedkey(key)
               end
             end,
             mode = "i",
-            expr = true,
           }
         end
       end
 
-      local function jump(dir) require("luasnip").jump(dir) end
+      local function jump(dir)
+        return function() require("luasnip").jump(dir) end
+      end
 
       return Keymap.Collector()
         :map({
-          { "@snippet.next_node", with = jump_or_fallback(1), mode = "i" },
+          { "@snippet.next_node", with = jump_or_fallback(1) },
           { "@snippet.next_node", jump(1), mode = "s" },
-          { "@snippet.prev_node", with = jump_or_fallback(-1), mode = "i" },
+          { "@snippet.prev_node", with = jump_or_fallback(-1) },
           { "@snippet.prev_node", jump(-1), mode = "s" },
         })
         :collect_lazy()
