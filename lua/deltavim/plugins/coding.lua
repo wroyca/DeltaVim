@@ -6,6 +6,7 @@ return {
   -- Snippets
   {
     "L3MON4D3/LuaSnip",
+    build = "make install_jsregexp",
     dependencies = { "friendly-snippets" },
     opts = {
       history = true,
@@ -93,7 +94,7 @@ return {
         local luasnip = require("luasnip")
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
+        elseif luasnip.locally_jumpable(-1) then
           luasnip.jump(-1)
         else
           fallback()
@@ -124,12 +125,12 @@ return {
           expand = function(args) require("luasnip").lsp_expand(args.body) end,
         },
         mapping = mappings,
-        sources = {
+        sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
           { name = "buffer" },
           { name = "path" },
-        },
+        }),
         formatting = {
           format = function(_, item)
             local icons = Config.icons.kinds
@@ -145,12 +146,6 @@ return {
           },
         },
       }
-    end,
-    config = function(_, opts)
-      -- TODO: PR to LazyVim
-      local cmp = require("cmp")
-      local sources = cmp.config.sources(opts.sources or {})
-      cmp.setup(Util.merge({}, opts, { sources = sources }))
     end,
   },
 
@@ -190,7 +185,10 @@ return {
           { "@surround.update_n_lines", "update_n_lines" },
         })
         :collect_rhs_table()
-      return { mappings = mappings }
+      return {
+        mappings = mappings,
+        search_method = "cover",
+      }
     end,
     config = function(_, opts) require("mini.surround").setup(opts) end,
   },
@@ -243,6 +241,7 @@ return {
             i = "@class.inner",
           }),
         },
+        search_method = "cover",
       }
     end,
     config = function(_, opts) require("mini.ai").setup(opts) end,

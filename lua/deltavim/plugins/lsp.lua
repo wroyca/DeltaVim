@@ -97,15 +97,6 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      -- Temp fix for lspconfig rename
-      -- https://github.com/neovim/nvim-lspconfig/pull/2439
-      -- TODO: remove this patch
-      local mappings = require("mason-lspconfig.mappings.server")
-      if not mappings.lspconfig_to_package.lua_ls then
-        mappings.lspconfig_to_package.lua_ls = "lua-language-server"
-        mappings.package_to_lspconfig["lua-language-server"] = "lua_ls"
-      end
-
       local mlsp = require("mason-lspconfig")
       local available = mlsp.get_available_servers()
 
@@ -139,6 +130,7 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "mason.nvim" },
     ---@class DeltaVim.Config.NullLs
+    --TODO: PR to LazyVim
     opts = {
       ---Null-ls formatters and options passed to `formatter:with(options)`.
       ---@type table<string,table>
@@ -151,6 +143,13 @@ return {
         flake8 = {},
       },
     },
+    keys = function()
+      return Keymap.Collector()
+        :map({
+          { "@ui.nullls_info", "<Cmd>NullLsInfo<CR>", "Null-ls info" },
+        })
+        :collect_lazy()
+    end,
     ---@param opts DeltaVim.Config.NullLs|table
     config = function(_, opts)
       local builtins = require("null-ls").builtins

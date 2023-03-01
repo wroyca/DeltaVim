@@ -36,7 +36,7 @@ local Util = require("deltavim.util")
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
 ---@field [1] string
----Events or a function return a autocmd
+---Events
 ---@field [2]? string|string[]
 ---Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string

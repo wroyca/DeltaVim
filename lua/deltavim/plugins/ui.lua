@@ -152,7 +152,6 @@ return {
               path = 1,
               symbols = { modified = "  ", readonly = "", unnamed = "" },
             },
-            -- TODO: auto hide
             {
               function() return require("nvim-navic").get_location() end,
               cond = function() return require("nvim-navic").is_available() end,
@@ -162,17 +161,13 @@ return {
             {
               function() return require("noice").api.status.command.get() end,
               cond = function()
-                return package.loaded["noice"]
-                  and require("noice").api.status.command.has()
+                return require("noice").api.status.command.has()
               end,
               color = fg("Statement"),
             },
             {
               function() return require("noice").api.status.mode.get() end,
-              cond = function()
-                return package.loaded["noice"]
-                  and require("noice").api.status.mode.has()
-              end,
+              cond = function() return require("noice").api.status.mode.has() end,
               color = fg("Constant"),
             },
             {
@@ -229,24 +224,25 @@ return {
     opts = {
       symbol = "│",
       options = { try_as_border = true },
-      disabled = {
-        "help",
-        "alpha",
-        "dashboard",
-        "neo-tree",
-        "Trouble",
-        "lazy",
-        "mason",
-      },
     },
-    config = function(_, opts)
+    init = function()
       Util.autocmd(
         "FileType",
         function() vim.b.miniindentscope_disable = true end,
-        { pattern = opts.disabled }
+        {
+          pattern = {
+            "help",
+            "alpha",
+            "dashboard",
+            "neo-tree",
+            "Trouble",
+            "lazy",
+            "mason",
+          },
+        }
       )
-      require("mini.indentscope").setup(opts)
     end,
+    config = function(_, opts) require("mini.indentscope").setup(opts) end,
   },
 
   -- Noicer UI
@@ -273,24 +269,6 @@ return {
       end
 
       local function redirect() require("noice").redirect(vim.fn.getcmdline()) end
-
-      ---@param offset integer
-      ---@param desc string
-      ---@return DeltaVim.Keymap.Map
-      local function scroll(offset, desc)
-        return function(src)
-          local key = src[1]
-          return {
-            key,
-            function()
-              if not require("noice.lsp").scroll(offset) then return key end
-            end,
-            desc,
-            mode = { "i", "s" },
-            expr = true,
-          }
-        end
-      end
 
       -- stylua: ignore
       ---@type DeltaVim.Keymap.Presets
@@ -353,8 +331,8 @@ return {
         button("r", " ", " Recent files", ":Telescope oldfiles <CR>"),
         button("g", " ", " Find text", telescope("live_grep")),
         button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
-        button("s", "勒", " Restore session", restore),
-        button("l", "鈴", " Lazy", "<Cmd>Lazy<CR>"),
+        button("s", "󰑓 ", " Restore session", restore),
+        button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),
         button("q", " ", " Quit", "<Cmd>qa<CR>"),
       }
       dashboard.section.buttons.opts.hl = "AlphaButtons"

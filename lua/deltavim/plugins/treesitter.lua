@@ -27,6 +27,7 @@ return {
       return {
         ensure_installed = {
           "bash",
+          "c",
           "help",
           "html",
           "javascript",
@@ -45,15 +46,13 @@ return {
         highlight = { enable = true },
         indent = { enable = true, disable = { "python" } },
         context_commentstring = { enable = true, enable_autocmd = false },
-        incremental_selection = {
-          enable = true,
-          keymaps = mappings,
-        },
+        incremental_selection = { enable = true, keymaps = mappings },
       }
     end,
     config = function(_, opts) require("nvim-treesitter.configs").setup(opts) end,
   },
 
+  -- Text-objects queries used by other plugins like mini.ai
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
     init = function()

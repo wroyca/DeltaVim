@@ -6,6 +6,25 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
+    deactivate = function() vim.cmd("Neotree close") end,
+    init = function()
+      vim.g.neo_tree_remove_legacy_commands = 1
+      if vim.fn.argc() == 1 then
+        local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
+        if stat and stat.type == "directory" then require("neo-tree") end
+      end
+    end,
+    opts = {
+      filesystem = {
+        bind_to_cwd = false,
+        follow_current_file = true,
+      },
+      window = {
+        mappings = {
+          ["<space>"] = "none",
+        },
+      },
+    },
     keys = function()
       ---@param dir fun():string
       ---@return fun()
@@ -33,25 +52,6 @@ return {
       }
       return Keymap.Collector():map(presets):collect_lazy()
     end,
-    deactivate = function() vim.cmd("Neotree close") end,
-    init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
-      if vim.fn.argc() == 1 then
-        local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
-        if stat and stat.type == "directory" then require("neo-tree") end
-      end
-    end,
-    opts = {
-      filesystem = {
-        bind_to_cwd = false,
-        follow_current_file = true,
-      },
-      window = {
-        mappings = {
-          ["<space>"] = "none",
-        },
-      },
-    },
   },
 
   -- TODO: PR to LazyVim
@@ -60,6 +60,7 @@ return {
     keys = function()
       ---@param opts fun():table
       local function create(opts)
+        -- TODO: vim.v.count
         return function()
           require("toggleterm.terminal").Terminal:new(opts()):open()
         end
@@ -255,6 +256,28 @@ return {
 
   -- Easily jump to any location and enhanced f/t motions for Leap
   {
+    "ggandor/leap.nvim",
+    keys = function()
+      ---@param name string
+      ---@param key string
+      ---@param desc string
+      local function leap(name, key, desc)
+        return { name, key, desc, mode = { "n", "x", "o" }, remap = false }
+      end
+      -- stylua: ignore
+      ---@type DeltaVim.Keymap.Presets
+      local presets = {
+        leap("@leap.forward_to", "<Plug>(leap-forward-to)", "Leap forward to"),
+        leap("@leap.backward_to", "<Plug>(leap-backward-to)", "Leap backward to"),
+        leap("@leap.forward_till", "<Plug>(leap-forward-till)", "Leap forward till"),
+        leap("@leap.backward_till", "<Plug>(leap-backward-till)", "Leap backward till"),
+        leap("@leap.from_window", "<Plug>(leap-from-window)", "Leap from window"),
+      }
+      return Keymap.Collector():map(presets):collect_lazy()
+    end,
+    config = function(_, opts) Util.merge(require("leap").opts, opts) end,
+  },
+  {
     "ggandor/flit.nvim",
     keys = function()
       local keys = {}
@@ -263,23 +286,7 @@ return {
       end
       return keys
     end,
-    opts = { labeled_modes = "nx" },
-  },
-  {
-    "ggandor/leap.nvim",
-    keys = {
-      { "s", mode = { "n", "x", "o" }, desc = "Leap forward to" },
-      { "S", mode = { "n", "x", "o" }, desc = "Leap backward to" },
-      { "x", mode = { "n", "x", "o" }, desc = "Leap exclusive forward to" },
-      { "X", mode = { "n", "x", "o" }, desc = "Leap exclusive backward to" },
-      { "gs", mode = { "n", "x", "o" }, desc = "Leap from windows" },
-    },
-    config = function(_, opts)
-      local leap = require("leap")
-      Util.deep_merge(leap.opts, opts)
-      -- TODO: no map x
-      leap.add_default_mappings(true)
-    end,
+    opts = { labeled_modes = "nxo" },
   },
 
   -- Which-key
@@ -359,8 +366,8 @@ return {
         signs = {
           add = { text = "▎" },
           change = { text = "▎" },
-          delete = { text = "契" },
-          topdelete = { text = "契" },
+          delete = { text = "" },
+          topdelete = { text = "" },
           changedelete = { text = "▎" },
           untracked = { text = "▎" },
         },
@@ -419,8 +426,21 @@ return {
         return function() require("trouble").toggle({ mode = mode }) end
       end
 
+      ---@param next boolean
+      local function goto_qf(next)
+        local f = next and "next" or "previous"
+        return function()
+          local trouble = require("trouble")
+          if trouble.is_open() then
+            trouble[f]({ skip_groups = true, jump = true })
+          end
+        end
+      end
+
       -- stylua: ignore
       local presets = {
+        { "@goto.prev_quickfix", goto_qf(false), "Prev quickfix" },
+        { "@goto.next_quickfix", goto_qf(true), "Next quickfix" },
         { "@quickfix.definitions", tb("lsp_definitions"), "Definitions" },
         { "@quickfix.document_diagnostics", tb("document_diagnostics"), "Document diagnostics" },
         { "@quickfix.implementations", tb("lsp_implementations"), "Implementations" },
@@ -448,11 +468,8 @@ return {
 
       ---@param args? table
       local function trouble(args)
-        return function()
-          require("trouble").toggle(vim.tbl_extend("force", {
-            mode = "todo",
-          }, args or {}))
-        end
+        args = Util.merge({ mode = "todo" }, args or {})
+        return function() require("trouble").toggle(args) end
       end
 
       ---@param args? table

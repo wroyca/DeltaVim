@@ -131,12 +131,18 @@ M.DEFAULT = {
   { "<Leader>ghS", "@git.stage_buffer" },
   { "<Leader>ghs", "@git.stage_hunk" },
   { "<Leader>ghu", "@git.undo_stage_hunk" },
+  -- leap/flit
+  { "s", "@leap.forward_to" },
+  { "S", "@leap.backward_to" },
+  { "gs", "@leap.from_window" },
   -- goto references
   { "[[", "@goto.prev_reference" },
   { "]]", "@goto.next_reference" },
   -- quickfix
   { "[t", "@goto.prev_todo" },
   { "]t", "@goto.next_todo" },
+  { "[x", "@goto.prev_quickfix" },
+  { "]x", "@goto.next_quickfix" },
   { "<Leader>xl", "@quickfix.location_list" },
   { "<Leader>xq", "@quickfix.quickfix_list" },
   { "<Leader>xt", "@quickfix.todo" },

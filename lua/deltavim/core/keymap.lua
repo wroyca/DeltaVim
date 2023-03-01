@@ -306,12 +306,6 @@ function Collector:collect_rhs_table(init)
   return tbl
 end
 
--- HACK: dbg!
-function Collector:dbg()
-  vim.notify(vim.inspect(self._output))
-  return self
-end
-
 M.Collector = Collector.new
 
 ---Loads keymaps. Preset inputs will be added to the global storage and other
