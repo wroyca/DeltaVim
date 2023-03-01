@@ -51,7 +51,7 @@ end
 function M.keymaps(client, buffer)
   ---@param cmd string
   ---@param has string
-  local function lsp(cmd, has) return { vim.lsp[cmd], has } end
+  local function lsp(cmd, has) return { vim.lsp.buf[cmd], has } end
 
   ---@param next boolean
   ---@param level? string
@@ -65,18 +65,18 @@ function M.keymaps(client, buffer)
   ---@type DeltaVim.Keymap.Presets
   local presets = {
     -- lsp
-    { "@lsp.hover", lsp("hover", "hover"), "Hover" },
-    { "@lsp.signature_help",  lsp("signature_help", "signatureHelp") , "Signature help" },
+    { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "n", "x" } },
     { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
     { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
-    { "@lsp.references", lsp("references", "references"), "References" },
-    { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
-    { "@lsp.type_definitions", lsp("type_definition", "typeDefinition"), "Type definitions" },
-    { "@lsp.rename", lsp("rename", "rename"), "Rename" },
-    { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "n", "x" } },
     { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "n" },
     { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
+    { "@lsp.hover", lsp("hover", "hover"), "Hover" },
+    { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
     { "@lsp.line_diagnostics", { vim.diagnostic.open_float, "diagnostic" }, "Line diagnostics" },
+    { "@lsp.references", lsp("references", "references"), "References" },
+    { "@lsp.rename", lsp("rename", "rename"), "Rename" },
+    { "@lsp.signature_help",  lsp("signature_help", "signatureHelp") , "Signature help" },
+    { "@lsp.type_definitions", lsp("type_definition", "typeDefinition"), "Type definitions" },
     -- goto
     { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
     { "@goto.prev_diagnostic", goto_diagnostic(false), "Prev diagnostic" },

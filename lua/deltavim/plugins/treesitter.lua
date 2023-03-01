@@ -21,7 +21,7 @@ return {
         :map_unique({
           { "@treesitter.increase_selection", "init_selection" },
           { "@treesitter.increase_selection", "node_incremental" },
-          { "@treesitter.decrease_selection", "node_incremental" },
+          { "@treesitter.decrease_selection", "node_decremental" },
         })
         :collect_rhs_table()
       return {

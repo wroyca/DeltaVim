@@ -37,10 +37,10 @@ return {
       -- stylua: ignore
       ---@type DeltaVim.Keymap.Presets
       local presets ={
+        { "@session.quit_silently", quit_silently, "Quit without saving" },
         { "@session.restore", persistence("load"), "Restore session" },
         { "@session.restore_last", persistence("load", { last = true }), "Restore last session" },
         { "@session.stop", persistence("stop"), "Don't save current session" },
-        { "@session.quit_silently", quit_silently, "Quit without saving" },
       }
       return Keymap.Collector():map(presets):collect_lazy()
     end,

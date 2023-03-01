@@ -54,12 +54,12 @@ return {
       -- stylua: ignore
       ---@type DeltaVim.Keymap.Presets
       local presets = {
-        { "@buffer.next", "<Cmd>BufferLineCycleNext<CR>", "Next buffer" },
-        { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
-        { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
         { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
         { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
         { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
+        { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
+        { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
+        { "@buffer.next", "<Cmd>BufferLineCycleNext<CR>", "Next buffer" },
       }
       return Keymap.Collector():map(presets):collect_lazy()
     end,
@@ -295,12 +295,10 @@ return {
       -- stylua: ignore
       ---@type DeltaVim.Keymap.Presets
       local presets = {
-        { "@notify.redirect", redirect, mode = "c", "Redirect to notification" },
-        { "@notify.last", cmd("last"), "Last notification" },
-        { "@notify.history", cmd("history"), "Notification history" },
         { "@notify.all", cmd("all"), "All notifications" },
-        { "@cmp.scroll_down", with = scroll(4, "Scroll down") },
-        { "@cmp.scroll_up", with = scroll(-4, "Scroll up") },
+        { "@notify.history", cmd("history"), "Notification history" },
+        { "@notify.last", cmd("last"), "Last notification" },
+        { "@notify.redirect", redirect, mode = "c", "Redirect to notification" },
       }
       return Keymap.Collector():map(presets):collect_lazy()
     end,

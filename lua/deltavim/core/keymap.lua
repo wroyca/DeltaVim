@@ -192,7 +192,7 @@ end
 function Collector:_map_preset(preset, input)
   if preset.with then
     load_keymaps(self, { preset.with(input) })
-  elseif preset[2] then
+  else
     local key = input[1] or preset.key
     if key == nil then return end
     ---@type string[]

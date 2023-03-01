@@ -60,7 +60,7 @@ function M.setup()
         table.insert(cc, tostring(offsets))
       end
       ---@type DeltaVim.Autocmd.Callback
-      local function cb(ev) vim.bo[ev.buf].colorcolumn = cc end
+      local function cb(ev) vim.opt_local.colorcolumn = cc end
       table.insert(autocmds, { "FileType", cb, group = group, pattern = ft })
     end
     return unpack(autocmds)
