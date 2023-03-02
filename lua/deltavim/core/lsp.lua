@@ -62,31 +62,31 @@ function M.keymaps(client, buffer)
   end
 
   -- stylua: ignore
-  ---@type DeltaVim.Keymap.Presets
-  local presets = {
-    -- lsp
-    { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "n", "x" } },
-    { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
-    { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
-    { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "n" },
-    { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
-    { "@lsp.hover", lsp("hover", "hover"), "Hover" },
-    { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
-    { "@lsp.line_diagnostics", { vim.diagnostic.open_float }, "Line diagnostics" },
-    { "@lsp.references", lsp("references", "references"), "References" },
-    { "@lsp.rename", lsp("rename", "rename"), "Rename" },
-    { "@lsp.signature_help",  lsp("signature_help", "signatureHelp") , "Signature help" },
-    { "@lsp.type_definitions", lsp("type_definition", "typeDefinition"), "Type definitions" },
-    -- goto
-    { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
-    { "@goto.prev_diagnostic", goto_diagnostic(false), "Prev diagnostic" },
-    { "@goto.next_error", goto_diagnostic(true, "ERROR"), "Next error" },
-    { "@goto.prev_error", goto_diagnostic(false, "ERROR"), "Prev error" },
-    { "@goto.next_warning", goto_diagnostic(true, "WARN"), "Next warning" },
-    { "@goto.prev_warning", goto_diagnostic(false, "WARN"), "Prev warning" },
-    buffer = buffer,
-  }
-  local keymaps = Keymap.Collector():map(presets):collect()
+  local keymaps = Keymap.Collector()
+    :map({
+      -- lsp
+      { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "n", "x" } },
+      { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
+      { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
+      { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "n" },
+      { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
+      { "@lsp.hover", lsp("hover", "hover"), "Hover" },
+      { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
+      { "@lsp.line_diagnostics", { vim.diagnostic.open_float }, "Line diagnostics" },
+      { "@lsp.references", lsp("references", "references"), "References" },
+      { "@lsp.rename", lsp("rename", "rename"), "Rename" },
+      { "@lsp.signature_help",  lsp("signature_help", "signatureHelp") , "Signature help" },
+      { "@lsp.type_definitions", lsp("type_definition", "typeDefinition"), "Type definitions" },
+      -- goto
+      { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
+      { "@goto.prev_diagnostic", goto_diagnostic(false), "Prev diagnostic" },
+      { "@goto.next_error", goto_diagnostic(true, "ERROR"), "Next error" },
+      { "@goto.prev_error", goto_diagnostic(false, "ERROR"), "Prev error" },
+      { "@goto.next_warning", goto_diagnostic(true, "WARN"), "Next warning" },
+      { "@goto.prev_warning", goto_diagnostic(false, "WARN"), "Prev warning" },
+      buffer = buffer,
+    })
+    :collect()
 
   for _, m in ipairs(keymaps) do
     local rhs, has = unpack(m[2])

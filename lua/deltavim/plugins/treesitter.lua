@@ -9,12 +9,12 @@ return {
     dependencies = { "nvim-treesitter-textobjects" },
     keys = function()
       -- stylua: ignore
-      ---@type DeltaVim.Keymap.Presets
-      local presets = {
-        { "@treesitter.increase_selection", "Increase selection", mode = { "n", "x" } },
-        { "@treesitter.decrease_selection", "Decrease selection", mode = "x" },
-      }
-      return Keymap.Collector():map_unique(presets):collect_lazy()
+      return Keymap.Collector()
+        :map_unique({
+          { "@treesitter.increase_selection", "Increase selection", mode = { "n", "x" } },
+          { "@treesitter.decrease_selection", "Decrease selection", mode = "x" },
+        })
+        :collect_lazy()
     end,
     opts = function()
       local mappings = Keymap.Collector()

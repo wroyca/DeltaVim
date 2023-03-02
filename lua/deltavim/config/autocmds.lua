@@ -92,16 +92,14 @@ function M.setup()
   end
 
   -- stylua: ignore
-  ---@type DeltaVim.Autocmd.Presets
-  local presets = {
+  CONFIG:map({
     { "@auto_resize", "VimResized", "tabdo wincmd =" },
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
     { "@quit", with = quit },
     { "@rulers", with = rulers },
     { "@sync_time", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
     { "@trim_spaces", "BufWritePre", [[silent! s/\s+$//e]] },
-  }
-  CONFIG:map(presets):collect_and_set()
+  }):collect_and_set()
 end
 
 return M

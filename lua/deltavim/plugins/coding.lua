@@ -161,17 +161,17 @@ return {
     "echasnovski/mini.surround",
     keys = function(_, keys)
       -- stylua: ignore
-      ---@type DeltaVim.Keymap.Presets
-      local presets = {
-        { "@surround.add", desc = "Add surrounding", mode = { "n", "x" } },
-        { "@surround.delete", desc = "Delete surrounding", mode = "n" },
-        { "@surround.find", desc = "Next surrounding", mode = "n" },
-        { "@surround.find_left", desc = "Prev surrounding", mode = "n" },
-        { "@surround.highlight", desc = "Highlight surrounding", mode = "n" },
-        { "@surround.replace", desc = "Replace surrounding", mode = "n" },
-        { "@surround.update_n_lines", desc = "Update N lines surrounding", mode = "n" },
-      }
-      return Keymap.Collector():map_unique(presets):collect_lazy(keys)
+      return Keymap.Collector()
+        :map_unique({
+          { "@surround.add", desc = "Add surrounding", mode = { "n", "x" } },
+          { "@surround.delete", desc = "Delete surrounding", mode = "n" },
+          { "@surround.find", desc = "Next surrounding", mode = "n" },
+          { "@surround.find_left", desc = "Prev surrounding", mode = "n" },
+          { "@surround.highlight", desc = "Highlight surrounding", mode = "n" },
+          { "@surround.replace", desc = "Replace surrounding", mode = "n" },
+          { "@surround.update_n_lines", desc = "Update N lines surrounding", mode = "n" },
+        })
+        :collect_lazy(keys)
     end,
     opts = function()
       local mappings = Keymap.Collector()

@@ -7,15 +7,12 @@ return {
   {
     "rcarriga/nvim-notify",
     keys = function()
-      local function clear()
-        require("notify").dismiss({ silent = true, pending = true })
-      end
-
+      local opts = { silent = true, pending = true }
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@notify.clear", clear, "Delete all notifications" },
-          { "@search.notifications", "<Cmd>Telescope notify<CR>", "Notifications" },
+          { "@notify.clear", function() require("notify").dismiss(opts) end, "Delete all notifications" },
+          { "@search.notifications", Util.telescope({ "notify" }), "Notifications" },
         })
         :collect_lazy()
     end,
@@ -61,63 +58,53 @@ return {
     event = "VeryLazy",
     keys = function()
       -- stylua: ignore
-      ---@type DeltaVim.Keymap.Presets
-      local presets = {
-        { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
-        { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
-        { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
-        { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
-        { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
-        { "@buffer.next", "<Cmd>BufferLineCycleNext<CR>", "Next buffer" },
-      }
-      return Keymap.Collector():map(presets):collect_lazy()
+      return Keymap.Collector()
+        :map({
+          { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
+          { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
+          { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
+          { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
+          { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
+          { "@buffer.next", "<Cmd>BufferLineCycleNext<CR>", "Next buffer" },
+        })
+        :collect_lazy()
     end,
-    opts = function()
-      local function close(id) require("mini.bufremove").delete(id, true) end
-
-      local function diagnostics_indicator(_, _, diag)
-        local icons = Config.icons.diagnostics
-        ---@type string[]
-        local s = {}
-        if diag.error then table.insert(s, icons.Error .. diag.error) end
-        if diag.warning then table.insert(s, icons.Warn .. diag.warning) end
-        return table.concat(s, " ")
-      end
-
-      return {
-        options = {
-          -- TODO: PR to LazyVim
-          close_command = close,
-          right_mouse_command = close,
-          diagnostics = "nvim_lsp",
-          always_show_bufferline = false,
-          diagnostics_indicator = diagnostics_indicator,
-          offsets = {
-            {
-              filetype = "neo-tree",
-              text = "Explorer",
-              highlight = "Directory",
-              text_align = "left",
-            },
+    opts = {
+      options = {
+        -- TODO: PR to LazyVim
+        close_command = Util.bufremove(true),
+        right_mouse_command = Util.bufremove(true),
+        diagnostics = "nvim_lsp",
+        always_show_bufferline = false,
+        diagnostics_indicator = function(_, _, diag)
+          local icons = Config.icons.diagnostics
+          ---@type string[]
+          local s = {}
+          if diag.error then table.insert(s, icons.Error .. diag.error) end
+          if diag.warning then table.insert(s, icons.Warn .. diag.warning) end
+          return table.concat(s, " ")
+        end,
+        offsets = {
+          {
+            filetype = "neo-tree",
+            text = "Explorer",
+            highlight = "Directory",
+            text_align = "left",
           },
         },
-      }
-    end,
+      },
+    },
   },
   {
     "echasnovski/mini.bufremove",
     keys = function()
-      ---@param force boolean
-      local function close(force)
-        return function() require("mini.bufremove").delete(0, force) end
-      end
-
       -- stylua: ignore
-      local presets = {
-        { "@buffer.close", close(false), "Delete buffer" },
-        { "@buffer.close_force", close(true), "Delete buffer (force)" },
-      }
-      return Keymap.Collector():map(presets):collect_lazy()
+      return Keymap.Collector()
+        :map({
+          { "@buffer.close", Util.bufremove(), "Delete buffer" },
+          { "@buffer.close_force", Util.bufremove(true), "Delete buffer (force)" },
+        })
+        :collect_lazy()
     end,
     config = function(_, opts) require("mini.bufremove").setup(opts) end,
   },
@@ -288,14 +275,14 @@ return {
       local function redirect() require("noice").redirect(vim.fn.getcmdline()) end
 
       -- stylua: ignore
-      ---@type DeltaVim.Keymap.Presets
-      local presets = {
-        { "@notify.all", cmd("all"), "All notifications" },
-        { "@notify.history", cmd("history"), "Notification history" },
-        { "@notify.last", cmd("last"), "Last notification" },
-        { "@notify.redirect", redirect, mode = "c", "Redirect to notification" },
-      }
-      return Keymap.Collector():map(presets):collect_lazy()
+      return Keymap.Collector()
+        :map({
+          { "@notify.all", cmd("all"), "All notifications" },
+          { "@notify.history", cmd("history"), "Notification history" },
+          { "@notify.last", cmd("last"), "Last notification" },
+          { "@notify.redirect", redirect, "Redirect to notification", mode = "c" },
+        })
+        :collect_lazy()
     end,
   },
 
@@ -330,25 +317,18 @@ return {
         return btn
       end
 
-      local function files() Util.telescope_files({ cwd = Util.get_cwd() }) end
-
-      local function telescope(builtin)
-        return function() Util.telescope(builtin) end
-      end
-
-      local function restore() require("persistence").load() end
-
       -- header
       dashboard.section.header.val = logo
       dashboard.section.header.opts.hl = "AlphaHeader"
       -- body
+      -- stylua: ignore
       dashboard.section.buttons.val = {
-        button("f", " ", " Find file", files),
+        button("f", " ", " Find file", Util.telescope_files),
         button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
         button("r", " ", " Recent files", ":Telescope oldfiles <CR>"),
-        button("g", " ", " Find text", telescope("live_grep")),
+        button("g", " ", " Find text", Util.telescope("live_grep")),
         button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
-        button("s", "󰑓 ", " Restore session", restore),
+        button("s", "󰑓 ", " Restore session", function() require("persistence").load() end),
         button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),
         button("q", " ", " Quit", "<Cmd>qa<CR>"),
       }
@@ -362,7 +342,9 @@ return {
     end,
     keys = function()
       return Keymap.Collector()
-        :map1({ "@ui.alpha", "<Cmd>Alpha<CR>", "Alpha" })
+        :map({
+          { "@ui.alpha", "<Cmd>Alpha<CR>", "Alpha" },
+        })
         :collect_lazy()
     end,
     config = function(_, dashboard)
