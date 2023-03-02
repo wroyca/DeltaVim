@@ -105,13 +105,13 @@ return {
   -- Search/replace in multiple files
   {
     "windwp/nvim-spectre",
-    opts = {},
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
         :map1({ "@search.replace", function() require("spectre").open() end, "Replace in files" })
         :collect_lazy()
     end,
+    config = true,
   },
 
   -- fuzzy finder
@@ -422,7 +422,6 @@ return {
     "folke/todo-comments.nvim",
     cmd = { "TodoTrouble", "TodoTelescope" },
     event = { "BufReadPost", "BufNewFile" },
-    opts = {},
     keys = function()
       ---@param name string
       local function todo(name)
@@ -451,5 +450,6 @@ return {
         })
         :collect_lazy()
     end,
+    config = true,
   },
 }
