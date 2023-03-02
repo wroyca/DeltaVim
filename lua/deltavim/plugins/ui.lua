@@ -63,29 +63,37 @@ return {
       }
       return Keymap.Collector():map(presets):collect_lazy()
     end,
-    -- TODO: use mini.bufremove to close
-    opts = {
-      options = {
-        diagnostics = "nvim_lsp",
-        always_show_bufferline = false,
-        diagnostics_indicator = function(_, _, diag)
-          local icons = Config.icons.diagnostics
-          ---@type string[]
-          local s = {}
-          if diag.error then table.insert(s, icons.Error .. diag.error) end
-          if diag.warning then table.insert(s, icons.Warn .. diag.warning) end
-          return table.concat(s, " ")
-        end,
-        offsets = {
-          {
-            filetype = "neo-tree",
-            text = "Explorer",
-            highlight = "Directory",
-            text_align = "left",
+    opts = function()
+      local function close(id) require("mini.bufremove").delete(id, true) end
+
+      local function diagnostics_indicator(_, _, diag)
+        local icons = Config.icons.diagnostics
+        ---@type string[]
+        local s = {}
+        if diag.error then table.insert(s, icons.Error .. diag.error) end
+        if diag.warning then table.insert(s, icons.Warn .. diag.warning) end
+        return table.concat(s, " ")
+      end
+
+      return {
+        options = {
+          -- TODO: PR to LazyVim
+          close_command = close,
+          right_mouse_command = close,
+          diagnostics = "nvim_lsp",
+          always_show_bufferline = false,
+          diagnostics_indicator = diagnostics_indicator,
+          offsets = {
+            {
+              filetype = "neo-tree",
+              text = "Explorer",
+              highlight = "Directory",
+              text_align = "left",
+            },
           },
         },
-      },
-    },
+      }
+    end,
   },
   {
     "echasnovski/mini.bufremove",
