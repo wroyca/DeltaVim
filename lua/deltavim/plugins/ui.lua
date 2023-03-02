@@ -11,8 +11,12 @@ return {
         require("notify").dismiss({ silent = true, pending = true })
       end
 
+      -- stylua: ignore
       return Keymap.Collector()
-        :map1({ "@notify.clear", clear, "Delete all notifications" })
+        :map({
+          { "@notify.clear", clear, "Delete all notifications" },
+          { "@search.notifications", "<Cmd>Telescope notify<CR>", "Notifications" },
+        })
         :collect_lazy()
     end,
     opts = {
@@ -25,6 +29,11 @@ return {
       if not Util.has("noice.nvim") then
         Util.on_very_lazy(function() vim.notify = require("notify") end)
       end
+    end,
+    config = function(_, opts)
+      require("notify").setup(opts)
+      -- TODO: PR to LazyVim
+      require("telescope").load_extension("notify")
     end,
   },
 
