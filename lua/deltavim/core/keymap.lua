@@ -77,14 +77,12 @@ end
 
 ---Collects modes.
 ---@param mode string|string[]|nil
----@param default? string[]
-local function get_mode(mode, default)
+local function get_mode(mode)
   if type(mode) == "string" then
-    mode = { mode }
-  elseif type(mode) ~= "table" then
-    mode = default or Util.KEYMAP_MODE
+    return { mode }
+  else
+    return mode or Util.KEYMAP_MODE
   end
-  return mode
 end
 
 ---Collects options.
@@ -146,7 +144,7 @@ local function load_keymaps(collector, keymaps)
           k,
           rhs,
           args = get_args(mapping),
-          mode = get_mode(mapping.mode, {}),
+          mode = get_mode(mapping.mode or {}),
           desc = desc,
         })
       end
@@ -200,17 +198,20 @@ function Collector:_map_preset(preset, input)
     ---If no modes are specified, uses modes defined by the preset.
     if #input.mode == 0 then
       mode = get_mode(preset.mode)
-      ---Otherwise, only supported modes will be mapped.
+    ---Otherwise, only supported modes will be mapped.
     else
-      local supported = get_mode(preset.mode, {})
       -- Empty value means all modes are supported.
-      if #supported == 0 then
+      if not preset.mode then
         mode = input.mode
-        -- Otherwise, finds common modes.
+      -- Otherwise, finds common modes.
       else
+        local supported = {}
+        for _, m in ipairs(get_mode(preset.mode or {})) do
+          supported[m] = true
+        end
         mode = {}
         for _, m in ipairs(input.mode) do
-          if vim.tbl_contains(supported, m) then table.insert(mode, m) end
+          if supported[m] then table.insert(mode, m) end
         end
         if #mode == 0 then return end
       end

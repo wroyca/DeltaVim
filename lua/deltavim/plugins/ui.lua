@@ -323,7 +323,7 @@ return {
       -- body
       -- stylua: ignore
       dashboard.section.buttons.val = {
-        button("f", " ", " Find file", Util.telescope_files),
+        button("f", " ", " Find file", Util.telescope_files()),
         button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
         button("r", " ", " Recent files", ":Telescope oldfiles <CR>"),
         button("g", " ", " Find text", Util.telescope("live_grep")),
@@ -363,7 +363,7 @@ return {
         local stats = require("lazy").stats()
         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
         -- stylua: ignore
-        dashboard.section.footer.val = ("⚡ Neovim loaded %s plugins in %d ms"):format(stats.count, ms)
+        dashboard.section.footer.val = ("⚡ Neovim loaded %s plugins in %s ms"):format(stats.count, ms)
         pcall(vim.cmd.AlphaRedraw)
       end, { pattern = "LazyVimStarted" })
     end,

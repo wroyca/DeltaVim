@@ -22,6 +22,7 @@ return {
         update_in_insert = false,
         virtual_text = { spacing = 4, prefix = "●" },
         severity_sort = true,
+        float = { border = Config.border },
       },
       ---Automatically format on save
       autoformat = true,
