@@ -83,19 +83,23 @@ return {
         })
         :collect_lazy()
     end,
-    opts = {
-      direction = "float",
-      ---@param term Terminal
-      on_open = function(term)
-        Keymap.Collector()
-          :map({
-            { "@terminal.hide", function() term:toggle() end, "Hide terminal" },
-            mode = "t",
-            buffer = term.bufnr,
-          })
-          :collect_and_set()
-      end,
-    },
+    opts = function()
+      return {
+        direction = "float",
+        ---@param term Terminal
+        on_open = function(term)
+          Keymap.Collector()
+            :map1({
+              "@terminal.hide",
+              function() term:toggle() end,
+              "Hide terminal",
+              mode = "t",
+              buffer = term.bufnr,
+            })
+            :collect_and_set()
+        end,
+      }
+    end,
   },
 
   -- Search/replace in multiple files
@@ -105,9 +109,7 @@ return {
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
-        :map({
-          { "@search.replace", function() require("spectre").open() end, "Replace in files" }
-        })
+        :map1({ "@search.replace", function() require("spectre").open() end, "Replace in files" })
         :collect_lazy()
     end,
   },
@@ -291,6 +293,15 @@ return {
     "lewis6991/gitsigns.nvim",
     event = { "BufReadPre", "BufNewFile" },
     opts = function()
+      ---@param name string
+      ---@param args? any
+      local function gs(name, args)
+        return function() require("gitsigns")[name](args) end
+      end
+
+      ---@type DeltaVim.Keymap.Output[]
+      local keymaps
+
       return {
         signs = {
           add = { text = "▎" },
@@ -301,19 +312,12 @@ return {
           untracked = { text = "▎" },
         },
         on_attach = function(buffer)
-          ---@param name string
-          ---@param args? any
-          local function gs(name, args)
-            return function() require("gitsigns")[name](args) end
-          end
-
-          local full = { full = true }
           -- stylua: ignore
-          Keymap.Collector()
+          keymaps = keymaps or Keymap.Collector()
             :map({
               -- git
               { "@git.blame_line", gs("blame_line"), "Blame line" },
-              { "@git.blame_line_full", gs("blame_line", full), "Blame line (full)" },
+              { "@git.blame_line_full", gs("blame_line", { full = true }), "Blame line (full)" },
               { "@git.diffthis", gs("diffthis"), "Diff this" },
               { "@git.diffthis_last", gs("diffthis", "~"), "Diff this (last)" },
               { "@git.preview_hunk", gs("preview_hunk"), "Preview hunk" },
@@ -329,9 +333,9 @@ return {
               { "@toggle.blame_line", gs("toggle_current_line_blame"), "Toggle blame line" },
               -- select
               { "@select.hunk", gs("select_hunk"), "Select hunk", mode = { "o", "x" } },
-              buffer = buffer,
             })
-            :collect_and_set()
+            :collect()
+          Keymap.set(keymaps, { buffer = buffer })
         end,
       }
     end,

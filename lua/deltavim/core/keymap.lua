@@ -267,7 +267,8 @@ end
 ---Collects mappings from presets.
 function Collector:collect() return self._output end
 
-function Collector:collect_and_set() M.set(self:collect()) end
+---@param opts? DeltaVim.Keymap.Options
+function Collector:collect_and_set(opts) M.set(self:collect(), opts) end
 
 ---Constructs a list of tables that could be used as keys of `lazy.nvim`.
 ---@param init? table[]

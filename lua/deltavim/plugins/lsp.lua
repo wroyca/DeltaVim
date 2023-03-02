@@ -55,9 +55,7 @@ return {
     },
     keys = function()
       return Keymap.Collector()
-        :map({
-          { "@ui.lsp_info", "<Cmd>LspInfo<CR>", "Lsp info" },
-        })
+        :map1({ "@ui.lsp_info", "<Cmd>LspInfo<CR>", "Lsp info" })
         :collect_lazy()
     end,
     ---@param opts DeltaVim.Config.Lsp
@@ -145,9 +143,7 @@ return {
     },
     keys = function()
       return Keymap.Collector()
-        :map({
-          { "@ui.nullls_info", "<Cmd>NullLsInfo<CR>", "Null-ls info" },
-        })
+        :map1({ "@ui.nullls_info", "<Cmd>NullLsInfo<CR>", "Null-ls info" })
         :collect_lazy()
     end,
     ---@param opts DeltaVim.Config.NullLs|table
@@ -171,9 +167,7 @@ return {
     cmd = "Mason",
     keys = function()
       return Keymap.Collector()
-        :map({
-          { "@ui.mason", "<Cmd>Mason<CR>", "Mason" },
-        })
+        :map1({ "@ui.mason", "<Cmd>Mason<CR>", "Mason" })
         :collect_lazy()
     end,
     opts = {

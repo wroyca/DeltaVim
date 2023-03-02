@@ -46,6 +46,9 @@ function M.autoformat(client, buffer, opts)
   end
 end
 
+---@type DeltaVim.Keymap.Output[]
+local KEYMAPS
+
 ---@param client any
 ---@param buffer integer
 function M.keymaps(client, buffer)
@@ -62,7 +65,7 @@ function M.keymaps(client, buffer)
   end
 
   -- stylua: ignore
-  local keymaps = Keymap.Collector()
+  KEYMAPS = KEYMAPS or Keymap.Collector()
     :map({
       -- lsp
       { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "n", "x" } },
@@ -84,14 +87,13 @@ function M.keymaps(client, buffer)
       { "@goto.prev_error", goto_diagnostic(false, "ERROR"), "Prev error" },
       { "@goto.next_warning", goto_diagnostic(true, "WARN"), "Next warning" },
       { "@goto.prev_warning", goto_diagnostic(false, "WARN"), "Prev warning" },
-      buffer = buffer,
     })
     :collect()
 
-  for _, m in ipairs(keymaps) do
+  for _, m in ipairs(KEYMAPS) do
     local rhs, has = unpack(m[2])
     if not has or client.server_capabilities[has .. "Provider"] then
-      Util.keymap(m.mode, m[1], rhs, m.opts)
+      Util.keymap(m.mode, m[1], rhs, Util.merge({ buffer = buffer }, m.opts))
     end
   end
 end
