@@ -342,7 +342,7 @@ end
 
 ---@param force? boolean
 function M.bufremove(force)
-  return function() require("mini.bufremove").delete(0, force) end
+  return function(n) require("mini.bufremove").delete(n or 0, force) end
 end
 
 ---@param plugin string
