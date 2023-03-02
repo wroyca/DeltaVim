@@ -1,3 +1,4 @@
+local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
@@ -280,6 +281,7 @@ return {
         ["<Leader>x"] = { name = "+diagnostics/quickfix" },
         ["<Leader><Tab>"] = { name = "+tabs" },
       },
+      window = { border = Config.border },
     },
     config = function(_, opts)
       local wk = require("which-key")
@@ -311,6 +313,7 @@ return {
           changedelete = { text = "▎" },
           untracked = { text = "▎" },
         },
+        preview_config = { border = Config.border },
         on_attach = function(buffer)
           -- stylua: ignore
           keymaps = keymaps or Keymap.Collector()

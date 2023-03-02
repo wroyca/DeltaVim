@@ -66,6 +66,7 @@ return {
     opts = function()
       local cmp = require("cmp")
       local mapping = cmp.mapping
+      local bordered = cmp.config.window.bordered
 
       local function has_words_before()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -144,6 +145,10 @@ return {
           ghost_text = {
             hl_group = "LspCodeLens",
           },
+        },
+        window = {
+          completion = bordered(Config.border),
+          documentation = bordered(Config.border),
         },
       }
     end,

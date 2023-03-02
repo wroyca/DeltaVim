@@ -4,6 +4,8 @@ local M = {}
 
 ---@class DeltaVim.Config
 local CONFIG = {
+  ---@type string?
+  border = "rounded",
   ---@type string|fun()
   colorscheme = function() require("tokyonight").load() end,
   icons = {

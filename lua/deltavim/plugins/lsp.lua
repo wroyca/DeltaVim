@@ -115,6 +115,9 @@ return {
 
       require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
       require("mason-lspconfig").setup_handlers({ setup })
+
+      -- Set LspInfo border
+      require("lspconfig.ui.windows").default_options.border = Config.border
     end,
   },
   { "folke/neoconf.nvim", cmd = "Neoconf", opts = {} },
@@ -140,6 +143,7 @@ return {
       linters = {
         flake8 = {},
       },
+      border = Config.border,
     },
     keys = function()
       return Keymap.Collector()
@@ -177,6 +181,7 @@ return {
         "shfmt",
         "flake8",
       },
+      ui = { border = Config.border },
     },
     ---@param opts MasonSettings | {ensure_installed: string[]}
     config = function(_, opts)
