@@ -60,7 +60,6 @@ return {
     keys = function()
       ---@param opts fun():table
       local function create(opts)
-        -- TODO: vim.v.count
         return function()
           require("toggleterm.terminal").Terminal:new(opts()):open()
         end
@@ -68,13 +67,14 @@ return {
 
       ---@param dir fun():string
       local function toggle(dir)
-        ---@diagnostic disable-line:undefined-field
-        return function() require("toggleterm").toggle(vim.v.count, nil, dir()) end
+        ---@type Terminal
+        return function() require("toggleterm").toggle(vim.v.count1, nil, dir()) end
       end
 
       ---@param dir fun():string
       local function lazygit(dir)
-        return create(function() return { cmd = "lazygit", dir = dir() } end)
+        -- stylua: ignore
+        return create(function() return { cmd = "lazygit", dir = dir(), id = 999 } end)
       end
 
       -- stylua: ignore
