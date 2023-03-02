@@ -1,4 +1,4 @@
-# DeltaVim
+# 🌱 DeltaVim
 
 A fork of [LazyVim](https://github.com/LazyVim/LazyVim) that focuses on
 customization with minimal code.
