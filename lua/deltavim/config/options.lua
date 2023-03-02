@@ -5,12 +5,17 @@ local M = {}
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 ---@class DeltaVim.Options
 M.DEFAULT = {
+  ---DeltaVim configurations
+  ---@type DeltaVim.Config
+  config = {},
+  ---vim.g
   g = {
     mapleader = " ",
     maplocalleader = " ",
     markdown_recommended_style = 0, -- Fix markdown indentation settings
   },
-  opt = {
+  ---vim.o
+  o = {
     autowrite = true, -- Enable auto write
     clipboard = "unnamedplus", -- Sync with system clipboard
     completeopt = "menu,menuone,noselect",
@@ -74,11 +79,12 @@ function M.init()
 end
 
 function M.setup()
-  for field, vals in pairs(CONFIG) do
-    local opts = vim[field]
-    for k, v in pairs(vals) do
-      opts[k] = v
-    end
+  require("deltavim.config").update(CONFIG.config)
+  for k, v in pairs(CONFIG.g) do
+    vim.g[k] = v
+  end
+  for k, v in pairs(CONFIG.o) do
+    vim.opt[k] = v
   end
 end
 

@@ -1,9 +1,13 @@
 local M = {}
 
----@param opts? DeltaVim.Config
 function M.setup(opts)
-  require("deltavim.config").update(opts or {})
-  require("deltavim.core.config").setup()
+  if opts == nil or vim.tbl_count(opts) == 0 then
+    require("deltavim.core.config").setup()
+  else
+    require("deltavim.core.log").warn(
+      "You should use 'config.options' to override default configurations"
+    )
+  end
 end
 
 return M

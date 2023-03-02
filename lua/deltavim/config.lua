@@ -63,6 +63,6 @@ local CONFIG = {
 setmetatable(M, { __index = CONFIG })
 
 ---@param cfg DeltaVim.Config
-function M.update(cfg) Util.merge(CONFIG, cfg) end
+function M.update(cfg) Util.deep_merge(CONFIG, cfg) end
 
 return M
