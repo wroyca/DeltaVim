@@ -87,6 +87,7 @@ return {
     opts = function()
       return {
         direction = "float",
+        float_opts = { border = Config.border },
         ---@param term Terminal
         on_open = function(term)
           Keymap.Collector()
