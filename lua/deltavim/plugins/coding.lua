@@ -167,7 +167,7 @@ return {
     keys = function(_, keys)
       -- stylua: ignore
       return Keymap.Collector()
-        :map_unique({
+        :map({
           { "@surround.add", desc = "Add surrounding", mode = { "n", "x" } },
           { "@surround.delete", desc = "Delete surrounding", mode = "n" },
           { "@surround.find", desc = "Next surrounding", mode = "n" },
@@ -249,6 +249,59 @@ return {
         search_method = "cover",
       }
     end,
-    config = function(_, opts) require("mini.ai").setup(opts) end,
+    config = function(_, opts)
+      require("mini.ai").setup(opts)
+      -- Register textobjects
+      if Util.has("which-key.nvim") then
+        ---@type table<string, string>
+        local a = {
+          ["("] = "Balanced (",
+          [")"] = "Balanced )",
+          ["<lt>"] = "Balanced <",
+          [">"] = "Balanced >",
+          ["["] = "Balanced [",
+          ["]"] = "Balanced ]",
+          ["{"] = "Balanced {",
+          ["}"] = "Balanced }",
+          [" "] = "Whitespace",
+          ['"'] = 'Balanced "',
+          ["'"] = "Balanced '",
+          ["`"] = "Balanced `",
+          ["?"] = "User Prompt",
+          _ = "Underscore",
+          a = "Argument",
+          b = "Balanced ) ] }",
+          c = "Class",
+          f = "Function",
+          o = "Block/conditional/loop",
+          q = "Quote ` \" '",
+          t = "Tag",
+        }
+        ---@type table<string, string>
+        local i = {
+          [")"] = "Balanced ) including whitespace",
+          [">"] = "Balanced > including whitespace",
+          ["]"] = "Balanced ] including whitespace",
+          ["}"] = "Balanced } including whitespace",
+        }
+        ---@type table<string, string>
+        local ai = {
+          n = "Next textobject",
+          l = "Last textobject",
+        }
+        for k, v in pairs(a) do
+          i[k] = i[k] or v
+        end
+        for k, v in pairs(ai) do
+          i[k] = v
+          a[k] = v
+        end
+        require("which-key").register({
+          mode = { "o", "x" },
+          a = a,
+          i = i,
+        })
+      end
+    end,
   },
 }

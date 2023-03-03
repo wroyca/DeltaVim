@@ -267,29 +267,38 @@ return {
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    opts = {
-      plugins = { spelling = true },
-      groups = {
-        mode = { "n", "x" },
-        ["]"] = { name = "+next" },
-        ["["] = { name = "+prev" },
-        ["g"] = { name = "+goto" },
-        ["gz"] = { name = "+surround" },
-        ["<Leader>b"] = { name = "+buffer" },
-        ["<Leader>c"] = { name = "+code" },
-        ["<Leader>f"] = { name = "+file/find" },
-        ["<Leader>g"] = { name = "+git" },
-        ["<Leader>gh"] = { name = "+hunks" },
-        ["<Leader>q"] = { name = "+quit/session" },
-        ["<Leader>s"] = { name = "+search" },
-        ["<Leader>sn"] = { name = "+noice" },
-        ["<Leader>u"] = { name = "+ui" },
-        ["<Leader>w"] = { name = "+windows" },
-        ["<Leader>x"] = { name = "+diagnostics/quickfix" },
-        ["<Leader><Tab>"] = { name = "+tabs" },
-      },
-      window = { border = Config.border },
-    },
+    opts = function()
+      local operators = Keymap.Collector()
+        :map({
+          { "@comment.toggle", "Comment" },
+          { "@surround.add", "Add surrounding" },
+        })
+        :collect_lhs_table()
+      return {
+        plugins = { spelling = true },
+        operators = operators,
+        groups = {
+          mode = { "n", "x" },
+          ["]"] = { name = "+next" },
+          ["["] = { name = "+prev" },
+          ["g"] = { name = "+goto" },
+          ["gz"] = { name = "+surround" },
+          ["<Leader>b"] = { name = "+buffer" },
+          ["<Leader>c"] = { name = "+code" },
+          ["<Leader>f"] = { name = "+file/find" },
+          ["<Leader>g"] = { name = "+git" },
+          ["<Leader>gh"] = { name = "+hunks" },
+          ["<Leader>q"] = { name = "+quit/session" },
+          ["<Leader>s"] = { name = "+search" },
+          ["<Leader>sn"] = { name = "+noice" },
+          ["<Leader>u"] = { name = "+ui" },
+          ["<Leader>w"] = { name = "+windows" },
+          ["<Leader>x"] = { name = "+diagnostics/quickfix" },
+          ["<Leader><Tab>"] = { name = "+tabs" },
+        },
+        window = { border = Config.border },
+      }
+    end,
     config = function(_, opts)
       local wk = require("which-key")
       wk.setup(opts)

@@ -5,6 +5,7 @@ local M = {}
 ---@class DeltaVim.Config
 local CONFIG = {
   ---@type string?
+  -- TODO: set border for more plugins
   border = "rounded",
   ---@type string|fun()
   colorscheme = function() require("tokyonight").load() end,

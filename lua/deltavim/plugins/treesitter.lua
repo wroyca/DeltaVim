@@ -10,7 +10,7 @@ return {
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
-        :map_unique({
+        :map({
           { "@treesitter.increase_selection", "Increase selection", mode = { "n", "x" } },
           { "@treesitter.decrease_selection", "Decrease selection", mode = "x" },
         })

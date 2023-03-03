@@ -346,7 +346,15 @@ function M.bufremove(force)
 end
 
 ---@param plugin string
-function M.has(plugin) return require("lazy.core.config").plugins[plugin] ~= nil end
+function M.has(plugin)
+  local plug = require("lazy.core.config").plugins[plugin]
+  if not plug then return false end
+  if type(plug.cond) == "function" then
+    return plug.cond() ~= false
+  else
+    return plug.cond ~= false
+  end
+end
 
 ---Delay notifications till vim.notify was replaced.
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
