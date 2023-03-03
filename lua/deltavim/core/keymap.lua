@@ -17,7 +17,7 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Keymap.Presets DeltaVim.Keymap.Preset[]|DeltaVim.Keymap.Options
 
----@alias DeltaVim.Keymap.Map fun(src:DeltaVim.Keymap.Input):DeltaVim.Keymap? ...
+---@alias DeltaVim.Keymap.With fun(src:DeltaVim.Keymap.Input):any
 
 ---@class DeltaVim.Keymap.Preset: DeltaVim.Keymap.Options
 ---Preset name
@@ -27,7 +27,7 @@ local Util = require("deltavim.util")
 ---Description
 ---@field [3]? string
 ---@field mode? string|string[]
----@field with? DeltaVim.Keymap.Map
+---@field with? DeltaVim.Keymap.With
 ---Default key to be set
 ---@field key? string
 
@@ -118,50 +118,11 @@ end
 ---@param name string
 local function remove_input(name) INPUT[name] = nil end
 
----@param collector DeltaVim.Keymap.Collector
----@param keymaps DeltaVim.Keymaps
-local function load_keymaps(collector, keymaps)
-  local gopts = get_opts(keymaps)
-  for _, mapping in ipairs(keymaps) do
-    ---@type DeltaVim.Keymap
-    mapping = Util.merge({}, mapping, gopts)
-    local key = mapping[1]
-    local rhs = mapping[2]
-    local desc = mapping[3] or mapping.desc
-    if type(rhs) == "string" and Util.starts_with(rhs, "@") then
-      if key == false then
-        remove_input(rhs)
-      else
-        ---@type string?
-        local k
-        if key == true then
-          k = nil
-        else
-          k = key --[[@as string]]
-        end
-        add_input({
-          ---@diagnostic disable-next-line:assign-type-mismatch
-          k,
-          rhs,
-          args = get_args(mapping),
-          mode = get_mode(mapping.mode or {}),
-          desc = desc,
-        })
-      end
-    elseif type(key) == "string" then
-      collector:extend1({
-        key,
-        rhs,
-        mode = get_mode(mapping.mode),
-        opts = get_opts(mapping, { desc = desc }),
-      })
-    end
-  end
-end
-
 ---Collects and maps keymaps.
 ---@class DeltaVim.Keymap.Collector
 ---@field private _output DeltaVim.Keymap.Output[]
+---table<name,table<mode,preset>>
+---@field private _preset table<string,table<string,DeltaVim.Keymap.Preset>>
 local Collector = {}
 
 function Collector.new()
@@ -170,87 +131,77 @@ function Collector.new()
 end
 
 ---@param output DeltaVim.Keymap.Output
-function Collector:extend1(output)
+function Collector:add(output)
   table.insert(self._output, output)
   return self
 end
 
----Adds outputs which will be extended to the collected result.
----@param output DeltaVim.Keymap.Output[]
-function Collector:extend(output)
-  for _, m in ipairs(output) do
-    self:extend1(m)
+---@private
+---@param presets DeltaVim.Keymap.Presets
+function Collector:_add_presets(presets)
+  local opts = get_opts(presets, {})
+  for _, preset in ipairs(presets) do
+    preset = Util.merge({}, opts, preset)
+    local name = preset[1]
+    local mode = preset.mode
+    if not self._preset[name] then self._preset[name] = {} end
+    local p = self._preset[name]
+    if not mode then
+      p["*"] = preset
+    else
+      for _, m in ipairs(get_mode(mode)) do
+        p[m] = preset
+      end
+    end
   end
-  return self
 end
 
 ---@private
 ---@param preset DeltaVim.Keymap.Preset
 ---@param input DeltaVim.Keymap.Input
-function Collector:_map_preset(preset, input)
-  if preset.with then
-    load_keymaps(self, { preset.with(input) })
-  else
-    local key = input[1] or preset.key
-    if key == nil then return end
-    ---@type string[]
-    local mode
-    ---If no modes are specified, uses modes defined by the preset.
-    if #input.mode == 0 then
-      mode = get_mode(preset.mode)
-    ---Otherwise, only supported modes will be mapped.
-    else
-      -- Empty value means all modes are supported.
-      if not preset.mode then
-        mode = input.mode
-      -- Otherwise, finds common modes.
-      else
-        local supported = {}
-        for _, m in ipairs(get_mode(preset.mode or {})) do
-          supported[m] = true
-        end
-        mode = {}
-        for _, m in ipairs(input.mode) do
-          if supported[m] then table.insert(mode, m) end
-        end
-        if #mode == 0 then return end
-      end
-    end
-    table.insert(self._output, {
-      key,
-      preset[2],
-      mode = mode,
-      opts = get_opts(preset, { desc = input.desc or preset[3] }),
-    })
-  end
+---@param mode string
+function Collector:_map_preset(preset, input, mode)
+  local rhs = preset[2]
+  if preset.with then rhs = preset.with(input) end
+  local key = input[1] or preset.key
+  if not key then return end
+  self:add({
+    key,
+    rhs,
+    -- TODO: string not string[]
+    mode = { mode },
+    opts = get_opts(preset, { desc = input.desc or preset[3] }),
+  })
 end
 
----@param preset DeltaVim.Keymap.Preset
-function Collector:map1(preset)
-  for _, input in ipairs(get(preset[1]) or {}) do
-    self:_map_preset(preset, input)
+---@private
+---@param input DeltaVim.Keymap.Input
+function Collector:_do_map(input)
+  local preset = self._preset[input[2]]
+  -- If no modes are specified, uses modes defined by the preset.
+  if #input.mode == 0 then
+    for m, p in pairs(preset) do
+      m = m == "*" and "n" or m
+      self:_map_preset(p, input, m)
+    end
+  -- Otherwise, only supported modes will be mapped.
+  else
+    for _, m in ipairs(input.mode) do
+      local p = preset[m] or preset["*"]
+      if p then self:_map_preset(p, input, m) end
+    end
   end
-  return self
 end
 
 ---Converts preset inputs to the output.
 ---@param presets DeltaVim.Keymap.Presets
 function Collector:map(presets)
-  local gopts = get_opts(presets)
-  for _, preset in ipairs(presets) do
-    self:map1(Util.merge({}, preset, gopts))
-  end
-  return self
-end
-
----@param preset DeltaVim.Keymap.Preset
-function Collector:map1_unique(preset)
-  local inputs = get(preset[1]) or {}
-  if #inputs >= 1 then
-    if #inputs > 1 then
-      Log.warn("Only the first key of '%s' will be set.", preset[1])
+  self._preset = {}
+  self:_add_presets(presets)
+  for name, _ in pairs(self._preset) do
+    for _, input in ipairs(get(name) or {}) do
+      self:_do_map(input)
     end
-    self:_map_preset(preset, inputs[1])
   end
   return self
 end
@@ -258,15 +209,30 @@ end
 ---Similar as `Collector:map`, but more than one inputs will be ignored.
 ---@param presets DeltaVim.Keymap.Presets
 function Collector:map_unique(presets)
-  local gopts = get_opts(presets)
-  for _, preset in ipairs(presets) do
-    self:map1_unique(Util.merge({}, preset, gopts))
+  self._preset = {}
+  self:_add_presets(presets)
+  for name, _ in pairs(self._preset) do
+    local input = get(name)
+    if input then
+      if #input > 1 then
+        Log.warn("Only the first key of '%s' will be set.", name)
+      end
+      self:_do_map(input[1])
+    end
   end
   return self
 end
 
 ---Collects mappings from presets.
-function Collector:collect() return self._output end
+function Collector:collect()
+  self._output = {}
+  for name, _ in pairs(self._preset) do
+    for _, input in ipairs(get(name) or {}) do
+      self:_do_map(input)
+    end
+  end
+  return self._output
+end
 
 ---@param opts? DeltaVim.Keymap.Options
 function Collector:collect_and_set(opts) M.set(self:collect(), opts) end
@@ -315,7 +281,42 @@ M.Collector = Collector.new
 ---@param keymaps DeltaVim.Keymaps
 function M.load(keymaps)
   local collector = Collector.new()
-  load_keymaps(collector, keymaps)
+  local opts = get_opts(keymaps)
+  for _, mapping in ipairs(keymaps) do
+    ---@type DeltaVim.Keymap
+    mapping = Util.merge({}, mapping, opts)
+    local key = mapping[1]
+    local rhs = mapping[2]
+    local desc = mapping[3] or mapping.desc
+    if type(rhs) == "string" and Util.starts_with(rhs, "@") then
+      if key == false then
+        remove_input(rhs)
+      else
+        ---@type string?
+        local k
+        if key == true then
+          k = nil
+        else
+          k = key --[[@as string]]
+        end
+        add_input({
+          ---@diagnostic disable-next-line:assign-type-mismatch
+          k,
+          rhs,
+          args = get_args(mapping),
+          mode = get_mode(mapping.mode or {}),
+          desc = desc,
+        })
+      end
+    elseif type(key) == "string" then
+      collector:add({
+        key,
+        rhs,
+        mode = get_mode(mapping.mode),
+        opts = get_opts(mapping, { desc = desc }),
+      })
+    end
+  end
   return collector
 end
 

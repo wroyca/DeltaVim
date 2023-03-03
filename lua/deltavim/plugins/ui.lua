@@ -343,7 +343,9 @@ return {
     end,
     keys = function()
       return Keymap.Collector()
-        :map1({ "@ui.alpha", "<Cmd>Alpha<CR>", "Alpha" })
+        :map({
+          { "@ui.alpha", "<Cmd>Alpha<CR>", "Alpha" },
+        })
         :collect_lazy()
     end,
     config = function(_, dashboard)

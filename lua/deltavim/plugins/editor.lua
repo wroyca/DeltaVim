@@ -8,24 +8,6 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     deactivate = function() vim.cmd("Neotree close") end,
-    init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
-      if vim.fn.argc() == 1 then
-        local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
-        if stat and stat.type == "directory" then require("neo-tree") end
-      end
-    end,
-    opts = {
-      filesystem = {
-        bind_to_cwd = false,
-        follow_current_file = true,
-      },
-      window = {
-        mappings = {
-          ["<space>"] = "none",
-        },
-      },
-    },
     keys = function()
       ---@param dir fun():string
       ---@return fun()
@@ -52,6 +34,24 @@ return {
           { "@explorer.focus_cwd", focus(Util.get_cwd), "Focus explorer (cwd)" },
         })
         :collect_lazy()
+    end,
+    opts = {
+      filesystem = {
+        bind_to_cwd = false,
+        follow_current_file = true,
+      },
+      window = {
+        mappings = {
+          ["<space>"] = "none",
+        },
+      },
+    },
+    init = function()
+      vim.g.neo_tree_remove_legacy_commands = 1
+      if vim.fn.argc() == 1 then
+        local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
+        if stat and stat.type == "directory" then require("neo-tree") end
+      end
     end,
   },
 
@@ -90,11 +90,10 @@ return {
         float_opts = { border = Config.border },
         ---@param term Terminal
         on_open = function(term)
+          -- stylua: ignore
           Keymap.Collector()
-            :map1({
-              "@terminal.hide",
-              function() term:toggle() end,
-              "Hide terminal",
+            :map({
+              { "@terminal.hide", function() term:toggle() end, "Hide terminal" },
               mode = "t",
               buffer = term.bufnr,
             })
@@ -110,7 +109,9 @@ return {
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
-        :map1({ "@search.replace", function() require("spectre").open() end, "Replace in files" })
+        :map({
+          { "@search.replace", function() require("spectre").open() end, "Replace in files" }
+        })
         :collect_lazy()
     end,
     config = true,
@@ -364,7 +365,6 @@ return {
   {
     "RRethy/vim-illuminate",
     event = { "BufReadPost", "BufNewFile" },
-    opts = { delay = 200 },
     keys = function()
       return Keymap.Collector()
         :map({
@@ -373,6 +373,7 @@ return {
         })
         :collect_lazy()
     end,
+    opts = { delay = 200 },
     config = function(_, opts)
       local illuminate = require("illuminate")
       illuminate.configure(opts)
@@ -403,7 +404,6 @@ return {
   {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
-    opts = { use_diagnostic_signs = true },
     keys = function()
       local tb = Util.trouble
 
@@ -434,6 +434,7 @@ return {
         })
         :collect_lazy()
     end,
+    opts = { use_diagnostic_signs = true },
   },
 
   -- Todo comments

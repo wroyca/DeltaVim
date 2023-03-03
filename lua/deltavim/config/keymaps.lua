@@ -218,11 +218,8 @@ function M.init()
 end
 
 function M.setup()
-  ---@type DeltaVim.Keymap.Map
-  local function undo_break_point(src)
-    local key = src[1]
-    return { key, key .. "<C-g>u", mode = "i" }
-  end
+  ---@type DeltaVim.Keymap.With
+  local function undo_break_point(src) return src[1] .. "<C-g>u" end
 
   ---@param opt string
   local function toggle_boolean(opt)
@@ -303,12 +300,12 @@ function M.setup()
     { "@tab.new", "<Cmd>tabnew<CR>", "New tab" },
     { "@tab.close", "<Cmd>tabclose<CR>", "Close tab" },
     -- Util
-    { "@util.save", "<Cmd>w<CR><Esc>", "Save file", mode = { "n", "i", "x" } },
+    { "@util.save", "<Cmd>w<CR><Esc>", "Save file", mode = { "*", "i", "x" } },
     { "@util.new_file", "<Cmd>enew<CR>", "New file" },
     { "@util.search_this", "*N", "Search this word", mode = { "n", "x" } },
     { "@util.escape_insert", "<Esc>", "Enter normal mode", mode = "i" },
     { "@util.escape_terminal", "<C-\\><C-n>", "Enter normal mode", mode = "t" },
-    { "@util.undo_break_point", with = undo_break_point, },
+    { "@util.undo_break_point", with = undo_break_point, mode = "i" },
     -- Move line up & down
     { "@util.move_line_down", "<Cmd>m .+1<CR>==", "Move line down", mode = "n" },
     { "@util.move_line_down", "<Cmd>m '>+1<CR>gv=gv", "Move line down", mode = "v" },

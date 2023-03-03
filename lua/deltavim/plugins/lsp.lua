@@ -14,6 +14,13 @@ return {
       "mason-lspconfig.nvim",
       "cmp-nvim-lsp",
     },
+    keys = function()
+      return Keymap.Collector()
+        :map({
+          { "@ui.lsp_info", "<Cmd>LspInfo<CR>", "Lsp info" },
+        })
+        :collect_lazy()
+    end,
     ---@class DeltaVim.Config.Lsp
     opts = {
       ---Options for `vim.diagnostic.config()`
@@ -54,11 +61,6 @@ return {
       ---@type table<string,fun(server:string,opts:table):boolean?>
       setup = {},
     },
-    keys = function()
-      return Keymap.Collector()
-        :map1({ "@ui.lsp_info", "<Cmd>LspInfo<CR>", "Lsp info" })
-        :collect_lazy()
-    end,
     ---@param opts DeltaVim.Config.Lsp
     config = function(_, opts)
       local Lsp = require("deltavim.core.lsp")
@@ -131,6 +133,13 @@ return {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "mason.nvim" },
+    keys = function()
+      return Keymap.Collector()
+        :map({
+          { "@ui.nullls_info", "<Cmd>NullLsInfo<CR>", "Null-ls info" },
+        })
+        :collect_lazy()
+    end,
     ---@class DeltaVim.Config.NullLs
     --TODO: PR to LazyVim
     opts = {
@@ -146,11 +155,6 @@ return {
       },
       border = Config.border,
     },
-    keys = function()
-      return Keymap.Collector()
-        :map1({ "@ui.nullls_info", "<Cmd>NullLsInfo<CR>", "Null-ls info" })
-        :collect_lazy()
-    end,
     ---@param opts DeltaVim.Config.NullLs|table
     config = function(_, opts)
       local builtins = require("null-ls").builtins
@@ -172,7 +176,9 @@ return {
     cmd = "Mason",
     keys = function()
       return Keymap.Collector()
-        :map1({ "@ui.mason", "<Cmd>Mason<CR>", "Mason" })
+        :map({
+          { "@ui.mason", "<Cmd>Mason<CR>", "Mason" },
+        })
         :collect_lazy()
     end,
     opts = {

@@ -68,10 +68,10 @@ function M.keymaps(client, buffer)
   KEYMAPS = KEYMAPS or Keymap.Collector()
     :map({
       -- lsp
-      { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "n", "x" } },
+      { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "*", "x" } },
       { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
       { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
-      { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "n" },
+      { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "*" },
       { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
       { "@lsp.hover", lsp("hover", "hover"), "Hover" },
       { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },

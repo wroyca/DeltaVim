@@ -46,7 +46,7 @@ function M.init()
 end
 
 function M.setup()
-  ---@type DeltaVim.Autocmd.Map
+  ---@type DeltaVim.Autocmd.With
   local function quit(src)
     ---@class DeltaVim.Autocmds.Quit
     ---@field ft string[]
@@ -60,13 +60,12 @@ function M.setup()
     return { "FileType", cb, pattern = ft }
   end
 
-  ---@type DeltaVim.Autocmd.Map
+  ---@type DeltaVim.Autocmd.With
   local function rulers(src)
     ---@class DeltaVim.Autocmds.Rulers
     ---@field offsets table<string,integer|integer[]>
     local args = src.args
     local offsets = Util.resolve_value(args.offsets, M.RULERS, Util.merge)
-    local group = vim.api.nvim_create_augroup("DeltaVimRulers", {})
     ---@type DeltaVim.Autocmd[]
     local autocmds = {}
     for ft, offs in pairs(offsets) do
@@ -79,16 +78,14 @@ function M.setup()
       else
         table.insert(cc, tostring(offs))
       end
-      ---@type DeltaVim.Autocmd.Callback
-
       table.insert(autocmds, {
         "FileType",
         function() vim.opt_local.colorcolumn = cc end,
-        group = group,
         pattern = ft,
       })
     end
-    return unpack(autocmds)
+    autocmds.grouped = "DeltaVimRulers"
+    return autocmds
   end
 
   -- stylua: ignore

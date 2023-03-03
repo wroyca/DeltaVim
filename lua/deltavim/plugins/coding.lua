@@ -8,28 +8,20 @@ return {
     "L3MON4D3/LuaSnip",
     build = (not jit.os:find("Windows")) and "make install_jsregexp" or nil,
     dependencies = { "friendly-snippets" },
-    opts = {
-      history = true,
-      delete_check_events = "TextChanged",
-    },
     keys = function()
       ---@param dir integer
-      ---@return DeltaVim.Keymap.Map
+      ---@return DeltaVim.Keymap.With
       local function jump_or_fallback(dir)
         return function(src)
           local key = src[1] --[[@as string]]
-          return {
-            key,
-            function()
-              local luasnip = require("luasnip")
-              if luasnip.locally_jumpable(dir) then
-                luasnip.jump(dir)
-              else
-                Util.feedkey(key)
-              end
-            end,
-            mode = "i",
-          }
+          return function()
+            local luasnip = require("luasnip")
+            if luasnip.locally_jumpable(dir) then
+              luasnip.jump(dir)
+            else
+              Util.feedkey(key)
+            end
+          end
         end
       end
 
@@ -39,13 +31,17 @@ return {
 
       return Keymap.Collector()
         :map({
-          { "@snippet.next_node", with = jump_or_fallback(1) },
+          { "@snippet.next_node", with = jump_or_fallback(1), mode = "i" },
           { "@snippet.next_node", jump(1), mode = "s" },
-          { "@snippet.prev_node", with = jump_or_fallback(-1) },
+          { "@snippet.prev_node", with = jump_or_fallback(-1), mode = "i" },
           { "@snippet.prev_node", jump(-1), mode = "s" },
         })
         :collect_lazy()
     end,
+    opts = {
+      history = true,
+      delete_check_events = "TextChanged",
+    },
   },
   {
     "rafamadriz/friendly-snippets",
@@ -164,7 +160,7 @@ return {
   -- Surround
   {
     "echasnovski/mini.surround",
-    keys = function(_, keys)
+    keys = function()
       -- stylua: ignore
       return Keymap.Collector()
         :map({
@@ -176,7 +172,7 @@ return {
           { "@surround.replace", desc = "Replace surrounding", mode = "n" },
           { "@surround.update_n_lines", desc = "Update N lines surrounding", mode = "n" },
         })
-        :collect_lazy(keys)
+        :collect_lazy()
     end,
     opts = function()
       local mappings = Keymap.Collector()

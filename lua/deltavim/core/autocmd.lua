@@ -33,6 +33,8 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Autocmd.Presets DeltaVim.Autocmd.Preset[]|DeltaVim.Autocmd.Options
 
+---@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd|DeltaVim.Autocmd[]|{grouped?:boolean|string}
+
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
 ---@field [1] string
@@ -40,10 +42,8 @@ local Util = require("deltavim.util")
 ---@field [2]? string|string[]
 ---Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string
----@field with? DeltaVim.Autocmd.Map
-
----@alias DeltaVim.Autocmd.Map fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd? ...
-
+---@field with? DeltaVim.Autocmd.With
+--
 ---@class DeltaVim.Autocmd.Output
 ---Events
 ---@field [1] string|string[]
@@ -96,9 +96,78 @@ end
 ---@param name string
 local function remove_input(name) INPUT[name] = nil end
 
----@param collector DeltaVim.Autocmd.Collector
+---@class DeltaVim.Autocmd.Collector
+---@field private _output DeltaVim.Autocmd.Output[]
+local Collector = {}
+
+function Collector.new()
+  local self = setmetatable({ _output = {} }, { __index = Collector })
+  return self
+end
+
+---@param autocmd DeltaVim.Autocmd.Output
+function Collector:add(autocmd)
+  table.insert(self._output, autocmd)
+  return self
+end
+
+---@private
+---@param preset DeltaVim.Autocmd.Preset
+function Collector:_map_preset(preset)
+  local src = INPUT[preset[1]]
+  if src == nil then return self end
+  if preset.with then
+    local output = preset.with(src)
+    if output.grouped then
+      local group
+      if type(output.grouped) == "string" then
+        group = vim.api.nvim_create_augroup(output.grouped --[[@as string]], {})
+      end
+      for _, o in ipairs(output) do
+        ---@cast o any
+        self:add({
+          o[1],
+          o[2],
+          opts = Util.merge({ group = group }, get_opts(o)),
+        })
+      end
+    else
+      ---@cast output any
+      self:add({
+        output[1],
+        output[2],
+        opts = get_opts(output),
+      })
+    end
+  elseif preset[2] then
+    self:add({
+      preset[2],
+      preset[3],
+      opts = get_opts(src),
+    })
+  end
+  return self
+end
+
+---Constructs autocmds from preset inputs.
+---@param presets DeltaVim.Autocmd.Presets
+function Collector:map(presets)
+  local opts = get_opts(presets)
+  for _, preset in ipairs(presets) do
+    self:_map_preset(Util.merge({}, preset, opts))
+  end
+  return self
+end
+
+---Collects output autocmds.
+function Collector:collect() return self._output end
+
+function Collector:collect_and_set() M.set(self:collect()) end
+
+---Loads auto commands.
 ---@param autocmds DeltaVim.Autocmds
-local function load_autocmds(collector, autocmds)
+function M.load(autocmds)
+  local collector = Collector.new()
   local gopts = get_opts(autocmds)
   for _, autocmd in ipairs(autocmds) do
     autocmd = Util.merge({}, autocmd, gopts)
@@ -116,75 +185,13 @@ local function load_autocmds(collector, autocmds)
         remove_input(event)
       end
     elseif type(cmd) ~= "boolean" then
-      collector:extend1({
+      collector:add({
         event,
         cmd,
         opts = get_opts(autocmd, { desc = desc }),
       })
     end
   end
-end
-
----@class DeltaVim.Autocmd.Collector
----@field private _output DeltaVim.Autocmd.Output[]
-local Collector = {}
-
-function Collector.new()
-  local self = setmetatable({ _output = {} }, { __index = Collector })
-  return self
-end
-
----@param autocmd DeltaVim.Autocmd.Output
-function Collector:extend1(autocmd)
-  table.insert(self._output, autocmd)
-  return self
-end
-
----Adds autocmds.
----@param autocmds DeltaVim.Autocmd.Output[]
-function Collector:extend(autocmds)
-  for _, autocmd in ipairs(autocmds) do
-    self:extend1(autocmd)
-  end
-  return self
-end
-
----@param preset DeltaVim.Autocmd.Preset
-function Collector:map1(preset)
-  local src = INPUT[preset[1]]
-  if src == nil then return self end
-  if preset.with then
-    load_autocmds(self, { preset.with(src) })
-  elseif preset[2] then
-    table.insert(self._output, {
-      preset[2],
-      preset[3],
-      opts = get_opts(src),
-    })
-  end
-  return self
-end
-
----Constructs autocmds from preset inputs.
----@param presets DeltaVim.Autocmd.Presets
-function Collector:map(presets)
-  local gopts = get_opts(presets)
-  for _, preset in ipairs(presets) do
-    self:map1(Util.merge({}, preset, gopts))
-  end
-  return self
-end
-
----Collects output autocmds.
-function Collector:collect() return self._output end
-
-function Collector:collect_and_set() M.set(self:collect()) end
-
----Loads auto commands.
----@param autocmds DeltaVim.Autocmds
-function M.load(autocmds)
-  local collector = Collector.new()
-  load_autocmds(collector, autocmds)
   return collector
 end
 
