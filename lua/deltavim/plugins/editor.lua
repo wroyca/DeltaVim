@@ -198,11 +198,17 @@ return {
         return require("trouble.providers.telescope").open_with_trouble(...)
       end
 
+      local function open_selected_with_trouble(...)
+        -- stylua: ignore
+        return require("trouble.providers.telescope").open_selected_with_trouble(...)
+      end
+
       local mappings = {
         i = {
-          ["<c-t>"] = open_with_trouble,
-          ["<a-i>"] = Util.telescope_files({ no_ignore = true }),
-          ["<a-h>"] = Util.telescope_files({ hidden = true }),
+          ["<C-t>"] = open_with_trouble,
+          ["<A-t>"] = open_selected_with_trouble,
+          ["<A-i>"] = Util.telescope_files({ no_ignore = true }),
+          ["<A-h>"] = Util.telescope_files({ hidden = true }),
           ["<C-Down>"] = action("cycle_history_next"),
           ["<C-Up>"] = action("cycle_history_prev"),
           ["<C-f>"] = action("preview_scrolling_down"),
