@@ -84,23 +84,20 @@ return {
         })
         :collect_lazy()
     end,
-    opts = function()
-      return {
-        direction = "float",
-        float_opts = { border = Config.border },
-        ---@param term Terminal
-        on_open = function(term)
+    opts = {
+      direction = "float",
+      float_opts = { border = Config.border },
+      ---@param term Terminal
+      on_open = function(term)
           -- stylua: ignore
           Keymap.Collector()
             :map({
-              { "@terminal.hide", function() term:toggle() end, "Hide terminal" },
-              mode = "t",
+              { "@terminal.hide", function() term:toggle() end, "Hide terminal", mode = "t" },
               buffer = term.bufnr,
             })
             :collect_and_set()
-        end,
-      }
-    end,
+      end,
+    },
   },
 
   -- Search/replace in multiple files
