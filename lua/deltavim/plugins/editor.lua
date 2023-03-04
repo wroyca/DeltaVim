@@ -103,6 +103,8 @@ return {
   -- Search/replace in multiple files
   {
     "windwp/nvim-spectre",
+    -- TODO: PR to LazyVim
+    cmd = "Spectre",
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
@@ -127,15 +129,15 @@ return {
       local symbols = {
         symbols = {
           "Class",
-          "Function",
-          "Method",
           "Constructor",
+          "Field",
+          "Function",
           "Interface",
+          "Method",
           "Module",
+          "Property",
           "Struct",
           "Trait",
-          "Field",
-          "Property",
         },
       }
 
@@ -258,48 +260,48 @@ return {
       end
       return keys
     end,
-    opts = { labeled_modes = "nxo" },
+    opts = { labeled_modes = "nx" },
   },
 
   -- Which-key
   {
     "folke/which-key.nvim",
     event = "VeryLazy",
-    opts = function()
+    opts = {
+      plugins = { spelling = true },
+      groups = {
+        mode = { "n", "x" },
+        ["]"] = { name = "+next" },
+        ["["] = { name = "+prev" },
+        ["g"] = { name = "+goto" },
+        ["gz"] = { name = "+surround" },
+        ["<Leader>b"] = { name = "+buffer" },
+        ["<Leader>c"] = { name = "+code" },
+        ["<Leader>f"] = { name = "+file/find" },
+        ["<Leader>g"] = { name = "+git" },
+        ["<Leader>gh"] = { name = "+hunks" },
+        ["<Leader>q"] = { name = "+quit/session" },
+        ["<Leader>s"] = { name = "+search" },
+        ["<Leader>sn"] = { name = "+noice" },
+        ["<Leader>u"] = { name = "+ui" },
+        ["<Leader>w"] = { name = "+windows" },
+        ["<Leader>x"] = { name = "+diagnostics/quickfix" },
+        ["<Leader><Tab>"] = { name = "+tabs" },
+      },
+      window = { border = Config.border },
+    },
+    config = function(_, opts)
+      local wk = require("which-key")
+      -- Register operators
       local operators = Keymap.Collector()
         :map({
           { "@comment.toggle", "Comment" },
           { "@surround.add", "Add surrounding" },
         })
         :collect_lhs_table()
-      return {
-        plugins = { spelling = true },
-        operators = operators,
-        groups = {
-          mode = { "n", "x" },
-          ["]"] = { name = "+next" },
-          ["["] = { name = "+prev" },
-          ["g"] = { name = "+goto" },
-          ["gz"] = { name = "+surround" },
-          ["<Leader>b"] = { name = "+buffer" },
-          ["<Leader>c"] = { name = "+code" },
-          ["<Leader>f"] = { name = "+file/find" },
-          ["<Leader>g"] = { name = "+git" },
-          ["<Leader>gh"] = { name = "+hunks" },
-          ["<Leader>q"] = { name = "+quit/session" },
-          ["<Leader>s"] = { name = "+search" },
-          ["<Leader>sn"] = { name = "+noice" },
-          ["<Leader>u"] = { name = "+ui" },
-          ["<Leader>w"] = { name = "+windows" },
-          ["<Leader>x"] = { name = "+diagnostics/quickfix" },
-          ["<Leader><Tab>"] = { name = "+tabs" },
-        },
-        window = { border = Config.border },
-      }
-    end,
-    config = function(_, opts)
-      local wk = require("which-key")
+      opts = Util.deep_merge({ operators = operators }, opts)
       wk.setup(opts)
+      -- Register groups
       wk.register(opts.groups)
     end,
   },
@@ -361,6 +363,8 @@ return {
   -- References
   {
     "RRethy/vim-illuminate",
+    -- TODO: PR to LazyVim
+    cmd = "IlluminateToggle",
     event = { "BufReadPost", "BufNewFile" },
     keys = function()
       return Keymap.Collector()
@@ -404,13 +408,17 @@ return {
     keys = function()
       local tb = Util.trouble
 
+      local goto_opts = { skip_groups = true, jump = true }
       ---@param next boolean
       local function goto_qf(next)
         local f = next and "next" or "previous"
+        local f2 = next and "cnext" or "cprev"
         return function()
           local trouble = require("trouble")
           if trouble.is_open() then
-            trouble[f]({ skip_groups = true, jump = true })
+            trouble[f](goto_opts)
+          else
+            vim.cmd(f2)
           end
         end
       end

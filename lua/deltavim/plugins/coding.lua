@@ -295,11 +295,7 @@ return {
           i[k] = v
           a[k] = v
         end
-        require("which-key").register({
-          mode = { "o", "x" },
-          a = a,
-          i = i,
-        })
+        require("which-key").register({ mode = { "o", "x" }, a = a, i = i })
       end
     end,
   },

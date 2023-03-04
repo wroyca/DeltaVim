@@ -11,7 +11,7 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@notify.clear", function() require("notify").dismiss(opts) end, "Delete all notifications" },
+          { "@notify.clear", function() require("notify").dismiss(opts) end, "Clear notifications" },
           { "@search.notifications", Util.telescope({ "notify" }), "Notifications" },
         })
         :collect_lazy()
@@ -41,12 +41,12 @@ return {
     init = function()
       ---@diagnostic disable-next-line:duplicate-set-field
       vim.ui.select = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
+        require("dressing")
         return vim.ui.select(...)
       end
       ---@diagnostic disable-next-line:duplicate-set-field
       vim.ui.input = function(...)
-        require("lazy").load({ plugins = { "dressing.nvim" } })
+        require("dressing")
         return vim.ui.input(...)
       end
     end,
@@ -197,7 +197,7 @@ return {
             function() return " " .. os.date("%R") end,
           },
         },
-        extensions = { "neo-tree" },
+        extensions = { "neo-tree", "quickfix", "toggleterm" },
       }
     end,
   },
@@ -209,12 +209,12 @@ return {
     opts = {
       char = "│",
       filetype_exclude = {
-        "help",
         "alpha",
         "dashboard",
+        "help",
+        "lazy",
         "neo-tree",
         "Trouble",
-        "lazy",
       },
       show_trailing_blankline_indent = false,
       show_current_context = false,
@@ -236,13 +236,13 @@ return {
         function() vim.b.miniindentscope_disable = true end,
         {
           pattern = {
-            "help",
             "alpha",
             "dashboard",
-            "neo-tree",
-            "Trouble",
+            "help",
             "lazy",
             "mason",
+            "neo-tree",
+            "Trouble",
           },
         }
       )
@@ -265,6 +265,7 @@ return {
         bottom_search = true,
         command_palette = true,
         long_message_to_split = true,
+        lsp_doc_border = Config.border == "rounded",
       },
     },
     keys = function()

@@ -123,9 +123,9 @@ return {
       require("lspconfig.ui.windows").default_options.border = Config.border
     end,
   },
-  { "folke/neoconf.nvim", cmd = "Neoconf", opts = {} },
+  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
   { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
-  { "williamboman/mason-lspconfig.nvim", opts = {} },
+  { "williamboman/mason-lspconfig.nvim", config = true },
   { "hrsh7th/cmp-nvim-lsp", cond = function() return Util.has("nvim-cmp") end },
 
   -- Formatters/linters
@@ -141,17 +141,17 @@ return {
         :collect_lazy()
     end,
     ---@class DeltaVim.Config.NullLs
-    --TODO: PR to LazyVim
+    -- TODO: PR to LazyVim
     opts = {
       ---Null-ls formatters and options passed to `formatter:with(options)`.
-      ---@type table<string,table>
+      ---@type table<string,table|boolean>
       formatters = {
-        stylua = {},
+        stylua = true,
       },
       ---Null-ls linters.
       ---@type table<string,table|boolean>
       linters = {
-        flake8 = {},
+        flake8 = true,
       },
       border = Config.border,
     },
@@ -183,10 +183,10 @@ return {
     end,
     opts = {
       ensure_installed = {
-        "stylua",
+        "flake8",
         "shellcheck",
         "shfmt",
-        "flake8",
+        "stylua",
       },
       ui = { border = Config.border },
     },

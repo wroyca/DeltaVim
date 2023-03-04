@@ -12,16 +12,6 @@ return {
   {
     "folke/persistence.nvim",
     event = "BufReadPre",
-    opts = {
-      options = {
-        "buffers",
-        "curdir",
-        "tabpages",
-        "winsize",
-        "help",
-        "globals",
-      },
-    },
     keys = function()
       ---@param cmd string
       ---@param args? any
@@ -44,6 +34,16 @@ return {
         })
         :collect_lazy()
     end,
+    opts = {
+      options = {
+        "buffers",
+        "curdir",
+        "globals",
+        "help",
+        "tabpages",
+        "winsize",
+      },
+    },
   },
 
   -- Library used by other plugins
