@@ -10,7 +10,7 @@ M.DEFAULT = {
   { "@quit", true },
   { "@ruler", true },
   { "@sync_time", true },
-  { "@trim_spaces", true },
+  { "@trim_whitespace", true },
 }
 
 ---@type DeltaVim.Autocmd.Collector
@@ -100,7 +100,7 @@ function M.setup()
     { "@quit", with = quit, args = quit_args },
     { "@ruler", with = ruler, args = ruler_args },
     { "@sync_time", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
-    { "@trim_spaces", "BufWritePre", [[silent! s/\s+$//e]] },
+    { "@trim_whitespace", "BufWritePre", [[silent! s/\s+$//e]] },
   }):collect_and_set()
 end
 
