@@ -141,6 +141,19 @@ end
 ---@param pat string
 function M.starts_with(s, pat) return s:sub(1, #pat) == pat end
 
+---Splits a string
+---@param s string
+---@param pat string
+---@return string,string?
+function M.split(s, pat)
+  local i, j = s:find(pat, nil, true)
+  if i ~= nil then
+    return s:sub(1, i - 1), s:sub(j + 1)
+  else
+    return s
+  end
+end
+
 ---Merge lists into a single list.
 ---Note: This mutates the first list.
 ---@generic T

@@ -23,17 +23,27 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Autocmds DeltaVim.Autocmd[]|DeltaVim.Autocmd.Options
 
----@class DeltaVim.Autocmd: DeltaVim.Autocmd.Options
----Events or a preset name starts with '@'
+---@alias DeltaVim.Autocmd DeltaVim.CustomAutocmd|DeltaVim.PresetAutocmd
+
+---@class DeltaVim.CustomAutocmd: DeltaVim.BaseAutocmd
+---Events
 ---@field [1] string|string[]
 ---Command, callback function or boolean value to enable a preset
----@field [2] string|DeltaVim.Autocmd.Callback|boolean
+---@field [2] string|DeltaVim.Autocmd.Callback
+
+---@class DeltaVim.PresetAutocmd: DeltaVim.BaseAutocmd
+---Preset name starts with '@'
+---@field [1] string
+---Boolean value to enable a preset
+---@field [2] boolean
+
+---@class DeltaVim.BaseAutocmd: DeltaVim.Autocmd.Options
 ---Description
 ---@field [3]? string
 
 ---@alias DeltaVim.Autocmd.Presets DeltaVim.Autocmd.Preset[]|DeltaVim.Autocmd.Options
 
----@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.Autocmd|DeltaVim.Autocmd[]|{grouped?:boolean|string}
+---@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.CustomAutocmd|DeltaVim.CustomAutocmd[]|{grouped?:boolean|string}
 
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
@@ -123,8 +133,8 @@ function Collector:_map_preset(preset)
       if type(output.grouped) == "string" then
         group = vim.api.nvim_create_augroup(output.grouped --[[@as string]], {})
       end
+      ---@cast output DeltaVim.CustomAutocmd[]
       for _, o in ipairs(output) do
-        ---@cast o any
         self:add({
           o[1],
           o[2],
@@ -132,7 +142,7 @@ function Collector:_map_preset(preset)
         })
       end
     else
-      ---@cast output any
+      ---@cast output DeltaVim.CustomAutocmd
       self:add({
         output[1],
         output[2],

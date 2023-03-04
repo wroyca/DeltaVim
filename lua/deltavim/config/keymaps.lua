@@ -219,7 +219,13 @@ end
 
 function M.setup()
   ---@type DeltaVim.Keymap.With
-  local function undo_break_point(src) return src[1] .. "<C-g>u" end
+  local function undo_break_point(src)
+    local key = src[1]
+    return {
+      key,
+      key .. "<C-g>u",
+    }
+  end
 
   ---@param opt string
   local function toggle_boolean(opt)
