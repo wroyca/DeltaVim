@@ -329,6 +329,23 @@ function M.setup()
   if vim.fn.has("nvim-0.9.0") == 1 then
     table.insert(presets, { "@util.show_pos", vim.show_pos, "Show position" })
   end
+  -- Fallback presets
+  ---@type table<string,DeltaVim.Keymap.Presets>
+  local fallback = {
+    ["bufferline.nvim"] = {
+      { "@buffer.prev", "<Cmd>bprevious<CR>", "Prev buffer" },
+      { "@buffer.next", "<Cmd>bnext<CR>", "Next buffer" },
+    },
+    ["trouble.nvim"] = {
+      { "@goto.prev_quickfix", "<Cmd>cprev<CR>", "Prev quickfix" },
+      { "@goto.next_quickfix", "<Cmd>cnext<CR>", "Next quickfix" },
+      { "@quickfix.location_list", "<Cmd>lopen<CR>", "Location list" },
+      { "@quickfix.quickfix_list", "<Cmd>copen<CR>", "Quickfix dist" },
+    },
+  }
+  for k, v in pairs(fallback) do
+    if not Util.has(k) then Util.concat(presets, v) end
+  end
   CONFIG:map(presets):collect_and_set()
 end
 
