@@ -53,6 +53,7 @@ local Util = require("deltavim.util")
 ---Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string
 ---@field with? DeltaVim.Autocmd.With
+---@field args? table<string,{[1]:DeltaVim.Util.Reduce,[2]:any}>
 --
 ---@class DeltaVim.Autocmd.Output
 ---Events
@@ -94,13 +95,14 @@ local function get_args(src)
 end
 
 ---Preset inputs shared by all collectors.
----@type table<string,DeltaVim.Autocmd.Input>
+---@type table<string,DeltaVim.Autocmd.Input[]>
 local INPUT = {}
 
----@param autocmd DeltaVim.Autocmd.Input
-local function add_input(autocmd)
-  local name = autocmd[1]
-  INPUT[name] = autocmd
+---@param input DeltaVim.Autocmd.Input
+local function add_input(input)
+  local name = input[1]
+  if INPUT[name] == nil then INPUT[name] = {} end
+  table.insert(INPUT[name], input)
 end
 
 ---@param name string
@@ -124,8 +126,26 @@ end
 ---@private
 ---@param preset DeltaVim.Autocmd.Preset
 function Collector:_map_preset(preset)
-  local src = INPUT[preset[1]]
-  if src == nil then return self end
+  local input = INPUT[preset[1]]
+  if input == nil then return self end
+  -- 1) Merge input tables.
+  ---@type DeltaVim.Autocmd.Input
+  local desc
+  local args = {}
+  local schema = preset.args or {}
+  for k, v in pairs(schema) do
+    args[k] = v[2]
+  end
+  for _, inp in ipairs(input) do
+    desc = desc or inp.desc
+    -- Reduce arguments
+    local new = inp.args
+    for k, t in pairs(schema) do
+      if new[k] ~= nil then Util.reduce(t[1], args[k], new[k]) end
+    end
+  end
+  -- 2) Collect output tables from custom function
+  local src = { preset[1], desc = desc, args = args }
   if preset.with then
     local output = preset.with(src)
     if output.grouped then
@@ -149,6 +169,7 @@ function Collector:_map_preset(preset)
         opts = get_opts(output),
       })
     end
+  -- 3) Or construct from preset directly.
   elseif preset[2] then
     self:add({
       preset[2],

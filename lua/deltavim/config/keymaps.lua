@@ -213,7 +213,7 @@ function M.init()
   if cfg == false then
     CONFIG = Keymap.Collector()
   else
-    CONFIG = Keymap.load(Util.resolve_value(cfg or {}, M.DEFAULT, Util.concat))
+    CONFIG = Keymap.load(Util.reduce("list", {}, M.DEFAULT, cfg or {}))
   end
 end
 

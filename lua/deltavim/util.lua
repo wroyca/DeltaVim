@@ -404,16 +404,42 @@ function M.lazy_notify(timeout)
   timer:start(timeout, 0, replay)
 end
 
+---@alias DeltaVim.Util.Reduce "list"|"map"|"table"|"string"|"number"|"boolean"
+
+---Merges values into a single value.
+---Note: this mutates the dst.
 ---@generic T
----@param value T[]|fun(default:T[]):T[]
----@param default T[]
----@param update fun(init:T,default:T,new:T):T
-function M.resolve_value(value, default, update)
-  if type(value) == "function" then
-    return value(default)
-  else
-    return update({}, default, value or {})
+---@param f fun(dst:T,new:T):T
+---@param ... T|fun(val:T):T
+function M.reduce_with(f, dst, ...)
+  for _, val in ipairs({ ... }) do
+    if type(val) == "function" then
+      dst = val(dst)
+    else
+      dst = f(dst, val)
+    end
   end
+  return dst
+end
+
+local function override(_, new) return new end
+
+---@generic T
+---@param ty DeltaVim.Util.Reduce
+---@param dst T
+---@param ... T|fun(val:T):T
+function M.reduce(ty, dst, ...)
+  local f
+  if ty == "list" then
+    f = M.concat
+  elseif ty == "map" then
+    f = M.merge
+  elseif ty == "table" then
+    f = M.deep_merge
+  else
+    f = override
+  end
+  return M.reduce_with(f, dst, ...)
 end
 
 return M

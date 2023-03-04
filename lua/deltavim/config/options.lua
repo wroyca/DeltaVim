@@ -74,7 +74,7 @@ function M.init()
   if cfg == false then
     CONFIG = {}
   else
-    CONFIG = Util.resolve_value(cfg or {}, M.DEFAULT, Util.deep_merge)
+    CONFIG = Util.reduce("table", {}, M.DEFAULT, cfg or {})
   end
 end
 

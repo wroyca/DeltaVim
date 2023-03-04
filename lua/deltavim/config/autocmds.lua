@@ -3,32 +3,12 @@ local Util = require("deltavim.util")
 
 local M = {}
 
-M.QUIT = {
-  "git",
-  "help",
-  "lspinfo",
-  "man",
-  "notify",
-  "null-ls-info",
-  "PlenaryTestPopup",
-  "qf",
-  "spectre_panel",
-  "startuptime",
-  "tsplayground",
-  "TelescopePrompt",
-  "vim",
-}
-
-M.RULERS = {
-  lua = 80,
-}
-
 ---@type DeltaVim.Autocmds
 M.DEFAULT = {
   { "@auto_resize", true },
   { "@highlight_yank", true },
-  { "@quit", true, ft = M.QUIT },
-  { "@rulers", true, offsets = M.RULERS },
+  { "@quit", true },
+  { "@ruler", true },
   { "@sync_time", true },
   { "@trim_spaces", true },
 }
@@ -41,34 +21,59 @@ function M.init()
   if cfg == false then
     CONFIG = Autocmd.Collector()
   else
-    CONFIG = Autocmd.load(Util.resolve_value(cfg or {}, M.DEFAULT, Util.concat))
+    CONFIG = Autocmd.load(Util.reduce("list", {}, M.DEFAULT, cfg or {}))
   end
 end
 
 function M.setup()
+  ---@class DeltaVim.Autocmds.Quit
+  ---@field ft string[]
+
+  ---@class DeltaVim.Autocmds.Rulers
+  ---@field ft table<string,integer|integer[]>
+
+  local quit_args = {
+    ft = {
+      "list",
+      {
+        "git",
+        "help",
+        "lspinfo",
+        "man",
+        "notify",
+        "null-ls-info",
+        "PlenaryTestPopup",
+        "qf",
+        "spectre_panel",
+        "startuptime",
+        "tsplayground",
+        "TelescopePrompt",
+        "vim",
+      },
+    },
+  }
+  local ruler_args = {
+    ft = {
+      "map",
+      { lua = 80 },
+    },
+  }
+
   ---@type DeltaVim.Autocmd.With
   local function quit(src)
-    ---@class DeltaVim.Autocmds.Quit
-    ---@field ft string[]
-    local args = src.args
-    local ft = Util.resolve_value(args.ft, M.QUIT, Util.concat)
     ---@type DeltaVim.Autocmd.Callback
     local function cb(ev)
       vim.bo[ev.buf].buflisted = false
       Util.keymap("n", "q", "<Cmd>close<CR>", { buffer = ev.buf })
     end
-    return { "FileType", cb, pattern = ft }
+    return { "FileType", cb, pattern = src.args.ft }
   end
 
   ---@type DeltaVim.Autocmd.With
-  local function rulers(src)
-    ---@class DeltaVim.Autocmds.Rulers
-    ---@field offsets table<string,integer|integer[]>
-    local args = src.args
-    local offsets = Util.resolve_value(args.offsets, M.RULERS, Util.merge)
+  local function ruler(src)
     ---@type DeltaVim.Autocmd[]
     local autocmds = {}
-    for ft, offs in pairs(offsets) do
+    for ft, offs in pairs(src.args.ft) do
       ---@type string[]
       local cc = {}
       if type(offs) == "table" then
@@ -92,8 +97,8 @@ function M.setup()
   CONFIG:map({
     { "@auto_resize", "VimResized", "tabdo wincmd =" },
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
-    { "@quit", with = quit },
-    { "@rulers", with = rulers },
+    { "@quit", with = quit, args = quit_args },
+    { "@ruler", with = ruler, args = ruler_args },
     { "@sync_time", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
     { "@trim_spaces", "BufWritePre", [[silent! s/\s+$//e]] },
   }):collect_and_set()
