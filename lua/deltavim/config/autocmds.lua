@@ -28,10 +28,7 @@ end
 function M.setup()
   ---@class DeltaVim.Autocmds.Quit
   ---@field ft string[]
-
-  ---@class DeltaVim.Autocmds.Rulers
-  ---@field ft table<string,integer|integer[]>
-
+  ---@type DeltaVim.Autocmd.Schema
   local quit_args = {
     ft = {
       "list",
@@ -52,6 +49,10 @@ function M.setup()
       },
     },
   }
+
+  ---@class DeltaVim.Autocmds.Rulers
+  ---@field ft table<string,integer|integer[]>
+  ---@type DeltaVim.Autocmd.Schema
   local ruler_args = {
     ft = {
       "map",

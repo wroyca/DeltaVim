@@ -45,6 +45,8 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.CustomAutocmd|DeltaVim.CustomAutocmd[]|{grouped?:boolean|string}
 
+---@alias DeltaVim.Autocmd.Schema table<string,{[1]:DeltaVim.Util.Reduce,[2]:any}>
+
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
 ---@field [1] string
@@ -132,6 +134,7 @@ function Collector:_map_preset(preset)
   ---@type DeltaVim.Autocmd.Input
   local desc
   local args = {}
+  ---@type DeltaVim.Autocmd.Schema
   local schema = preset.args or {}
   for k, v in pairs(schema) do
     args[k] = v[2]
