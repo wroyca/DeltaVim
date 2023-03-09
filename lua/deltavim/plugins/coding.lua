@@ -200,7 +200,16 @@ return {
   -- Comments
   {
     "echasnovski/mini.comment",
-    event = "VeryLazy",
+    -- TODO: PR to LazyVim
+    keys = function()
+      -- stylua: ignore
+      return Keymap.Collector()
+        :map({
+          { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
+          { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
+        })
+        :collect_lazy()
+    end,
     opts = function()
       local mappings = Keymap.Collector()
         :map_unique({
