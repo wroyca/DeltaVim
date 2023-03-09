@@ -204,7 +204,11 @@ function Collector:map(presets)
 end
 
 ---Collects output autocmds.
-function Collector:collect() return self._output end
+function Collector:collect()
+  local ret = self._output
+  self._output = {}
+  return ret
+end
 
 function Collector:collect_and_set() M.set(self:collect()) end
 

@@ -234,13 +234,9 @@ end
 
 ---Collects mappings from presets.
 function Collector:collect()
+  local ret = self._output
   self._output = {}
-  for name, _ in pairs(self._preset) do
-    for _, input in ipairs(get(name) or {}) do
-      self:_do_map(input)
-    end
-  end
-  return self._output
+  return ret
 end
 
 ---@param opts? DeltaVim.Keymap.Options
