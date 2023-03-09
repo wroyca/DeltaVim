@@ -207,6 +207,7 @@ return {
         :map({
           { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
           { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
+          { "@select.comment", desc = "Comment", mode = "o" },
         })
         :collect_lazy()
     end,
@@ -215,9 +216,7 @@ return {
         :map_unique({
           { "@comment.toggle", "comment" },
           { "@comment.toggle_line", "comment_line" },
-        })
-        :map_unique({
-          { "@comment.toggle", "text_object" },
+          { "@select.comment", "text_object" },
         })
         :collect_rhs_table()
       return {
