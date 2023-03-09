@@ -214,8 +214,10 @@ return {
       local mappings = Keymap.Collector()
         :map_unique({
           { "@comment.toggle", "comment" },
-          { "@comment.toggle", "text_object" },
           { "@comment.toggle_line", "comment_line" },
+        })
+        :map_unique({
+          { "@comment.toggle", "text_object" },
         })
         :collect_rhs_table()
       return {
