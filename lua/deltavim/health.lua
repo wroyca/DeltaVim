@@ -31,6 +31,7 @@ function M.check()
   end
 
   require("deltavim.core.keymap").check()
+  require("deltavim.core.autocmd").check()
 end
 
 return M

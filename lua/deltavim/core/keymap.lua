@@ -283,8 +283,6 @@ function Collector:collect_rhs_table(init)
   return tbl
 end
 
-M.Collector = Collector.new
-
 ---Loads keymaps. Preset inputs will be added to the global storage and other
 ---keymaps will be extended into the returned collector.
 ---@param keymaps DeltaVim.Keymaps
@@ -354,12 +352,14 @@ function M.check(cb)
     ---@param visited boolean
     or function(name, visited)
       if not visited then
-        vim.health.report_warn(("Keymap `%s` is not mapped"):format(name))
+        vim.health.report_warn(("Keymap `%s` is not applied"):format(name))
       end
     end
   for k, v in pairs(INPUT) do
     cb(k, v.visited == true)
   end
 end
+
+M.Collector = Collector.new
 
 return M

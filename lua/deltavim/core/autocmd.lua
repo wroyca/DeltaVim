@@ -64,6 +64,8 @@ local Util = require("deltavim.util")
 ---@field [2] string|DeltaVim.Autocmd.Callback
 ---@field opts DeltaVim.Autocmd.Options
 
+---@alias DeltaVim.Autocmd.Inputs DeltaVim.Autocmd.Input[]|{visited?:boolean}
+
 ---@class DeltaVim.Autocmd.Input
 ---Preset name
 ---@field [1] string
@@ -97,8 +99,16 @@ local function get_args(src)
 end
 
 ---Preset inputs shared by all collectors.
----@type table<string,DeltaVim.Autocmd.Input[]>
+---@type table<string,DeltaVim.Autocmd.Inputs>
 local INPUT = {}
+
+---@param preset string
+---@return DeltaVim.Autocmd.Inputs?
+local function get(preset)
+  local ret = INPUT[preset]
+  if ret then ret.visited = true end
+  return ret
+end
 
 ---@param input DeltaVim.Autocmd.Input
 local function add_input(input)
@@ -128,7 +138,7 @@ end
 ---@private
 ---@param preset DeltaVim.Autocmd.Preset
 function Collector:_map_preset(preset)
-  local input = INPUT[preset[1]]
+  local input = get(preset[1])
   if input == nil then return self end
   -- 1) Merge input tables.
   ---@type DeltaVim.Autocmd.Input
@@ -234,6 +244,21 @@ end
 function M.set(autocmds)
   for _, autocmd in ipairs(autocmds) do
     Util.autocmd(autocmd[1], autocmd[2], autocmd.opts)
+  end
+end
+
+---@param cb? fun(name:string,visited:boolean)
+function M.check(cb)
+  cb = cb
+    ---@param name string
+    ---@param visited boolean
+    or function(name, visited)
+      if not visited then
+        vim.health.report_warn(("Autocmd `%s` is not applied"):format(name))
+      end
+    end
+  for k, v in pairs(INPUT) do
+    cb(k, v.visited == true)
   end
 end
 
