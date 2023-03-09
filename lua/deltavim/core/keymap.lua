@@ -60,7 +60,7 @@ local Util = require("deltavim.util")
 ---@field [1] string
 ---Mapped value
 ---@field [2] any
----@field mode string
+---@field mode string[]
 ---@field opts DeltaVim.Keymap.Options
 
 ---@alias DeltaVim.Keymap.Inputs DeltaVim.Keymap.Input[]|{visited?:boolean}
@@ -124,7 +124,6 @@ local function remove_input(name) INPUT[name] = nil end
 ---@class DeltaVim.Keymap.Collector
 ---@field private _output DeltaVim.Keymap.Output[]
 ---table<name,table<mode,preset>>
----@field private _preset table<string,table<string,DeltaVim.Keymap.Preset>>
 local Collector = {}
 
 function Collector.new()
@@ -139,32 +138,48 @@ function Collector:add(output)
 end
 
 ---@private
----@param presets DeltaVim.Keymap.Presets
-function Collector:_add_presets(presets)
-  local opts = get_opts(presets, {})
-  for _, preset in ipairs(presets) do
-    local name, variant = Util.split(preset[1], ":")
-    preset = Util.merge({ variant = variant }, opts, preset)
-    local mode = preset.mode
-    if not self._preset[name] then self._preset[name] = {} end
-    local p = self._preset[name]
-    if not mode then
-      p["*"] = preset
-    else
-      for _, m in ipairs(get_mode(mode)) do
-        p[m] = preset
-      end
-    end
-  end
-end
-
----@private
 ---@param preset DeltaVim.Keymap.Preset
 ---@param input DeltaVim.Keymap.Input
----@param mode string
-function Collector:_map_preset(preset, input, mode)
+---@param opts DeltaVim.Keymap.Options
+function Collector:_map_preset(preset, input, opts)
+  -- 1) Check if variant matches.
   if preset.variant ~= input.variant then return end
-  local opts = get_opts(preset, { desc = input.desc or preset[3] })
+  -- 2) Select common modes.
+  ---@type string[]
+  local mode
+  local pmode = preset.mode
+  -- If no modes are specified, uses modes defined by the preset.
+  if #input.mode == 0 then
+    if not pmode or pmode == "*" then
+      mode = { "n" }
+    else
+      mode = {}
+      for _, m in ipairs(get_mode(pmode)) do
+        table.insert(mode, m == "*" and "n" or m)
+      end
+    end
+  -- If the preset supports all modes, then use input modes.
+  elseif not pmode or pmode == "*" then
+    mode = input.mode
+  -- Otherwise, only common modes will be selected.
+  else
+    local supported = {} ---@type table<string,boolean>
+    for _, m in ipairs(get_mode(pmode)) do
+      supported[m] = true
+    end
+    if supported["*"] then
+      mode = input.mode
+    else
+      mode = {}
+      for _, m in ipairs(input.mode) do
+        if supported[m] then table.insert(mode, m) end
+      end
+      if #mode == 0 then return end
+    end
+  end
+  -- 3) Generate output.
+  opts =
+    get_opts(preset, Util.merge({}, opts, { desc = input.desc or preset[3] }))
   if preset.with then
     local output = preset.with(input)
     self:add({
@@ -183,33 +198,13 @@ function Collector:_map_preset(preset, input, mode)
   end
 end
 
----@private
----@param input DeltaVim.Keymap.Input
-function Collector:_do_map(input)
-  local preset = self._preset[input[2]]
-  -- If no modes are specified, uses modes defined by the preset.
-  if #input.mode == 0 then
-    for m, p in pairs(preset) do
-      m = m == "*" and "n" or m
-      self:_map_preset(p, input, m)
-    end
-  -- Otherwise, only supported modes will be mapped.
-  else
-    for _, m in ipairs(input.mode) do
-      local p = preset[m] or preset["*"]
-      if p then self:_map_preset(p, input, m) end
-    end
-  end
-end
-
 ---Converts preset inputs to the output.
 ---@param presets DeltaVim.Keymap.Presets
 function Collector:map(presets)
-  self._preset = {}
-  self:_add_presets(presets)
-  for name, _ in pairs(self._preset) do
-    for _, input in ipairs(get(name) or {}) do
-      self:_do_map(input)
+  local opts = get_opts(presets)
+  for _, preset in ipairs(presets) do
+    for _, input in ipairs(get(preset[1]) or {}) do
+      self:_map_preset(preset, input, opts)
     end
   end
   return self
@@ -218,15 +213,14 @@ end
 ---Similar as `Collector:map`, but more than one inputs will be ignored.
 ---@param presets DeltaVim.Keymap.Presets
 function Collector:map_unique(presets)
-  self._preset = {}
-  self:_add_presets(presets)
-  for name, _ in pairs(self._preset) do
-    local input = get(name)
+  local opts = get_opts(presets)
+  for _, preset in ipairs(presets) do
+    local input = get(preset[1])
     if input then
       if #input > 1 then
-        Log.warn("Only the first key of '%s' will be set.", name)
+        Log.warn("Only the first key of '%s' will be set.", preset[1])
       end
-      self:_do_map(input[1])
+      self:_map_preset(preset, input[1], opts)
     end
   end
   return self
@@ -313,15 +307,12 @@ function M.load(keymaps)
         })
       end
     elseif type(key) == "string" then
-      local o = get_opts(mapping, { desc = desc })
-      for _, m in ipairs(get_mode(mapping.mode)) do
-        collector:add({
-          key,
-          rhs,
-          mode = m,
-          opts = o,
-        })
-      end
+      collector:add({
+        key,
+        rhs,
+        mode = get_mode(mapping.mode),
+        opts = get_opts(mapping, { desc = desc }),
+      })
     end
   end
   return collector
