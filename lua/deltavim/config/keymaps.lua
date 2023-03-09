@@ -314,11 +314,11 @@ function M.setup()
     { "@util.undo_break_point", with = undo_break_point, mode = "i" },
     -- Move line up & down
     { "@util.move_line_down", "<Cmd>m .+1<CR>==", "Move line down", mode = "n" },
-    { "@util.move_line_down", "<Cmd>m '>+1<CR>gv=gv", "Move line down", mode = "v" },
     { "@util.move_line_down", "<Esc><Cmd>m .+1<CR>==gi", "Move line down", mode = "i" },
-    { "@util.move_line_up", "<Cmd>m .-2<CR>==", "Move line down", mode = "n" },
-    { "@util.move_line_up", "<Cmd>m '>-2<CR>gv=gv", "Move line down", mode = "v" },
-    { "@util.move_line_up", "<Esc><Cmd>m .-2<CR>==gi", "Move line down", mode = "i" },
+    { "@util.move_line_down", ":m '>+1<CR>gv=gv", "Move line down", mode = "v" },
+    { "@util.move_line_up", "<Cmd>m .-2<CR>==", "Move line up", mode = "n" },
+    { "@util.move_line_up", "<Esc><Cmd>m .-2<CR>==gi", "Move line up", mode = "i" },
+    { "@util.move_line_up", ":m '<-2<CR>gv=gv", "Move line up", mode = "v" },
     -- UI
     { "@ui.refresh", "<Cmd>noh<Bar>diffupdate<Bar>normal!<C-L><CR>", "Refresh" },
     { "@ui.lazy", "<Cmd>Lazy<CR>", "Lazy" },
