@@ -18,8 +18,8 @@ return {
     end,
     opts = {
       timeout = 3000,
-      max_height = function() return math.floor(vim.o.lines * 0.75) end,
-      max_width = function() return math.floor(vim.o.columns * 0.75) end,
+      max_height = function() return math.floor(vim.o.lines * 0.5) end,
+      max_width = function() return math.floor(vim.o.columns * 0.5) end,
     },
     init = function()
       -- Install notify when `noice` is disabled
@@ -194,7 +194,7 @@ return {
             { "location", padding = { left = 0, right = 1 } },
           },
           lualine_z = {
-            function() return " " .. os.date("%R") end,
+            function() return " " .. os.date("%R") end,
           },
         },
         extensions = { "neo-tree", "quickfix", "toggleterm" },
@@ -334,14 +334,15 @@ return {
           action = ""
         end
         local btn = dashboard.button(key, icon .. " " .. desc, action, opts)
-        btn.opts.hl = "AlphaButtons"
-        btn.opts.hl_shortcut = "AlphaShortcut"
+        -- TODO: PR to LazyVim
+        btn.opts.hl = "DashboardCenter"
+        btn.opts.hl_shortcut = "DashboardShortCut"
         return btn
       end
 
       -- header
       dashboard.section.header.val = logo
-      dashboard.section.header.opts.hl = "AlphaHeader"
+      dashboard.section.header.opts.hl = "DashboardHeader"
       -- body
       -- stylua: ignore
       dashboard.section.buttons.val = {
@@ -354,11 +355,11 @@ return {
         button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),
         button("q", " ", " Quit", "<Cmd>qa<CR>"),
       }
-      dashboard.section.buttons.opts.hl = "AlphaButtons"
+      dashboard.section.buttons.opts.hl = "DashboardCenter"
       -- footer
       -- stylua: ignore
       dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
-      dashboard.section.footer.opts.hl = "Type"
+      dashboard.section.footer.opts.hl = "DashboardFooter"
       dashboard.opts.layout[1].val = 8
       return dashboard
     end,
