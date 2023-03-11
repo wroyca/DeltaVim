@@ -140,8 +140,7 @@ end
 ---@private
 ---@param preset DeltaVim.Keymap.Preset
 ---@param input DeltaVim.Keymap.Input
----@param opts DeltaVim.Keymap.Options
-function Collector:_map_preset(preset, input, opts)
+function Collector:_map_preset(preset, input)
   -- 1) Check if variant matches.
   if preset.variant ~= input.variant then return end
   -- 2) Select common modes.
@@ -178,8 +177,7 @@ function Collector:_map_preset(preset, input, opts)
     end
   end
   -- 3) Generate output.
-  opts =
-    get_opts(preset, Util.merge({}, opts, { desc = input.desc or preset[3] }))
+  local opts = get_opts(preset, { desc = input.desc or preset[3] })
   if preset.with then
     local output = preset.with(input)
     self:add({
@@ -203,8 +201,10 @@ end
 function Collector:map(presets)
   local opts = get_opts(presets)
   for _, preset in ipairs(presets) do
-    for _, input in ipairs(get(preset[1]) or {}) do
-      self:_map_preset(preset, input, opts)
+    local name, variant = Util.split(preset[1], ":")
+    preset = Util.merge({}, opts, { variant = variant }, preset)
+    for _, input in ipairs(get(name) or {}) do
+      self:_map_preset(preset, input)
     end
   end
   return self
@@ -215,12 +215,14 @@ end
 function Collector:map_unique(presets)
   local opts = get_opts(presets)
   for _, preset in ipairs(presets) do
-    local input = get(preset[1])
+    local name, variant = Util.split(preset[1], ":")
+    preset = Util.merge({}, opts, { variant = variant }, preset)
+    local input = get(name)
     if input then
       if #input > 1 then
         Log.warn("Only the first key of '%s' will be set.", preset[1])
       end
-      self:_map_preset(preset, input[1], opts)
+      self:_map_preset(preset, input[1])
     end
   end
   return self
