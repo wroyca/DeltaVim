@@ -146,11 +146,14 @@ return {
       ---Null-ls formatters and options passed to `formatter:with(options)`.
       ---@type table<string,table|boolean>
       formatters = {
+        fish_indent = true,
+        shfmt = true,
         stylua = true,
       },
       ---Null-ls linters.
       ---@type table<string,table|boolean>
       linters = {
+        fish = true,
         flake8 = true,
       },
       border = Config.border,
@@ -184,7 +187,6 @@ return {
     opts = {
       ensure_installed = {
         "flake8",
-        "shellcheck",
         "shfmt",
         "stylua",
       },

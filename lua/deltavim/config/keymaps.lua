@@ -52,6 +52,7 @@ M.DEFAULT = {
   { "<Down>", "@cmp.next_item" },
   { "<Up>", "@cmp.prev_item" },
   { "<CR>", "@cmp.confirm" },
+  { "<S-CR>", "@cmp.confirm_replace" },
   { "<C-b>", "@cmp.scroll_up" },
   { "<C-e>", "@cmp.abort" },
   { "<C-f>", "@cmp.scroll_down" },

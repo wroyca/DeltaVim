@@ -41,6 +41,7 @@ function M.setup()
         "null-ls-info",
         "PlenaryTestPopup",
         "qf",
+        "query",
         "spectre_panel",
         "startuptime",
         "tsplayground",

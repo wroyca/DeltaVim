@@ -2,11 +2,13 @@ local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
+local install_jsregexp =
+  "echo -e 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
 return {
   -- Snippets
   {
     "L3MON4D3/LuaSnip",
-    build = (not jit.os:find("Windows")) and "make install_jsregexp" or nil,
+    build = (not jit.os:find("Windows")) and install_jsregexp or nil,
     dependencies = { "friendly-snippets" },
     keys = function()
       ---@param dir integer
@@ -102,7 +104,8 @@ return {
       end)
 
       -- Collect key mappings.
-      local behavior = { behavior = cmp.SelectBehavior.Insert }
+      local insert = { behavior = cmp.SelectBehavior.Insert }
+      local replace = { behavior = cmp.ConfirmBehavior.Replace, select = true }
       local mappings = Keymap.Collector()
         :map({
           { "@cmp.super_tab", super_tab },
@@ -110,8 +113,9 @@ return {
           { "@cmp.abort", mapping.abort() },
           { "@cmp.complete", mapping.complete({}) },
           { "@cmp.confirm", mapping.confirm({ select = true }) },
-          { "@cmp.prev_item", mapping.select_prev_item(behavior) },
-          { "@cmp.next_item", mapping.select_next_item(behavior) },
+          { "@cmp.confirm_replace", mapping.confirm(replace) },
+          { "@cmp.prev_item", mapping.select_prev_item(insert) },
+          { "@cmp.next_item", mapping.select_next_item(insert) },
           { "@cmp.scroll_up", mapping.scroll_docs(-4) },
           { "@cmp.scroll_down", mapping.scroll_docs(4) },
         })
