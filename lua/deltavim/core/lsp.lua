@@ -27,10 +27,9 @@ function M.toggle_autoformat() M.AUTOFORMAT = not M.AUTOFORMAT end
 ---@param buffer integer
 ---@param opts? table
 function M.autoformat(client, buffer, opts)
+  -- Don't format if client disabled it
   if
-    M.AUTOFORMAT
-    -- Don't format if client disabled it
-    and client.config
+    client.config
     and client.config.capabilities
     and client.config.capabilities["documentFormattingProvider"] == false
   then
@@ -38,11 +37,9 @@ function M.autoformat(client, buffer, opts)
   end
 
   if client.server_capabilities["documentFormattingProvider"] then
-    Util.autocmd(
-      "BufWritePre",
-      function() M.format(buffer, opts) end,
-      { buffer = buffer }
-    )
+    Util.autocmd("BufWritePre", function()
+      if M.AUTOFORMAT then M.format(buffer, opts) end
+    end, { buffer = buffer })
   end
 end
 
