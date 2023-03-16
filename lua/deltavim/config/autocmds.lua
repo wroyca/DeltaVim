@@ -102,7 +102,7 @@ function M.setup()
     { "@quit", with = quit, args = quit_args },
     { "@ruler", with = ruler, args = ruler_args },
     { "@sync_time", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
-    { "@trim_whitespace", "BufWritePre", [[silent! s/\s+$//e]] },
+    { "@trim_whitespace", "BufWritePre", [[silent! s/\s\+$//e]] },
   }):collect_and_set()
 end
 

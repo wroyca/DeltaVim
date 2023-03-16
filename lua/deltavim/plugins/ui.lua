@@ -23,7 +23,7 @@ return {
     },
     init = function()
       -- Install notify when `noice` is disabled
-      if not Util.has("noice.nvim") then
+      if not Util.has("noice.nvim") and Util.has("notify") then
         Util.on_very_lazy(function() vim.notify = require("notify") end)
       end
     end,
@@ -399,12 +399,14 @@ return {
     "SmiteshP/nvim-navic",
     lazy = true,
     init = function()
-      vim.g.navic_silence = true
-      Util.on_lsp_attach(function(client, buffer)
-        if client.server_capabilities.documentSymbolProvider then
-          require("nvim-navic").attach(client, buffer)
-        end
-      end)
+      if Util.has("nvim-navic") then
+        vim.g.navic_silence = true
+        Util.on_lsp_attach(function(client, buffer)
+          if client.server_capabilities.documentSymbolProvider then
+            require("nvim-navic").attach(client, buffer)
+          end
+        end)
+      end
     end,
     opts = function()
       return {
