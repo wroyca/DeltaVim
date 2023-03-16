@@ -348,10 +348,10 @@ return {
       dashboard.section.buttons.val = {
         button("f", " ", " Find file", Util.telescope_files()),
         button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
-        button("r", " ", " Recent files", ":Telescope oldfiles <CR>"),
+        button("r", "󰄉 ", " Recent files", ":Telescope oldfiles <CR>"),
         button("g", " ", " Find text", Util.telescope("live_grep")),
         button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
-        button("s", " ", " Restore session", function() require("persistence").load() end),
+        button("s", "󰦛 ", " Restore session", function() require("persistence").load() end),
         button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),
         button("q", " ", " Quit", "<Cmd>qa<CR>"),
       }
