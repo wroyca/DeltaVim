@@ -51,7 +51,14 @@ local KEYMAPS
 function M.keymaps(client, buffer)
   ---@param cmd string
   ---@param has string
-  local function lsp(cmd, has) return { vim.lsp.buf[cmd], has } end
+  ---@param opts? table
+  local function lsp(cmd, has, opts)
+    if opts == nil then
+      return { vim.lsp.buf[cmd], has }
+    else
+      return { function() vim.lsp.buf[cmd](opts) end, has }
+    end
+  end
 
   ---@param next boolean
   ---@param level? string
@@ -61,11 +68,21 @@ function M.keymaps(client, buffer)
     return { function() f({ severity = severity }) end }
   end
 
+  local code_action_source = lsp("code_action", "codeAction", {
+    context = {
+      only = {
+        "source",
+      },
+      diagnostics = {},
+    },
+  })
+
   -- stylua: ignore
   KEYMAPS = KEYMAPS or Keymap.Collector()
     :map({
       -- lsp
       { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "*", "x" } },
+      { "@lsp.code_action_source", code_action_source, "Source action", mode = { "*", "x" } },
       { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
       { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
       { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "*" },

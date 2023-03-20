@@ -10,8 +10,6 @@ return {
     dependencies = {
       "neoconf.nvim",
       "neodev.nvim",
-      "mason.nvim",
-      "mason-lspconfig.nvim",
       "cmp-nvim-lsp",
     },
     keys = function()
@@ -98,26 +96,27 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      local mlsp = require("mason-lspconfig")
-      local available = mlsp.get_available_servers()
+      local has_mason = Util.has("mason-lspconfig.nvim")
+      local available = Util.list_to_set(
+        has_mason and require("mason-lspconfig").get_available_servers() or {}
+      )
 
       ---@type string[]
       local ensure_installed = {}
       for server, server_opts in pairs(servers) do
         -- Run manual setup if `mason=false` or if this is a server that cannot
         -- be installed with mason-lspconfig
-        if
-          server_opts.mason == false
-          or not vim.tbl_contains(available, server)
-        then
+        if server_opts.mason == false or not available[server] then
           setup(server)
         else
           table.insert(ensure_installed, server)
         end
       end
 
-      require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
-      require("mason-lspconfig").setup_handlers({ setup })
+      if has_mason then
+        require("mason-lspconfig").setup({ ensure_installed = ensure_installed })
+        require("mason-lspconfig").setup_handlers({ setup })
+      end
 
       -- Set LspInfo border
       require("lspconfig.ui.windows").default_options.border = Config.border
@@ -125,14 +124,13 @@ return {
   },
   { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
   { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
-  { "williamboman/mason-lspconfig.nvim", config = true },
+  { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },
   { "hrsh7th/cmp-nvim-lsp", cond = function() return Util.has("nvim-cmp") end },
 
   -- Formatters/linters
   {
     "jose-elias-alvarez/null-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
     keys = function()
       return Keymap.Collector()
         :map({

@@ -162,10 +162,7 @@ function Collector:_map_preset(preset, input)
     mode = input.mode
   -- Otherwise, only common modes will be selected.
   else
-    local supported = {} ---@type table<string,boolean>
-    for _, m in ipairs(get_mode(pmode)) do
-      supported[m] = true
-    end
+    local supported = Util.list_to_set(get_mode(pmode))
     if supported["*"] then
       mode = input.mode
     else

@@ -107,7 +107,10 @@ end
 
 ---Checks whether the given module is present.
 ---@param mod string
-function M.has_module(mod) return require("lazy.core.cache").find(mod) ~= nil end
+function M.has_module(mod)
+  local info = require("lazy.core.cache").find(mod)
+  return info ~= nil and #info > 0
+end
 
 ---Loads a module.
 ---@param mod string
@@ -440,6 +443,16 @@ function M.reduce(ty, dst, ...)
     f = override
   end
   return M.reduce_with(f, dst, ...)
+end
+
+---@param list string[]
+function M.list_to_set(list)
+  ---@type table<string,boolean>
+  local set = {}
+  for _, k in ipairs(list) do
+    set[k] = true
+  end
+  return set
 end
 
 return M

@@ -166,6 +166,7 @@ M.DEFAULT = {
   { "K", "@lsp.hover" },
   { "<C-k>", "@lsp.signature_help", mode = "i" },
   { "<Leader>ca", "@lsp.code_action" },
+  { "<Leader>cA", "@lsp.code_action_source" },
   { "<Leader>cd", "@lsp.line_diagnostics" },
   { "<Leader>cf", "@lsp.format" },
   { "<Leader>cl", "@ui.lsp_info" },
