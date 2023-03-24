@@ -97,16 +97,18 @@ return {
       end
 
       local has_mason = Util.has("mason-lspconfig.nvim")
-      local available = Util.list_to_set(
-        has_mason and require("mason-lspconfig").get_available_servers() or {}
-      )
+      local available = has_mason
+          and vim.tbl_keys(
+            require("mason-lspconfig.mappings.server").lspconfig_to_package
+          )
+        or {}
 
       ---@type string[]
       local ensure_installed = {}
       for server, server_opts in pairs(servers) do
         -- Run manual setup if `mason=false` or if this is a server that cannot
         -- be installed with mason-lspconfig
-        if server_opts.mason == false or not available[server] then
+        if server_opts.mason == false or available[server] == nil then
           setup(server)
         else
           table.insert(ensure_installed, server)
@@ -194,9 +196,16 @@ return {
     config = function(_, opts)
       require("mason").setup(opts)
       local registry = require("mason-registry")
-      for _, name in ipairs(opts.ensure_installed) do
-        local p = registry.get_package(name)
-        if not p:is_installed() then p:install() end
+      local function ensure_installed()
+        for _, name in ipairs(opts.ensure_installed) do
+          local p = registry.get_package(name)
+          if not p:is_installed() then p:install() end
+        end
+      end
+      if registry.refresh then
+        registry.refresh(ensure_installed)
+      else
+        ensure_installed()
       end
     end,
   },
