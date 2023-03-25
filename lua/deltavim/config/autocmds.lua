@@ -95,6 +95,13 @@ function M.setup()
     return autocmds
   end
 
+  ---@param ev DeltaVim.Autocmd.Event
+  local function trim_whitespace(ev)
+    if vim.b[ev.buf]["deltavim.config.autocmds.trim_whitespace"] ~= false then
+      vim.cmd([[s/\s\+$//e]])
+    end
+  end
+
   -- stylua: ignore
   CONFIG:map({
     { "@auto_resize", "VimResized", "tabdo wincmd =" },
@@ -102,7 +109,7 @@ function M.setup()
     { "@quit", with = quit, args = quit_args },
     { "@ruler", with = ruler, args = ruler_args },
     { "@sync_time", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
-    { "@trim_whitespace", "BufWritePre", [[silent! s/\s\+$//e]] },
+    { "@trim_whitespace", "BufWritePre", trim_whitespace },
   }):collect_and_set()
 end
 

@@ -40,6 +40,7 @@ function M.autoformat(client, buffer, opts)
     or client.name ~= "null-ls"
       and client.server_capabilities["documentFormattingProvider"]
   then
+    vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
     Util.autocmd("BufWritePre", function()
       if M.AUTOFORMAT then M.format(buffer, opts) end
     end, { buffer = buffer })
