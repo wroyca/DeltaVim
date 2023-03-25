@@ -66,8 +66,9 @@ return {
 
       -- Setup autoformat and keymaps
       Lsp.AUTOFORMAT = opts.autoformat
+      Lsp.FORMAT_OPTS = opts.format
       Util.on_lsp_attach(function(client, buffer)
-        Lsp.autoformat(client, buffer, opts.format)
+        Lsp.autoformat(client, buffer)
         Lsp.keymaps(client, buffer)
       end)
 

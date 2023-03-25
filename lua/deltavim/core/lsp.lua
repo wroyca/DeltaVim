@@ -4,27 +4,25 @@ local Util = require("deltavim.util")
 local M = {}
 
 M.AUTOFORMAT = true
+M.FORMAT_OPTS = {}
 
 ---@param buffer integer
----@param opts? table
-function M.format(buffer, opts)
-  local ft = vim.bo[buffer].filetype
-  local use_nls = Util.nls_supports(ft, "FORMATTING")
+function M.format(buffer)
+  local use_nls = Util.nls_supports(vim.bo[buffer].ft, "FORMATTING")
   vim.lsp.buf.format(Util.deep_merge({
     bufnr = buffer,
     filter = function(client)
       if use_nls then return client.name == "null-ls" end
       return client.name ~= "null-ls"
     end,
-  }, opts or {}))
+  }, M.FORMAT_OPTS or {}))
 end
 
 function M.toggle_autoformat() M.AUTOFORMAT = not M.AUTOFORMAT end
 
 ---@param client table
 ---@param buffer integer
----@param opts? table
-function M.autoformat(client, buffer, opts)
+function M.autoformat(client, buffer)
   -- Don't format if client disabled it
   if
     client.config
@@ -42,7 +40,7 @@ function M.autoformat(client, buffer, opts)
   then
     vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
     Util.autocmd("BufWritePre", function()
-      if M.AUTOFORMAT then M.format(buffer, opts) end
+      if M.AUTOFORMAT then M.format(buffer) end
     end, { buffer = buffer })
   end
 end
@@ -81,6 +79,8 @@ function M.keymaps(client, buffer)
     },
   })
 
+  local function format() M.format(buffer) end
+
   -- stylua: ignore
   KEYMAPS = KEYMAPS or Keymap.Collector()
     :map({
@@ -89,8 +89,8 @@ function M.keymaps(client, buffer)
       { "@lsp.code_action_source", code_action_source, "Source action", mode = { "*", "x" } },
       { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
       { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
-      { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "*" },
-      { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
+      { "@lsp.format", { format, "documentFormatting" }, "Format document", mode = "*" },
+      { "@lsp.format", { format, "documentRangeFormatting" }, "Format range", mode = "x" },
       { "@lsp.hover", lsp("hover", "hover"), "Hover" },
       { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
       { "@lsp.line_diagnostics", { vim.diagnostic.open_float }, "Line diagnostics" },
@@ -116,7 +116,12 @@ end
 ---@param keymaps DeltaVim.Keymap.Output[]
 function M.set_keymaps(client, buffer, keymaps)
   for _, m in ipairs(keymaps) do
-    local rhs, has = unpack(m[2])
+    local rhs, has
+    if type(m[2]) == "table" then
+      rhs, has = unpack(m[2])
+    else
+      rhs = m[2]
+    end
     if not has or client.server_capabilities[has .. "Provider"] then
       Util.keymap(m.mode, m[1], rhs, Util.merge({ buffer = buffer }, m.opts))
     end
