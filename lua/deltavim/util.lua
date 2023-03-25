@@ -97,7 +97,7 @@ function M.on_very_lazy(cb)
 end
 
 ---Registers a callback on the LspAttach event.
----@param cb fun(client:any,buffer:integer)
+---@param cb fun(client:table,buffer:integer)
 function M.on_lsp_attach(cb)
   M.autocmd(
     "LspAttach",

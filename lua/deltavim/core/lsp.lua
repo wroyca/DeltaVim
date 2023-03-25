@@ -21,7 +21,7 @@ end
 
 function M.toggle_autoformat() M.AUTOFORMAT = not M.AUTOFORMAT end
 
----@param client any
+---@param client table
 ---@param buffer integer
 ---@param opts? table
 function M.autoformat(client, buffer, opts)
@@ -50,7 +50,7 @@ end
 ---@type DeltaVim.Keymap.Output[]
 local KEYMAPS
 
----@param client any
+---@param client table
 ---@param buffer integer
 function M.keymaps(client, buffer)
   ---@param cmd string
@@ -108,7 +108,14 @@ function M.keymaps(client, buffer)
     })
     :collect()
 
-  for _, m in ipairs(KEYMAPS) do
+  M.set_keymaps(client, buffer, KEYMAPS)
+end
+
+---Set keymaps only server has specified capabilities.
+---@param client table
+---@param keymaps DeltaVim.Keymap.Output[]
+function M.set_keymaps(client, buffer, keymaps)
+  for _, m in ipairs(keymaps) do
     local rhs, has = unpack(m[2])
     if not has or client.server_capabilities[has .. "Provider"] then
       Util.keymap(m.mode, m[1], rhs, Util.merge({ buffer = buffer }, m.opts))
