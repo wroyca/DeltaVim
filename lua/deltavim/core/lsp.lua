@@ -9,9 +9,7 @@ M.AUTOFORMAT = true
 ---@param opts? table
 function M.format(buffer, opts)
   local ft = vim.bo[buffer].filetype
-  local methods = require("null-ls.methods").internal
-  -- stylua: ignore
-  local use_nls = #require("null-ls.sources").get_available(ft, methods.FORMATTING) > 0
+  local use_nls = Util.nls_supports(ft, "FORMATTING")
   vim.lsp.buf.format(Util.deep_merge({
     bufnr = buffer,
     filter = function(client)
@@ -36,7 +34,12 @@ function M.autoformat(client, buffer, opts)
     return
   end
 
-  if client.server_capabilities["documentFormattingProvider"] then
+  if
+    client.name == "null-ls"
+      and Util.nls_supports(vim.bo[buffer].ft, "FORMATTING")
+    or client.name ~= "null-ls"
+      and client.server_capabilities["documentFormattingProvider"]
+  then
     Util.autocmd("BufWritePre", function()
       if M.AUTOFORMAT then M.format(buffer, opts) end
     end, { buffer = buffer })
