@@ -455,13 +455,4 @@ function M.list_to_set(list)
   return set
 end
 
----@param ft string
----@param method string
-function M.nls_supports(ft, method)
-  return #require("null-ls.sources").get_available(
-    ft,
-    require("null-ls").methods[method]
-  ) > 0
-end
-
 return M

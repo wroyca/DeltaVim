@@ -32,12 +32,7 @@ function M.autoformat(client, buffer)
     return
   end
 
-  if
-    client.name == "null-ls"
-      and Util.nls_supports(vim.bo[buffer].ft, "FORMATTING")
-    or client.name ~= "null-ls"
-      and client.server_capabilities["documentFormattingProvider"]
-  then
+  if M.supports(client, buffer, "documentFormatting") then
     vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
     Util.autocmd("BufWritePre", function()
       if M.AUTOFORMAT then M.format(buffer) end
@@ -109,18 +104,52 @@ function M.keymaps(client, buffer)
   M.set_keymaps(client, buffer, KEYMAPS)
 end
 
+---Checks if a client has the given capability.
+---@param client table
+---@param buffer integer
+---@param cap string
+---@return boolean
+function M.supports(client, buffer, cap)
+  if client.name == "null-ls" then
+    return M.nls_supports(buffer, cap)
+  else
+    return client.server_capabilities[cap .. "Provider"] ~= nil
+  end
+end
+
+local CAPABILITY_MAP = {
+  codeAction = "CODE_ACTION",
+  completion = "COMPLETION",
+  diagnostics = "DIAGNOSTICS",
+  documentFormatting = "FORMATTING",
+  documentRangeFormatting = "RANGE_FORMATTING",
+  hover = "HOVER",
+}
+
+---@param buffer integer
+---@param cap string
+---@return boolean
+function M.nls_supports(buffer, cap)
+  return CAPABILITY_MAP[cap] ~= nil
+    and #require("null-ls.sources").get_available(
+        vim.bo[buffer].ft,
+        require("null-ls").methods[CAPABILITY_MAP[cap]]
+      )
+      > 0
+end
+
 ---Set keymaps only server has specified capabilities.
 ---@param client table
 ---@param keymaps DeltaVim.Keymap.Output[]
 function M.set_keymaps(client, buffer, keymaps)
   for _, m in ipairs(keymaps) do
-    local rhs, has
+    local rhs, cap
     if type(m[2]) == "table" then
-      rhs, has = unpack(m[2])
+      rhs, cap = unpack(m[2])
     else
       rhs = m[2]
     end
-    if not has or client.server_capabilities[has .. "Provider"] then
+    if not cap or M.supports(client, buffer, cap) then
       Util.keymap(m.mode, m[1], rhs, Util.merge({ buffer = buffer }, m.opts))
     end
   end
