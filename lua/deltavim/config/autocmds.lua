@@ -8,9 +8,11 @@ M.DEFAULT = {
   { "@checktime", true },
   { "@close_with_q", true },
   { "@highlight_yank", true },
+  { "@last_loc", true },
   { "@resize_splits", true },
   { "@ruler", true },
   { "@trim_whitespace", true },
+  { "@wrap_spell", true },
 }
 
 ---@type DeltaVim.Autocmd.Collector
@@ -26,10 +28,10 @@ function M.init()
 end
 
 function M.setup()
-  ---@class DeltaVim.Autocmds.Quit
+  ---@class DeltaVim.Autocmds.CloseWithQ
   ---@field ft string[]
   ---@type DeltaVim.Autocmd.Schema
-  local quit_args = {
+  local close_with_q_args = {
     ft = {
       "list",
       {
@@ -51,6 +53,24 @@ function M.setup()
     },
   }
 
+  ---@type DeltaVim.Autocmd.With
+  local function close_with_q(src)
+    ---@type DeltaVim.Autocmd.Callback
+    local function cb(ev)
+      vim.bo[ev.buf].buflisted = false
+      Util.keymap("n", "q", "<Cmd>close<CR>", { buffer = ev.buf })
+    end
+    return { "FileType", cb, pattern = src.args.ft }
+  end
+
+  local function last_loc()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local lcount = vim.api.nvim_buf_line_count(0)
+    if mark[1] > 0 and mark[1] <= lcount then
+      pcall(vim.api.nvim_win_set_cursor, 0, mark)
+    end
+  end
+
   ---@class DeltaVim.Autocmds.Rulers
   ---@field ft table<string,integer|integer[]>
   ---@type DeltaVim.Autocmd.Schema
@@ -60,16 +80,6 @@ function M.setup()
       { lua = 80 },
     },
   }
-
-  ---@type DeltaVim.Autocmd.With
-  local function quit(src)
-    ---@type DeltaVim.Autocmd.Callback
-    local function cb(ev)
-      vim.bo[ev.buf].buflisted = false
-      Util.keymap("n", "q", "<Cmd>close<CR>", { buffer = ev.buf })
-    end
-    return { "FileType", cb, pattern = src.args.ft }
-  end
 
   ---@type DeltaVim.Autocmd.With
   local function ruler(src)
@@ -102,14 +112,36 @@ function M.setup()
     end
   end
 
+  ---@class DeltaVim.Autocmds.WrapSpell
+  ---@field ft table<string,boolean>
+  ---@type DeltaVim.Autocmd.Schema
+  local wrap_spell_args = {
+    ft = {
+      "list",
+      { "gitcommit", "markdown" },
+    },
+  }
+
+  ---@type DeltaVim.Autocmd.With
+  local function wrap_spell(src)
+    ---@type DeltaVim.Autocmd.Callback
+    local function cb()
+      vim.opt_local.wrap = true
+      vim.opt_local.spell = true
+    end
+    return { "FileType", cb, pattern = src.args.ft }
+  end
+
   -- stylua: ignore
   CONFIG:map({
     { "@checktime", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
-    { "@close_with_q", with = quit, args = quit_args },
+    { "@close_with_q", with = close_with_q, args = close_with_q_args },
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
+    { "@last_loc", "BufReadPost", last_loc  },
     { "@resize_splits", "VimResized", "tabdo wincmd =" },
     { "@ruler", with = ruler, args = ruler_args },
     { "@trim_whitespace", "BufWritePre", trim_whitespace },
+    { "@wrap_spell", with = wrap_spell, args = wrap_spell_args },
   }):collect_and_set()
 end
 
