@@ -259,7 +259,7 @@ return {
             i = "@class.inner",
           }),
         },
-        search_method = "cover",
+        search_method = "cover_or_next",
       }
     end,
     config = function(_, opts)
