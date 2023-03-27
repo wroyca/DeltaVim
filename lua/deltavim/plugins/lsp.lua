@@ -144,18 +144,23 @@ return {
     ---@class DeltaVim.Config.NullLs
     -- TODO: PR to LazyVim
     opts = {
-      ---Null-ls formatters and options passed to `formatter:with(options)`.
-      ---@type table<string,table|boolean>
-      formatters = {
-        fish_indent = true,
-        shfmt = true,
-        stylua = true,
-      },
-      ---Null-ls linters.
-      ---@type table<string,table|boolean>
-      linters = {
-        fish = true,
-        flake8 = true,
+      sources_with = {
+        ---Null-ls formatters and options passed to `formatter:with(options)`.
+        ---@type table<string,table|boolean>
+        formatting = {
+          fish_indent = true,
+          shfmt = true,
+          stylua = true,
+        },
+        ---Null-ls linters.
+        ---@type table<string,table|boolean>
+        diagnostics = {
+          fish = true,
+          flake8 = true,
+        },
+        ---Null-ls code actions.
+        ---@type table<string,table|boolean>
+        code_actions = {},
       },
       border = Config.border,
     },
@@ -164,11 +169,10 @@ return {
       local builtins = require("null-ls").builtins
       ---@type any[]
       local sources = Util.concat({}, opts.sources or {})
-      for k, v in pairs(Util.copy_as_table(opts.formatters)) do
-        table.insert(sources, builtins.formatting[k]:with(v))
-      end
-      for k, v in pairs(Util.copy_as_table(opts.linters)) do
-        table.insert(sources, builtins.diagnostics[k]:with(v))
+      for key, val in pairs(opts.sources_with) do
+        for k, v in pairs(Util.copy_as_table(val)) do
+          table.insert(sources, builtins[key][k].with(v))
+        end
       end
       require("null-ls").setup(Util.merge({}, opts, { sources = sources }))
     end,

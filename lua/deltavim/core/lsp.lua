@@ -8,12 +8,12 @@ M.FORMAT_OPTS = {}
 
 ---@param buffer integer
 function M.format(buffer)
-  local use_nls = Util.nls_supports(vim.bo[buffer].ft, "FORMATTING")
+  local use_nls = M.nls_supports(buffer, "documentFormatting")
   vim.lsp.buf.format(Util.deep_merge({
     bufnr = buffer,
     filter = function(client)
-      if use_nls then return client.name == "null-ls" end
-      return client.name ~= "null-ls"
+      return use_nls and client.name == "null-ls"
+        or not use_nls and client.name ~= "null-ls"
     end,
   }, M.FORMAT_OPTS or {}))
 end
@@ -72,9 +72,7 @@ function M.keymaps(client, buffer)
 
   local code_action_source = lsp("code_action", "codeAction", {
     context = {
-      only = {
-        "source",
-      },
+      only = { "source" },
       diagnostics = {},
     },
   })
