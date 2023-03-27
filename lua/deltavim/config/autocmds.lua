@@ -5,11 +5,11 @@ local M = {}
 
 ---@type DeltaVim.Autocmds
 M.DEFAULT = {
-  { "@auto_resize", true },
+  { "@checktime", true },
+  { "@close_with_q", true },
   { "@highlight_yank", true },
-  { "@quit", true },
+  { "@resize_splits", true },
   { "@ruler", true },
-  { "@sync_time", true },
   { "@trim_whitespace", true },
 }
 
@@ -104,11 +104,11 @@ function M.setup()
 
   -- stylua: ignore
   CONFIG:map({
-    { "@auto_resize", "VimResized", "tabdo wincmd =" },
+    { "@checktime", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
+    { "@close_with_q", with = quit, args = quit_args },
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
-    { "@quit", with = quit, args = quit_args },
+    { "@resize_splits", "VimResized", "tabdo wincmd =" },
     { "@ruler", with = ruler, args = ruler_args },
-    { "@sync_time", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
     { "@trim_whitespace", "BufWritePre", trim_whitespace },
   }):collect_and_set()
 end
