@@ -11,8 +11,9 @@ M.DEFAULT = {
   { "@last_loc", true },
   { "@resize_splits", true },
   { "@ruler", true },
+  { "@spell", true },
   { "@trim_whitespace", true },
-  { "@wrap_spell", true },
+  { "@wrap", true },
 }
 
 ---@type DeltaVim.Autocmd.Collector
@@ -71,7 +72,7 @@ function M.setup()
     end
   end
 
-  ---@class DeltaVim.Autocmds.Rulers
+  ---@class DeltaVim.Autocmds.Ruler
   ---@field ft table<string,integer|integer[]>
   ---@type DeltaVim.Autocmd.Schema
   local ruler_args = {
@@ -105,17 +106,10 @@ function M.setup()
     return autocmds
   end
 
-  ---@param ev DeltaVim.Autocmd.Event
-  local function trim_whitespace(ev)
-    if vim.b[ev.buf]["deltavim.config.autocmds.trim_whitespace"] ~= false then
-      vim.cmd([[s/\s\+$//e]])
-    end
-  end
-
-  ---@class DeltaVim.Autocmds.WrapSpell
+  ---@class DeltaVim.Autocmds.Spell
   ---@field ft table<string,boolean>
   ---@type DeltaVim.Autocmd.Schema
-  local wrap_spell_args = {
+  local spell_args = {
     ft = {
       "list",
       { "gitcommit", "markdown" },
@@ -123,12 +117,33 @@ function M.setup()
   }
 
   ---@type DeltaVim.Autocmd.With
-  local function wrap_spell(src)
+  local function spell(src)
     ---@type DeltaVim.Autocmd.Callback
-    local function cb()
-      vim.opt_local.wrap = true
-      vim.opt_local.spell = true
+    local function cb() vim.opt_local.spell = true end
+    return { "FileType", cb, pattern = src.args.ft }
+  end
+
+  ---@param ev DeltaVim.Autocmd.Event
+  local function trim_whitespace(ev)
+    if vim.b[ev.buf]["deltavim.config.autocmds.trim_whitespace"] ~= false then
+      vim.cmd([[s/\s\+$//e]])
     end
+  end
+
+  ---@class DeltaVim.Autocmds.Wrap
+  ---@field ft table<string,boolean>
+  ---@type DeltaVim.Autocmd.Schema
+  local wrap_args = {
+    ft = {
+      "list",
+      { "gitcommit", "markdown" },
+    },
+  }
+
+  ---@type DeltaVim.Autocmd.With
+  local function wrap(src)
+    ---@type DeltaVim.Autocmd.Callback
+    local function cb() vim.opt_local.wrap = true end
     return { "FileType", cb, pattern = src.args.ft }
   end
 
@@ -140,8 +155,9 @@ function M.setup()
     { "@last_loc", "BufReadPost", last_loc  },
     { "@resize_splits", "VimResized", "tabdo wincmd =" },
     { "@ruler", with = ruler, args = ruler_args },
+    { "@spell", with = spell, args = spell_args },
     { "@trim_whitespace", "BufWritePre", trim_whitespace },
-    { "@wrap_spell", with = wrap_spell, args = wrap_spell_args },
+    { "@wrap", with = wrap, args = wrap_args },
   }):collect_and_set()
 end
 
