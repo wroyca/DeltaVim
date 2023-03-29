@@ -45,7 +45,7 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.CustomAutocmd|DeltaVim.CustomAutocmd[]|{grouped?:boolean|string}
 
----@alias DeltaVim.Autocmd.Schema table<string,{[1]:DeltaVim.Util.Reduce,[2]:any}>
+---@alias DeltaVim.Autocmd.Schema table<string,DeltaVim.Util.Reduce>
 
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
@@ -55,7 +55,7 @@ local Util = require("deltavim.util")
 ---Callback or command
 ---@field [3]? DeltaVim.Autocmd.Callback|string
 ---@field with? DeltaVim.Autocmd.With
----@field args? table<string,{[1]:DeltaVim.Util.Reduce,[2]:any}>
+---@field args? DeltaVim.Autocmd.Schema
 --
 ---@class DeltaVim.Autocmd.Output
 ---Events
@@ -146,15 +146,12 @@ function Collector:_map_preset(preset)
   local args = {}
   ---@type DeltaVim.Autocmd.Schema
   local schema = preset.args or {}
-  for k, v in pairs(schema) do
-    args[k] = v[2]
-  end
   for _, inp in ipairs(input) do
     desc = desc or inp.desc
     -- Reduce arguments
     local new = inp.args
     for k, t in pairs(schema) do
-      if new[k] ~= nil then Util.reduce(t[1], args[k], new[k]) end
+      if new[k] ~= nil then args[k] = Util.reduce(t, args[k] or {}, new[k]) end
     end
   end
   -- 2) Collect output tables from custom function
@@ -223,14 +220,14 @@ function M.load(autocmds)
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
     if type(event) == "string" and Util.starts_with(event, "@") then
-      if cmd == true then
+      if cmd == false then
+        remove_input(event)
+      else
         add_input({
           event,
           desc = desc,
           args = get_args(autocmd),
         })
-      elseif cmd == false then
-        remove_input(event)
       end
     elseif type(cmd) ~= "boolean" then
       collector:add({

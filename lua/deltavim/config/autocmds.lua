@@ -6,14 +6,32 @@ local M = {}
 ---@type DeltaVim.Autocmds
 M.DEFAULT = {
   { "@checktime", true },
-  { "@close_with_q", true },
+  {
+    "@close_with_q",
+    ft = {
+      "git",
+      "help",
+      "lspinfo",
+      "man",
+      "notify",
+      "null-ls-info",
+      "PlenaryTestPopup",
+      "qf",
+      "query",
+      "spectre_panel",
+      "startuptime",
+      "tsplayground",
+      "TelescopePrompt",
+      "vim",
+    },
+  },
   { "@highlight_yank", true },
   { "@last_loc", true },
   { "@resize_splits", true },
-  { "@ruler", true },
-  { "@spell", true },
+  { "@ruler", ft = { lua = 80 } },
+  { "@spell", ft = { "gitcommit", "markdown" } },
   { "@trim_whitespace", true },
-  { "@wrap", true },
+  { "@wrap", ft = { "gitcommit", "markdown" } },
 }
 
 ---@type DeltaVim.Autocmd.Collector
@@ -32,27 +50,7 @@ function M.setup()
   ---@class DeltaVim.Autocmds.CloseWithQ
   ---@field ft string[]
   ---@type DeltaVim.Autocmd.Schema
-  local close_with_q_args = {
-    ft = {
-      "list",
-      {
-        "git",
-        "help",
-        "lspinfo",
-        "man",
-        "notify",
-        "null-ls-info",
-        "PlenaryTestPopup",
-        "qf",
-        "query",
-        "spectre_panel",
-        "startuptime",
-        "tsplayground",
-        "TelescopePrompt",
-        "vim",
-      },
-    },
-  }
+  local close_with_q_args = { ft = "list" }
 
   ---@type DeltaVim.Autocmd.With
   local function close_with_q(src)
@@ -75,12 +73,7 @@ function M.setup()
   ---@class DeltaVim.Autocmds.Ruler
   ---@field ft table<string,integer|integer[]>
   ---@type DeltaVim.Autocmd.Schema
-  local ruler_args = {
-    ft = {
-      "map",
-      { lua = 80 },
-    },
-  }
+  local ruler_args = { ft = "map" }
 
   ---@type DeltaVim.Autocmd.With
   local function ruler(src)
@@ -109,12 +102,7 @@ function M.setup()
   ---@class DeltaVim.Autocmds.Spell
   ---@field ft table<string,boolean>
   ---@type DeltaVim.Autocmd.Schema
-  local spell_args = {
-    ft = {
-      "list",
-      { "gitcommit", "markdown" },
-    },
-  }
+  local spell_args = { ft = "list" }
 
   ---@type DeltaVim.Autocmd.With
   local function spell(src)
@@ -133,12 +121,7 @@ function M.setup()
   ---@class DeltaVim.Autocmds.Wrap
   ---@field ft table<string,boolean>
   ---@type DeltaVim.Autocmd.Schema
-  local wrap_args = {
-    ft = {
-      "list",
-      { "gitcommit", "markdown" },
-    },
-  }
+  local wrap_args = { ft = "list" }
 
   ---@type DeltaVim.Autocmd.With
   local function wrap(src)
