@@ -197,7 +197,14 @@ return {
             function() return " " .. os.date("%R") end,
           },
         },
-        extensions = { "neo-tree", "quickfix", "toggleterm" },
+        -- TODO: PR to LazyVim
+        extensions = {
+          "lazy",
+          "neo-tree",
+          "quickfix",
+          "toggleterm",
+          "trouble",
+        },
       }
     end,
   },
