@@ -28,7 +28,7 @@ end
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
 ---@param opts? table
 local function telescope_files(opts)
-  opts = M.merge({}, opts or { cwd = Utils.get_cwd() })
+  opts = Utils.merge({}, opts or { cwd = Utils.get_cwd() })
   local cmd = "find_files"
   if vim.loop.fs_stat(opts.cwd .. "/.git") then
     opts.show_untracked = true
