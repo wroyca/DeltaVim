@@ -1,6 +1,7 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 local Utils = require("deltavim.utils")
+local H = require("deltavim.helpers")
 
 return {
   -- Better `vim.notify()`
@@ -12,7 +13,7 @@ return {
       return Keymap.Collector()
         :map({
           { "@notify.clear", function() require("notify").dismiss(opts) end, "Clear notifications" },
-          { "@search.notifications", Utils.telescope({ "notify" }), "Notifications" },
+          { "@search.notifications", H.telescope({ "notify" }), "Notifications" },
         })
         :collect_lazy()
     end,
@@ -72,8 +73,8 @@ return {
     opts = {
       options = {
         -- TODO: PR to LazyVim
-        close_command = Utils.bufremove(true),
-        right_mouse_command = Utils.bufremove(true),
+        close_command = H.bufremove(true),
+        right_mouse_command = H.bufremove(true),
         diagnostics = "nvim_lsp",
         always_show_bufferline = false,
         diagnostics_indicator = function(_, _, diag)
@@ -101,8 +102,8 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@buffer.close", Utils.bufremove(), "Delete buffer" },
-          { "@buffer.close_force", Utils.bufremove(true), "Delete buffer (force)" },
+          { "@buffer.close", H.bufremove(), "Delete buffer" },
+          { "@buffer.close_force", H.bufremove(true), "Delete buffer (force)" },
         })
         :collect_lazy()
     end,
@@ -368,10 +369,10 @@ return {
       -- body
       -- stylua: ignore
       dashboard.section.buttons.val = {
-        button("f", " ", " Find file", Utils.telescope_files()),
+        button("f", " ", " Find file", H.telescope_files()),
         button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
         button("r", "󰄉 ", " Recent files", ":Telescope oldfiles <CR>"),
-        button("g", " ", " Find text", Utils.telescope("live_grep")),
+        button("g", " ", " Find text", H.telescope("live_grep")),
         button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
         button("s", "󰦛 ", " Restore session", function() require("persistence").load() end),
         button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),

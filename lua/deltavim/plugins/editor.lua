@@ -1,6 +1,7 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 local Utils = require("deltavim.utils")
+local H = require("deltavim.helpers")
 
 return {
   -- File explorer
@@ -149,8 +150,7 @@ return {
         },
       }
 
-      local builtin = Utils.telescope
-      local files = Utils.telescope_files
+      local builtin = H.telescope
       -- stylua: ignore
       return Keymap.Collector()
         :map({
@@ -164,8 +164,8 @@ return {
           { "@search.words", builtin("grep_string", get_root), "Words" },
           { "@search.words_cwd", builtin("grep_string", get_cwd), "Words (cwd)" },
           -- files
-          { "@search.files", files(get_root), "Files" },
-          { "@search.files_cwd", files(get_cwd), "Files (cwd)" },
+          { "@search.files", H.telescope_files(get_root), "Files" },
+          { "@search.files_cwd", H.telescope_files(get_cwd), "Files (cwd)" },
           { "@search.oldfiles", builtin("oldfiles"), "Recent files" },
           -- git
           { "@search.git_commits", builtin("git_commits"), "Git commits" },
@@ -215,8 +215,8 @@ return {
         i = {
           ["<C-t>"] = open_with_trouble,
           ["<A-t>"] = open_selected_with_trouble,
-          ["<A-i>"] = Utils.telescope_files({ no_ignore = true }),
-          ["<A-h>"] = Utils.telescope_files({ hidden = true }),
+          ["<A-i>"] = H.telescope_files({ no_ignore = true }),
+          ["<A-h>"] = H.telescope_files({ hidden = true }),
           ["<C-Down>"] = action("cycle_history_next"),
           ["<C-Up>"] = action("cycle_history_prev"),
           ["<C-f>"] = action("preview_scrolling_down"),
@@ -415,7 +415,7 @@ return {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     keys = function()
-      local tb = Utils.trouble
+      local tb = H.trouble
 
       local goto_opts = { skip_groups = true, jump = true }
       ---@param next boolean
@@ -464,11 +464,11 @@ return {
 
       ---@param args? table
       local function telescope(args)
-        return Utils.telescope({ "todo-comments", "todo" }, args)
+        return H.telescope({ "todo-comments", "todo" }, args)
       end
 
       ---@param args? table
-      local function trouble(args) return Utils.trouble("todo", args) end
+      local function trouble(args) return H.trouble("todo", args) end
 
       local keywords = { keywords = "TODO,FIX,FIXME" }
       -- stylua: ignore
