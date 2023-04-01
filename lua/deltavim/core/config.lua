@@ -3,7 +3,7 @@ local Config = require("deltavim.config")
 local Log = require("deltavim.core.log")
 local Keymaps = require("deltavim.config.keymaps")
 local Options = require("deltavim.config.options")
-local Util = require("deltavim.util")
+local Utils = require("deltavim.utils")
 
 local M = {}
 
@@ -20,7 +20,7 @@ function M.init()
   did_init = true
 
   -- Delay notifications
-  Util.lazy_notify()
+  Utils.lazy_notify()
 
   -- Initialize configs
   Autocmds.init()
@@ -48,12 +48,12 @@ function M.setup()
   end
 
   if vim.fn.argc(-1) == 0 then
-    Util.on_very_lazy(setup)
+    Utils.on_very_lazy(setup)
   else
     setup()
   end
 
-  Util.try(function()
+  Utils.try(function()
     local colorscheme = Config.colorscheme
     if type(colorscheme) == "function" then
       colorscheme()

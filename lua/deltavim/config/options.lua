@@ -1,4 +1,4 @@
-local Util = require("deltavim.util")
+local Utils = require("deltavim.utils")
 
 local M = {}
 
@@ -70,11 +70,11 @@ function M.init()
     vim.opt.shortmess:append({ C = true })
   end
 
-  local cfg = Util.load_config("config.options")
+  local cfg = Utils.load_config("config.options")
   if cfg == false then
     CONFIG = {}
   else
-    CONFIG = Util.reduce("table", {}, M.DEFAULT, cfg or {})
+    CONFIG = Utils.reduce("table", {}, M.DEFAULT, cfg or {})
   end
 end
 

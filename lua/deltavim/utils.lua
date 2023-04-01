@@ -407,7 +407,7 @@ function M.lazy_notify(timeout)
   timer:start(timeout, 0, replay)
 end
 
----@alias DeltaVim.Util.Reduce "list"|"map"|"table"
+---@alias deltavim.utils.Reduce "list"|"map"|"table"
 
 ---Merges values into a single value.
 ---Note: this mutates the dst.
@@ -427,7 +427,7 @@ function M.reduce_with(f, dst, ...)
 end
 
 ---@generic T
----@param ty DeltaVim.Util.Reduce
+---@param ty deltavim.utils.Reduce
 ---@param dst T
 ---@param ... T|fun(val:T):T
 function M.reduce(ty, dst, ...)

@@ -1,6 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
-local Util = require("deltavim.util")
+local Utils = require("deltavim.utils")
 
 return {
   -- File explorer
@@ -28,10 +28,10 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@explorer.toggle", toggle(Util.get_root), "Toggle explorer" },
-          { "@explorer.toggle_cwd", toggle(Util.get_cwd), "Toggle explorer (cwd)" },
-          { "@explorer.focus", focus(Util.get_root), "Focus explorer" },
-          { "@explorer.focus_cwd", focus(Util.get_cwd), "Focus explorer (cwd)" },
+          { "@explorer.toggle", toggle(Utils.get_root), "Toggle explorer" },
+          { "@explorer.toggle_cwd", toggle(Utils.get_cwd), "Toggle explorer (cwd)" },
+          { "@explorer.focus", focus(Utils.get_root), "Focus explorer" },
+          { "@explorer.focus_cwd", focus(Utils.get_cwd), "Focus explorer (cwd)" },
         })
         :collect_lazy()
     end,
@@ -85,10 +85,10 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@terminal.open", toggle(Util.get_root), "Open terminal" },
-          { "@terminal.open_cwd", toggle(Util.get_cwd), "Open terminal (cwd)" },
-          { "@terminal.lazygit", lazygit(Util.get_root), "Lazygit" },
-          { "@terminal.lazygit_cwd", lazygit(Util.get_cwd), "Lazygit (cwd)" },
+          { "@terminal.open", toggle(Utils.get_root), "Open terminal" },
+          { "@terminal.open_cwd", toggle(Utils.get_cwd), "Open terminal (cwd)" },
+          { "@terminal.lazygit", lazygit(Utils.get_root), "Lazygit" },
+          { "@terminal.lazygit_cwd", lazygit(Utils.get_cwd), "Lazygit (cwd)" },
         })
         :collect_lazy()
     end,
@@ -130,9 +130,9 @@ return {
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
     keys = function()
-      local function get_root() return { cwd = Util.get_root() } end
+      local function get_root() return { cwd = Utils.get_root() } end
 
-      local function get_cwd() return { cwd = Util.get_cwd() } end
+      local function get_cwd() return { cwd = Utils.get_cwd() } end
 
       local symbols = {
         symbols = {
@@ -149,8 +149,8 @@ return {
         },
       }
 
-      local builtin = Util.telescope
-      local files = Util.telescope_files
+      local builtin = Utils.telescope
+      local files = Utils.telescope_files
       -- stylua: ignore
       return Keymap.Collector()
         :map({
@@ -215,8 +215,8 @@ return {
         i = {
           ["<C-t>"] = open_with_trouble,
           ["<A-t>"] = open_selected_with_trouble,
-          ["<A-i>"] = Util.telescope_files({ no_ignore = true }),
-          ["<A-h>"] = Util.telescope_files({ hidden = true }),
+          ["<A-i>"] = Utils.telescope_files({ no_ignore = true }),
+          ["<A-h>"] = Utils.telescope_files({ hidden = true }),
           ["<C-Down>"] = action("cycle_history_next"),
           ["<C-Up>"] = action("cycle_history_prev"),
           ["<C-f>"] = action("preview_scrolling_down"),
@@ -257,7 +257,7 @@ return {
         })
         :collect_lazy()
     end,
-    config = function(_, opts) Util.merge(require("leap").opts, opts) end,
+    config = function(_, opts) Utils.merge(require("leap").opts, opts) end,
   },
   {
     "ggandor/flit.nvim",
@@ -307,7 +307,7 @@ return {
           { "@surround.add", "Add surrounding" },
         })
         :collect_lhs_table()
-      opts = Util.deep_merge({ operators = operators }, opts)
+      opts = Utils.deep_merge({ operators = operators }, opts)
       wk.setup(opts)
       -- Register groups
       wk.register(opts.groups)
@@ -403,7 +403,7 @@ return {
       Keymap.set(keymaps)
 
       -- Also set it after loading ftplugins, since a lot overwrite `[[`` and `]]`
-      Util.autocmd(
+      Utils.autocmd(
         "FileType",
         function(ev) Keymap.set(keymaps, { buffer = ev.buf }) end
       )
@@ -415,7 +415,7 @@ return {
     "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     keys = function()
-      local tb = Util.trouble
+      local tb = Utils.trouble
 
       local goto_opts = { skip_groups = true, jump = true }
       ---@param next boolean
@@ -464,11 +464,11 @@ return {
 
       ---@param args? table
       local function telescope(args)
-        return Util.telescope({ "todo-comments", "todo" }, args)
+        return Utils.telescope({ "todo-comments", "todo" }, args)
       end
 
       ---@param args? table
-      local function trouble(args) return Util.trouble("todo", args) end
+      local function trouble(args) return Utils.trouble("todo", args) end
 
       local keywords = { keywords = "TODO,FIX,FIXME" }
       -- stylua: ignore

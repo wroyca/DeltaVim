@@ -1,6 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
-local Util = require("deltavim.util")
+local Utils = require("deltavim.utils")
 
 return {
   -- Better `vim.notify()`
@@ -12,7 +12,7 @@ return {
       return Keymap.Collector()
         :map({
           { "@notify.clear", function() require("notify").dismiss(opts) end, "Clear notifications" },
-          { "@search.notifications", Util.telescope({ "notify" }), "Notifications" },
+          { "@search.notifications", Utils.telescope({ "notify" }), "Notifications" },
         })
         :collect_lazy()
     end,
@@ -23,8 +23,8 @@ return {
     },
     init = function()
       -- Install notify when `noice` is disabled
-      if not Util.has("noice.nvim") and Util.has("notify") then
-        Util.on_very_lazy(function() vim.notify = require("notify") end)
+      if not Utils.has("noice.nvim") and Utils.has("notify") then
+        Utils.on_very_lazy(function() vim.notify = require("notify") end)
       end
     end,
     config = function(_, opts)
@@ -72,8 +72,8 @@ return {
     opts = {
       options = {
         -- TODO: PR to LazyVim
-        close_command = Util.bufremove(true),
-        right_mouse_command = Util.bufremove(true),
+        close_command = Utils.bufremove(true),
+        right_mouse_command = Utils.bufremove(true),
         diagnostics = "nvim_lsp",
         always_show_bufferline = false,
         diagnostics_indicator = function(_, _, diag)
@@ -101,8 +101,8 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@buffer.close", Util.bufremove(), "Delete buffer" },
-          { "@buffer.close_force", Util.bufremove(true), "Delete buffer (force)" },
+          { "@buffer.close", Utils.bufremove(), "Delete buffer" },
+          { "@buffer.close_force", Utils.bufremove(true), "Delete buffer (force)" },
         })
         :collect_lazy()
     end,
@@ -253,7 +253,7 @@ return {
       options = { try_as_border = true },
     },
     init = function()
-      Util.autocmd(
+      Utils.autocmd(
         "FileType",
         function() vim.b.miniindentscope_disable = true end,
         {
@@ -308,7 +308,7 @@ return {
             key,
             function()
               if not require("noice.lsp").scroll(delta) then
-                return Util.feedkey(key)
+                return Utils.feedkey(key)
               end
             end,
             desc,
@@ -368,10 +368,10 @@ return {
       -- body
       -- stylua: ignore
       dashboard.section.buttons.val = {
-        button("f", " ", " Find file", Util.telescope_files()),
+        button("f", " ", " Find file", Utils.telescope_files()),
         button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
         button("r", "󰄉 ", " Recent files", ":Telescope oldfiles <CR>"),
-        button("g", " ", " Find text", Util.telescope("live_grep")),
+        button("g", " ", " Find text", Utils.telescope("live_grep")),
         button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
         button("s", "󰦛 ", " Restore session", function() require("persistence").load() end),
         button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),
@@ -396,7 +396,7 @@ return {
       -- Close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then
         vim.cmd.close()
-        Util.autocmd(
+        Utils.autocmd(
           "User",
           function() require("lazy").show() end,
           { pattern = "AlphaReady" }
@@ -406,7 +406,7 @@ return {
       require("alpha").setup(dashboard.opts)
 
       -- Show plugins summary
-      Util.autocmd("User", function()
+      Utils.autocmd("User", function()
         local stats = require("lazy").stats()
         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
         -- stylua: ignore
@@ -421,9 +421,9 @@ return {
     "SmiteshP/nvim-navic",
     lazy = true,
     init = function()
-      if Util.has("nvim-navic") then
+      if Utils.has("nvim-navic") then
         vim.g.navic_silence = true
-        Util.on_lsp_attach(function(client, buffer)
+        Utils.on_lsp_attach(function(client, buffer)
           if client.server_capabilities.documentSymbolProvider then
             require("nvim-navic").attach(client, buffer)
           end

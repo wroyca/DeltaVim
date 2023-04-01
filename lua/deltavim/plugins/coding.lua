@@ -1,6 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
-local Util = require("deltavim.util")
+local Utils = require("deltavim.utils")
 
 local install_jsregexp =
   "echo -e 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
@@ -23,7 +23,7 @@ return {
               if luasnip.locally_jumpable(dir) then
                 luasnip.jump(dir)
               else
-                Util.feedkey(key)
+                Utils.feedkey(key)
               end
             end,
           }
@@ -187,7 +187,7 @@ return {
     config = function(_, opts)
       local icons = Config.icons
       local formatting = opts.formatting
-      require("cmp").setup(Util.deep_merge({
+      require("cmp").setup(Utils.deep_merge({
         formatting = {
           -- Credit: https://github.com/LunarVim/LunarVim/blob/1.2.0/lua/lvim/core/cmp.lua#L175-L212
           -- License: GPL-3.0
@@ -318,7 +318,7 @@ return {
     config = function(_, opts)
       require("mini.ai").setup(opts)
       -- Register textobjects
-      if Util.has("which-key.nvim") then
+      if Utils.has("which-key.nvim") then
         ---@type table<string, string>
         local a = {
           ["("] = "Balanced (",
