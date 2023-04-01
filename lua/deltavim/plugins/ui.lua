@@ -19,8 +19,8 @@ return {
     end,
     opts = {
       timeout = 3000,
-      max_height = function() return math.floor(vim.o.lines * 0.5) end,
-      max_width = function() return math.floor(vim.o.columns * 0.5) end,
+      max_height = function() return math.floor(vim.o.lines * 0.4) end,
+      max_width = function() return math.floor(vim.o.columns * 0.4) end,
     },
     init = function()
       -- Install notify when `noice` is disabled
