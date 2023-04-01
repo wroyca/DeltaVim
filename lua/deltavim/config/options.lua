@@ -63,13 +63,6 @@ M.DEFAULT = {
 local CONFIG
 
 function M.init()
-  -- Other options.
-  vim.opt.shortmess:append({ W = true, I = true, c = true })
-  if vim.fn.has("nvim-0.9.0") == 1 then
-    vim.opt.splitkeep = "screen"
-    vim.opt.shortmess:append({ C = true })
-  end
-
   CONFIG = Utils.reduce(
     "table",
     {},
@@ -80,6 +73,14 @@ end
 
 function M.setup()
   require("deltavim.config").update(CONFIG.config)
+
+  -- Other options.
+  vim.opt.shortmess:append({ W = true, I = true, c = true })
+  if vim.fn.has("nvim-0.9.0") == 1 then
+    vim.opt.splitkeep = "screen"
+    vim.opt.shortmess:append({ C = true })
+  end
+
   for k, v in pairs(CONFIG.g) do
     vim.g[k] = v
   end
