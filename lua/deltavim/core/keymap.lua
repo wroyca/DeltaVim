@@ -17,7 +17,7 @@ local Utils = require("deltavim.utils")
 
 ---@alias DeltaVim.Keymap.Presets DeltaVim.Keymap.Preset[]|DeltaVim.Keymap.Options
 
----@alias DeltaVim.Keymap.With fun(src:DeltaVim.Keymap.Input):DeltaVim.CustomKeymap
+---@alias DeltaVim.Keymap.With fun(src:DeltaVim.Keymap.Input):any
 
 ---@class DeltaVim.Keymap.Preset: DeltaVim.Keymap.Options
 ---Preset name
@@ -175,22 +175,18 @@ function Collector:_map_preset(preset, input)
   end
   -- 3) Generate output.
   local opts = get_opts(preset, { desc = input.desc or preset[3] })
+  local rhs
   if preset.with then
-    local output = preset.with(input)
-    self:add({
-      output[1],
-      output[2],
-      mode = mode,
-      opts = get_opts(output, opts),
-    })
+    rhs = preset.with(input)
   else
-    self:add({
-      input[1] or preset.key,
-      preset[2],
-      mode = mode,
-      opts = opts,
-    })
+    rhs = preset[2]
   end
+  self:add({
+    input[1] or preset.key,
+    rhs,
+    mode = mode,
+    opts = opts,
+  })
 end
 
 ---Converts preset inputs to the output.

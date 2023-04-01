@@ -300,20 +300,15 @@ return {
       local function redirect() require("noice").redirect(vim.fn.getcmdline()) end
 
       ---@param delta number
-      ---@param desc string
       ---@return DeltaVim.Keymap.With
-      local function scroll(delta, desc)
+      local function scroll(delta)
         return function(src)
           local key = src[1] --[[@as string]]
-          return {
-            key,
-            function()
-              if not require("noice.lsp").scroll(delta) then
-                return Utils.feedkey(key)
-              end
-            end,
-            desc,
-          }
+          return function()
+            if not require("noice.lsp").scroll(delta) then
+              return Utils.feedkey(key)
+            end
+          end
         end
       end
 
@@ -324,8 +319,8 @@ return {
           { "@notify.history", cmd("history"), "Notification history" },
           { "@notify.last", cmd("last"), "Last notification" },
           { "@notify.redirect", redirect, "Redirect to notification", mode = "c" },
-          { "@cmp.scroll_up:noice", with = scroll(-4, "Scroll up"), mode = { "n", "i", "s" } },
-          { "@cmp.scroll_down:noice", with = scroll(4, "Scroll down"), mode = { "n", "i", "s" } },
+          { "@cmp.scroll_up:noice", with = scroll(-4), desc = "Scroll up", mode = { "n", "i", "s" } },
+          { "@cmp.scroll_down:noice", with = scroll(4), desc = "Scroll down", mode = { "n", "i", "s" } },
         })
         :collect_lazy()
     end,

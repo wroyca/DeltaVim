@@ -16,17 +16,14 @@ return {
       local function jump_or_fallback(dir)
         return function(src)
           local key = src[1] --[[@as string]]
-          return {
-            key,
-            function()
-              local luasnip = require("luasnip")
-              if luasnip.locally_jumpable(dir) then
-                luasnip.jump(dir)
-              else
-                Utils.feedkey(key)
-              end
-            end,
-          }
+          return function()
+            local luasnip = require("luasnip")
+            if luasnip.locally_jumpable(dir) then
+              luasnip.jump(dir)
+            else
+              Utils.feedkey(key)
+            end
+          end
         end
       end
 
