@@ -68,6 +68,7 @@ return {
       local cmp = require("cmp")
       local mapping = cmp.mapping
       local bordered = cmp.config.window.bordered
+      local comparator = cmp.config.compare
 
       local function has_words_before()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -121,6 +122,7 @@ return {
         })
         :collect_lhs_table()
 
+      ---@class DeltaVim.Config.Cmp
       return {
         completion = {
           completeopt = "menu,menuone,noinsert",
@@ -136,13 +138,39 @@ return {
           { name = "path" },
         }),
         formatting = {
-          format = function(_, item)
-            local icons = Config.icons.kinds
-            if icons[item.kind] then
-              item.kind = icons[item.kind] .. item.kind
-            end
-            return item
+          source_names = {
+            buffer = "[BUF]",
+            calc = "[CALC]",
+            cmp_tabnine = "[TABNINE]",
+            copilot = "[COPILOT]",
+            crates = "[CRATES]",
+            emoji = "[EMOJI]",
+            luasnip = "[SNIP]",
+            nvim_lsp = "[LSP]",
+            path = "[PATH]",
+            tmux = "[TMUX]",
+            treesitter = "[TS]",
+            vsnip = "[SNIPPET]",
+          },
+          ---@param name string
+          default_source_name = function(name)
+            return string.format("[%s]", name:upper())
           end,
+          source_dups = {
+            buffer = 1,
+            luasnip = 1,
+            nvim_lsp = 0,
+            path = 1,
+          },
+          default_source_dup = 0,
+          max_width = function() return math.floor(vim.o.columns * 0.4) end,
+        },
+        sorting = {
+          comparators = {
+            comparator.kind,
+            comparator.score,
+            comparator.recently_used,
+          },
         },
         experimental = {
           ghost_text = {
@@ -154,6 +182,31 @@ return {
           documentation = bordered(Config.border),
         },
       }
+    end,
+    ---@param opts DeltaVim.Config.Cmp
+    config = function(_, opts)
+      local icons = Config.icons
+      local formatting = opts.formatting
+      require("cmp").setup(Util.deep_merge({
+        formatting = {
+          -- Credit: https://github.com/LunarVim/LunarVim/blob/1.2.0/lua/lvim/core/cmp.lua#L175-L212
+          -- License: GPL-3.0
+          format = function(entry, item)
+            local source = entry.source.name
+            local max_width = formatting.max_width()
+            if #item.abbr > max_width then
+              item.abbr = string.sub(item.abbr, 1, max_width) .. "..."
+            end
+            item.kind = icons[item.kind] and icons[item.kind] .. item.kind
+              or item.kind
+            item.menu = formatting.source_names[source]
+              or formatting.default_source_name(source)
+            item.dup = formatting.source_dups[source]
+              or formatting.default_source_dup
+            return item
+          end,
+        },
+      }, opts))
     end,
   },
 
