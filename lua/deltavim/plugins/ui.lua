@@ -109,6 +109,26 @@ return {
     config = function(_, opts) require("mini.bufremove").setup(opts) end,
   },
 
+  -- VS Code like winbar
+  {
+    "utilyre/barbecue.nvim",
+    version = "*",
+    event = "VeryLazy",
+    opts = function()
+      local kinds = {}
+      for k, v in pairs(Config.icons.kinds) do
+        -- Remove spaces
+        kinds[k] = v:gsub(" ", "")
+      end
+      return {
+        attach_navic = false,
+        show_dirname = false,
+        show_basename = true,
+        kinds = kinds,
+      }
+    end,
+  },
+
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
@@ -155,11 +175,6 @@ return {
               "filename",
               path = 1,
               symbols = { modified = "  ", readonly = "", unnamed = "" },
-            },
-            -- stylua: ignore
-            {
-              function() return require("nvim-navic").get_location() end,
-              cond = function() return package.loaded["nvim-navic"] and require("nvim-navic").is_available() end,
             },
           },
           lualine_x = {
