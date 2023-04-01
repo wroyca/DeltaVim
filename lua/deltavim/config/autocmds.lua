@@ -38,12 +38,14 @@ M.DEFAULT = {
 local CONFIG
 
 function M.init()
-  local cfg = Utils.load_config("config.autocmds")
-  if cfg == false then
-    CONFIG = Autocmd.Collector()
-  else
-    CONFIG = Autocmd.load(Utils.reduce("list", {}, M.DEFAULT, cfg or {}))
-  end
+  CONFIG = Autocmd.load(
+    Utils.reduce(
+      "list",
+      {},
+      M.DEFAULT,
+      Utils.load_config("config.autocmds") or {}
+    )
+  )
 end
 
 function M.setup()

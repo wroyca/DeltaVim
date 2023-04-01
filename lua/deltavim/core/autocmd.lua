@@ -45,7 +45,7 @@ local Utils = require("deltavim.utils")
 
 ---@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.CustomAutocmd|DeltaVim.CustomAutocmd[]|{grouped?:boolean|string}
 
----@alias DeltaVim.Autocmd.Schema table<string,deltavim.utils.Reduce>
+---@alias DeltaVim.Autocmd.Schema table<string,DeltaVim.Utils.ReduceType>
 
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name

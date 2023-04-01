@@ -70,12 +70,12 @@ function M.init()
     vim.opt.shortmess:append({ C = true })
   end
 
-  local cfg = Utils.load_config("config.options")
-  if cfg == false then
-    CONFIG = {}
-  else
-    CONFIG = Utils.reduce("table", {}, M.DEFAULT, cfg or {})
-  end
+  CONFIG = Utils.reduce(
+    "table",
+    {},
+    M.DEFAULT,
+    Utils.load_config("config.options") or {}
+  )
 end
 
 function M.setup()

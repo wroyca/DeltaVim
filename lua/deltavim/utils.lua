@@ -2,6 +2,55 @@ local Log = require("deltavim.core.log")
 
 local M = {}
 
+M.ROOT_PATTERNS = { ".git" }
+
+---Returns the root directory based on:
+---* lsp workspace folders
+---* lsp root_dir
+---* root pattern of filename of the current buffer
+---* root pattern of cwd
+---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
+---@return string
+function M.get_root()
+  ---@type string?
+  local path = vim.api.nvim_buf_get_name(0)
+  path = path ~= "" and vim.loop.fs_realpath(path) or nil
+  ---@type string[]
+  local roots = {}
+  if path then
+    for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+      local workspace = client.config.workspace_folders
+      local paths = workspace
+          and vim.tbl_map(
+            function(ws) return vim.uri_to_fname(ws.uri) end,
+            workspace
+          )
+        or client.config.root_dir and { client.config.root_dir }
+        or {}
+      for _, p in ipairs(paths) do
+        local r = vim.loop.fs_realpath(p)
+        if r and path:find(r, 1, true) then roots[#roots + 1] = r end
+      end
+    end
+  end
+  table.sort(roots, function(a, b) return #a > #b end)
+  ---@type string?
+  local root = roots[1]
+  if not root then
+    path = path and vim.fs.dirname(path) or M.get_cwd()
+    ---@type string?
+    root = vim.fs.find(M.ROOT_PATTERNS, { path = path, upward = true })[1]
+    root = root and vim.fs.dirname(root) or M.get_cwd()
+  end
+  ---@cast root string
+  return root
+end
+
+---@return string
+function M.get_cwd()
+  return vim.loop.cwd() --[[@as string]]
+end
+
 ---@type string[]
 M.KEYMAP_MODE = { "n" }
 
@@ -31,16 +80,6 @@ function M.keymap(mode, lhs, rhs, opts)
     o[k] = opts[k] or v[1]
   end
   vim.keymap.set(mode, lhs, rhs, o)
-end
-
----@param key string
----@param mode? string
-function M.feedkey(key, mode)
-  vim.api.nvim_feedkeys(
-    vim.api.nvim_replace_termcodes(key, true, false, true),
-    mode or "n",
-    false
-  )
 end
 
 ---@type table<string,{[1]:any}>
@@ -105,6 +144,17 @@ function M.on_lsp_attach(cb)
   )
 end
 
+---@param plugin string
+function M.has(plugin)
+  local plug = require("lazy.core.config").plugins[plugin]
+  if not plug then return false end
+  if type(plug.cond) == "function" then
+    return plug.cond() ~= false
+  else
+    return plug.cond ~= false
+  end
+end
+
 ---Checks whether the given module is present.
 ---@param mod string
 function M.has_module(mod)
@@ -112,31 +162,32 @@ function M.has_module(mod)
   return info ~= nil and #info > 0
 end
 
----Loads a module.
----@param mod string
----@return any
-function M.load_module(mod)
-  local _, ret = M.try(function()
-    ---@diagnostic disable-next-line:missing-return
-    if M.has_module(mod) then return require(mod) end
-  end, ("Failed to load module '%s'"):format(mod))
-  return ret
-end
-
 ---Loads a config module that returns an optional table or function.
 ---@param mod string
----@return table|function|false?
+---@return (table|fun(dst:table):table|nil|boolean)?
 function M.load_config(mod)
-  local ret = M.load_module(mod)
-  if type(ret) == "table" or type(ret) == "function" then
+  local _, ret = M.try(function()
+    if M.has_module(mod) then return require(mod) end
+  end, ("Failed to load module '%s'"):format(mod))
+  if
+    type(ret) == "table"
+    or type(ret) == "function"
+    or type(ret) == "boolean"
+  then
     return ret
-  elseif ret == true then
-    return
-  elseif ret == false then
-    return false
   else
-    Log.error("Module '%s' should return a function or table", mod)
+    Log.error("Module '%s' should return a function/table/boolean", mod)
   end
+end
+
+---@param key string
+---@param mode? string
+function M.feedkey(key, mode)
+  vim.api.nvim_feedkeys(
+    vim.api.nvim_replace_termcodes(key, true, false, true),
+    mode or "n",
+    false
+  )
 end
 
 ---Checks if a string starts with another.
@@ -246,89 +297,41 @@ function M.copy_as_table(tbl)
   return ret
 end
 
-M.ROOT_PATTERNS = { ".git" }
-
----Returns the root directory based on:
----* lsp workspace folders
----* lsp root_dir
----* root pattern of filename of the current buffer
----* root pattern of cwd
----Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
----@return string
-function M.get_root()
-  ---@type string?
-  local path = vim.api.nvim_buf_get_name(0)
-  path = path ~= "" and vim.loop.fs_realpath(path) or nil
-  ---@type string[]
-  local roots = {}
-  if path then
-    for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-      local workspace = client.config.workspace_folders
-      local paths = workspace
-          and vim.tbl_map(
-            function(ws) return vim.uri_to_fname(ws.uri) end,
-            workspace
-          )
-        or client.config.root_dir and { client.config.root_dir }
-        or {}
-      for _, p in ipairs(paths) do
-        local r = vim.loop.fs_realpath(p)
-        if r and path:find(r, 1, true) then roots[#roots + 1] = r end
-      end
-    end
+---@param list string[]
+function M.list_to_set(list)
+  ---@type table<string,boolean>
+  local set = {}
+  for _, k in ipairs(list) do
+    set[k] = true
   end
-  table.sort(roots, function(a, b) return #a > #b end)
-  ---@type string?
-  local root = roots[1]
-  if not root then
-    path = path and vim.fs.dirname(path) or M.get_cwd()
-    ---@type string?
-    root = vim.fs.find(M.ROOT_PATTERNS, { path = path, upward = true })[1]
-    root = root and vim.fs.dirname(root) or M.get_cwd()
-  end
-  ---@cast root string
-  return root
+  return set
 end
 
----@return string
-function M.get_cwd()
-  return vim.loop.cwd() --[[@as string]]
-end
-
----@param plugin string
-function M.has(plugin)
-  local plug = require("lazy.core.config").plugins[plugin]
-  if not plug then return false end
-  if type(plug.cond) == "function" then
-    return plug.cond() ~= false
-  else
-    return plug.cond ~= false
-  end
-end
-
----@alias deltavim.utils.Reduce "list"|"map"|"table"
+---@alias DeltaVim.Utils.ReduceType "list"|"map"|"table"
+---@alias DeltaVim.Utils.Reducer table|(fun(dst:table):table)|boolean
 
 ---Merges values into a single value.
 ---Note: this mutates the dst.
----@generic T
----@param f fun(dst:T,new:T):T
----@param dst T
----@param ... T|fun(val:T):T
+---@param f fun(dst:table,new:table):table
+---@param dst table
+---@param ... DeltaVim.Utils.Reducer
+---@return table
 function M.reduce_with(f, dst, ...)
   for _, val in ipairs({ ... }) do
     if type(val) == "function" then
       dst = val(dst)
-    else
+    elseif val == false then
+      dst = {}
+    elseif val ~= true then
       dst = f(dst, val)
     end
   end
   return dst
 end
 
----@generic T
----@param ty deltavim.utils.Reduce
----@param dst T
----@param ... T|fun(val:T):T
+---@param ty DeltaVim.Utils.ReduceType
+---@param dst table
+---@param ... DeltaVim.Utils.Reducer
 function M.reduce(ty, dst, ...)
   local f
   if ty == "list" then
@@ -339,16 +342,6 @@ function M.reduce(ty, dst, ...)
     f = M.deep_merge
   end
   return M.reduce_with(f, dst, ...)
-end
-
----@param list string[]
-function M.list_to_set(list)
-  ---@type table<string,boolean>
-  local set = {}
-  for _, k in ipairs(list) do
-    set[k] = true
-  end
-  return set
 end
 
 return M

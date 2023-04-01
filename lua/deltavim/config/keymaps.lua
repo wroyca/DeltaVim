@@ -211,12 +211,14 @@ M.DEFAULT = {
 local CONFIG
 
 function M.init()
-  local cfg = Utils.load_config("config.keymaps")
-  if cfg == false then
-    CONFIG = Keymap.Collector()
-  else
-    CONFIG = Keymap.load(Utils.reduce("list", {}, M.DEFAULT, cfg or {}))
-  end
+  CONFIG = Keymap.load(
+    Utils.reduce(
+      "list",
+      {},
+      M.DEFAULT,
+      Utils.load_config("config.keymaps") or {}
+    )
+  )
 end
 
 function M.setup()
