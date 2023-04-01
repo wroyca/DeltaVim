@@ -20,7 +20,7 @@ function M.init()
   did_init = true
 
   -- Delay notifications
-  Utils.lazy_notify()
+  M.lazy_notify()
 
   -- Initialize configs
   Autocmds.init()
@@ -71,6 +71,41 @@ function M.check_version(ver)
   return require("lazy.manage.semver")
     .range(ver or M.lazy_version)
     :matches(require("lazy.core.config").version or "0.0.0")
+end
+
+---Delay notifications till vim.notify was replaced.
+---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
+---@param timeout? number
+function M.lazy_notify(timeout)
+  timeout = timeout or 500
+  ---@type table[]
+  local notifications = {}
+  local function temp(...) table.insert(notifications, vim.F.pack_len(...)) end
+
+  local orig = vim.notify
+  vim.notify = temp
+
+  local timer = vim.loop.new_timer() --[[@as uv.uv_timer_t]]
+  local check = vim.loop.new_check() --[[@as uv.uv_check_t]]
+
+  local replay = function()
+    timer:stop()
+    check:stop()
+    -- Put back the original notify if needed
+    if vim.notify == temp then vim.notify = orig end
+    vim.schedule(function()
+      for _, args in ipairs(notifications) do
+        vim.notify(vim.F.unpack_len(args))
+      end
+    end)
+  end
+
+  -- Wait till vim.notify has been replaced
+  check:start(function()
+    if vim.notify ~= temp then replay() end
+  end)
+  -- Or if it reached timeout, then something went wrong
+  timer:start(timeout, 0, replay)
 end
 
 return M
