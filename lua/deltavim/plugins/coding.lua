@@ -106,8 +106,8 @@ return {
       local replace = { behavior = cmp.ConfirmBehavior.Replace, select = true }
       local mappings = Keymap.Collector()
         :map({
-          { "@cmp.super_tab", super_tab },
-          { "@cmp.super_stab", super_stab },
+          { "@cmp.super_tab", super_tab, key = "<Tab>" },
+          { "@cmp.super_stab", super_stab, key = "<S-Tab>" },
           { "@cmp.abort", mapping.abort() },
           { "@cmp.complete", mapping.complete({}) },
           { "@cmp.confirm", mapping.confirm({ select = true }) },
