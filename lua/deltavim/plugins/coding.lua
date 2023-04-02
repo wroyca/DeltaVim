@@ -101,17 +101,22 @@ return {
         end
       end)
 
+      local function confirm(behavior)
+        return mapping.confirm({ behavior = behavior, select = true })
+      end
+
       -- Collect key mappings.
       local insert = { behavior = cmp.SelectBehavior.Insert }
-      local replace = { behavior = cmp.ConfirmBehavior.Replace, select = true }
+      -- stylua: ignore
       local mappings = Keymap.Collector()
         :map({
           { "@cmp.super_tab", super_tab, key = "<Tab>" },
           { "@cmp.super_stab", super_stab, key = "<S-Tab>" },
           { "@cmp.abort", mapping.abort() },
           { "@cmp.complete", mapping.complete({}) },
-          { "@cmp.confirm", mapping.confirm({ select = true }) },
-          { "@cmp.confirm_replace", mapping.confirm(replace) },
+          { "@cmp.confirm", confirm() },
+          { "@cmp.confirm_replace", confirm(cmp.ConfirmBehavior.Replace) },
+          { "@cmp.confirm_insert", confirm(cmp.ConfirmBehavior.Insert) },
           { "@cmp.prev_item", mapping.select_prev_item(insert) },
           { "@cmp.next_item", mapping.select_next_item(insert) },
           { "@cmp.scroll_up", mapping.scroll_docs(-4) },
