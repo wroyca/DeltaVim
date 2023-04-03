@@ -202,9 +202,26 @@ return {
 
   -- Auto pairs
   {
-    "echasnovski/mini.pairs",
+    "windwp/nvim-autopairs",
     event = "VeryLazy",
-    config = function(_, opts) require("mini.pairs").setup(opts) end,
+    ---@class DeltaVim.Config.Autopairs
+    opts = {
+      ---@type any[]
+      rules = {},
+      check_ts = true,
+    },
+    ---@param opts DeltaVim.Config.Autopairs
+    config = function(_, opts)
+      local npairs = require("nvim-autopairs")
+      npairs.setup(opts)
+      npairs.add_rules(opts.rules or {})
+      if Utils.has("nvim-cmp") then
+        require("cmp").event:on(
+          "confirm_done",
+          require("nvim-autopairs.completion.cmp").on_confirm_done()
+        )
+      end
+    end,
   },
 
   -- Surround
@@ -253,8 +270,8 @@ return {
         :map({
             { "@comment.toggle_line", desc = "Toggle line comment" },
             { "@comment.toggle_block", desc = "Toggle block comment" },
-            { "@comment.oplead_line", desc = "Toggle line comment" },
-            { "@comment.oplead_block", desc = "Toggle block comment" },
+            { "@comment.oplead_line", desc = "Toggle line comment", mode = { "n", "v" } },
+            { "@comment.oplead_block", desc = "Toggle block comment", mode = { "n", "v" } },
             { "@comment.insert_above", desc = "Insert comment above" },
             { "@comment.insert_below", desc = "Insert comment below" },
             { "@comment.insert_eol", desc = "Insert comment EOL" },
