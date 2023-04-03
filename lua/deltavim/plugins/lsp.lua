@@ -80,9 +80,7 @@ return {
       vim.diagnostic.config(opts.diagnostics)
 
       -- Update capabilities
-      local capabilities = require("cmp_nvim_lsp").default_capabilities(
-        vim.lsp.protocol.make_client_capabilities()
-      )
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       local function setup(server)
         local server_opts = Utils.deep_merge({
@@ -128,6 +126,7 @@ return {
   { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
   { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
   { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },
+  -- stylua: ignore
   { "hrsh7th/cmp-nvim-lsp", cond = function() return Utils.has("nvim-cmp") end },
 
   -- Formatters/linters
