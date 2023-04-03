@@ -11,17 +11,17 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@treesitter.increase_selection", desc = "Increase selection", mode = { "n", "x" } },
-          { "@treesitter.decrease_selection", desc = "Decrease selection", mode = "x" },
+          { "@treesitter.icrement_selection", desc = "Icrement selection", mode = { "n", "x" } },
+          { "@treesitter.decrement_selection", desc = "Decrement selection", mode = "x" },
         })
         :collect_lazy()
     end,
     opts = function()
       local mappings = Keymap.Collector()
         :map_unique({
-          { "@treesitter.increase_selection", "init_selection" },
-          { "@treesitter.increase_selection", "node_incremental" },
-          { "@treesitter.decrease_selection", "node_decremental" },
+          { "@treesitter.icrement_selection", "init_selection" },
+          { "@treesitter.icrement_selection", "node_incremental" },
+          { "@treesitter.decrement_selection", "node_decremental" },
         })
         :collect_rhs_table()
       return {

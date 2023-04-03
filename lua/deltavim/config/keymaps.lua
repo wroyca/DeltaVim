@@ -171,8 +171,8 @@ M.DEFAULT = {
   { "<Leader>cf", "@lsp.format" },
   { "<Leader>cl", "@ui.lsp_info" },
   -- treesitter
-  { "<C-Space>", "@treesitter.increase_selection" },
-  { "<BS>", "@treesitter.decrease_selection" },
+  { "<C-Space>", "@treesitter.icrement_selection" },
+  { "<BS>", "@treesitter.decrement_selection" },
   -- notify
   { "<S-Enter>", "@notify.redirect" },
   { "<Leader>un", "@notify.clear" },
