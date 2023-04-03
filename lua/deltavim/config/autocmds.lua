@@ -5,6 +5,7 @@ local M = {}
 
 ---@type DeltaVim.Autocmds
 M.DEFAULT = {
+  { "@auto_create_dir", true },
   { "@checktime", true },
   {
     "@close_with_q",
@@ -49,6 +50,12 @@ function M.init()
 end
 
 function M.setup()
+  ---@type DeltaVim.Autocmd.Callback
+  local function auto_create_dir(ev)
+    local file = vim.loop.fs_realpath(ev.match) or ev.match
+    vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+  end
+
   ---@class DeltaVim.Autocmds.CloseWithQ
   ---@field ft string[]
   ---@type DeltaVim.Autocmd.Schema
@@ -134,6 +141,7 @@ function M.setup()
 
   -- stylua: ignore
   CONFIG:map({
+    { "@auto_create_dir", "BufWritePre", auto_create_dir },
     { "@checktime", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
     { "@close_with_q", with = close_with_q, args = close_with_q_args },
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
