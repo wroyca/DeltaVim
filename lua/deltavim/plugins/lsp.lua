@@ -80,7 +80,9 @@ return {
       vim.diagnostic.config(opts.diagnostics)
 
       -- Update capabilities
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = Utils.has("nvim-cmp")
+          and require("cmp_nvim_lsp").default_capabilities()
+        or {}
 
       local function setup(server)
         local server_opts = Utils.deep_merge({
