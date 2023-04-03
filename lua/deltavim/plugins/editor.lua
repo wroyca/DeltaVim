@@ -303,7 +303,8 @@ return {
       -- Register operators
       local operators = Keymap.Collector()
         :map({
-          { "@comment.toggle", "Comment" },
+          { "@comment.oplead_line", "Toggle line comment" },
+          { "@comment.oplead_block", "Toggle block comment" },
           { "@surround.add", "Add surrounding" },
         })
         :collect_lhs_table()

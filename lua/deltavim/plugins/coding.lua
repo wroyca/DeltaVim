@@ -246,28 +246,49 @@ return {
 
   -- Comments
   {
-    "echasnovski/mini.comment",
-    -- TODO: PR to LazyVim
+    "numToStr/Comment.nvim",
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
-          { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
-          { "@select.comment", desc = "Comment", mode = "o" },
+            { "@comment.toggle_line", desc = "Toggle line comment" },
+            { "@comment.toggle_block", desc = "Toggle block comment" },
+            { "@comment.oplead_line", desc = "Toggle line comment" },
+            { "@comment.oplead_block", desc = "Toggle block comment" },
+            { "@comment.insert_above", desc = "Insert comment above" },
+            { "@comment.insert_below", desc = "Insert comment below" },
+            { "@comment.insert_eol", desc = "Insert comment EOL" },
         })
         :collect_lazy()
     end,
     opts = function()
-      local mappings = Keymap.Collector()
-        :map_unique({
-          { "@comment.toggle", "comment" },
-          { "@comment.toggle_line", "comment_line" },
-          { "@select.comment", "text_object" },
-        })
-        :collect_rhs_table()
+      ---@type fun(...)
+      local pre_hook
       return {
-        mappings = mappings,
+        toggler = Keymap.Collector()
+          :map_unique({
+            { "@comment.toggle_line", "line" },
+            { "@comment.toggle_block", "block" },
+          })
+          :collect_rhs_table(),
+        opleader = Keymap.Collector()
+          :map_unique({
+            { "@comment.oplead_line", "line" },
+            { "@comment.oplead_block", "block" },
+          })
+          :collect_rhs_table(),
+        extra = Keymap.Collector()
+          :map_unique({
+            { "@comment.insert_above", "above" },
+            { "@comment.insert_below", "below" },
+            { "@comment.insert_eol", "eol" },
+          })
+          :collect_rhs_table(),
+        pre_hook = function(...)
+          pre_hook = pre_hook
+            or require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
+          return pre_hook(...)
+        end,
         hooks = {
           pre = function()
             require("ts_context_commentstring.internal").update_commentstring({})
@@ -275,7 +296,6 @@ return {
         },
       }
     end,
-    config = function(_, opts) require("mini.comment").setup(opts) end,
   },
   { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
 
@@ -289,17 +309,17 @@ return {
       return {
         n_lines = 500,
         custom_textobjects = {
-          o = ai.gen_spec.treesitter({
-            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
-            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
+          c = ai.gen_spec.treesitter({
+            a = "@class.outer",
+            i = "@class.inner",
           }),
           f = ai.gen_spec.treesitter({
             a = "@function.outer",
             i = "@function.inner",
           }),
-          c = ai.gen_spec.treesitter({
-            a = "@class.outer",
-            i = "@class.inner",
+          o = ai.gen_spec.treesitter({
+            a = { "@block.outer", "@conditional.outer", "@loop.outer" },
+            i = { "@block.inner", "@conditional.inner", "@loop.inner" },
           }),
         },
         search_method = "cover_or_next",

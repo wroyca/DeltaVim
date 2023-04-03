@@ -282,16 +282,15 @@ end
 
 ---Constructs a table from the given table, `false` values will be removed and
 ---`true` values will be replaced with empty tables.
----@generic K
----@param tbl table<K,any>
----@return table<K,any>
+---@param tbl table<string,table|boolean>
 function M.copy_as_table(tbl)
+  ---@type table<string,table>
   local ret = {}
   for k, v in pairs(tbl) do
-    if v == true then
-      ret[k] = {}
-    elseif v then
+    if type(v) == "table" then
       ret[k] = v
+    elseif v then
+      ret[k] = {}
     end
   end
   return ret

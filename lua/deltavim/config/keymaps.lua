@@ -69,7 +69,7 @@ M.DEFAULT = {
   { "gzn", "@surround.update_n_lines" },
   { "gzr", "@surround.replace" },
   -- comment
-  { "gc", "@comment.toggle" },
+  { "gc", "@comment.oplead_line" },
   { "gcc", "@comment.toggle_line" },
   -- file/find
   { "<Leader><Leader>", "@search.files" },
