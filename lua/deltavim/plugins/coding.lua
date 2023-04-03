@@ -208,7 +208,6 @@ return {
     opts = {
       ---@type any[]
       rules = {},
-      check_ts = true,
     },
     ---@param opts DeltaVim.Config.Autopairs
     config = function(_, opts)
