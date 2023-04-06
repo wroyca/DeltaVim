@@ -78,7 +78,13 @@ return {
       local function lazygit(dir)
         return function()
           require("toggleterm.terminal").Terminal
-            :new({ cmd = "lazygit", dir = dir(), id = 999 })
+            :new({
+              cmd = "lazygit",
+              dir = dir(),
+              id = 999,
+              direction = "tab",
+              shade_terminals = false,
+            })
             :toggle()
         end
       end
@@ -94,6 +100,13 @@ return {
         :collect_lazy()
     end,
     opts = {
+      size = function(term)
+        if term.direction == "horizontal" then
+          return vim.o.lines * 0.4
+        elseif term.direction == "vertical" then
+          return vim.o.columns * 0.4
+        end
+      end,
       direction = "float",
       float_opts = { border = Config.border },
       ---@param term Terminal
@@ -106,6 +119,8 @@ return {
             })
             :collect_and_set()
       end,
+      shade_terminals = true,
+      shading_factor = -15,
     },
   },
 
