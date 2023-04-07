@@ -107,6 +107,7 @@ return {
           return vim.o.columns * 0.4
         end
       end,
+      persist_size = false,
       direction = "float",
       float_opts = { border = Config.border },
       ---@param term Terminal
