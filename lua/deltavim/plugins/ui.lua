@@ -345,10 +345,10 @@ return {
         -- stylua: ignore
         ---@type {[1]:string,[2]:string,[3]:string,[4]:string|fun()}[]
         buttons = {
-          { "n", " ", "New file", "<Cmd>ene<BAR>startinsert<CR>" },
+          { "n", "󱪝 ", "New file", "<Cmd>ene<BAR>startinsert<CR>" },
           { "f", "󰱼 ", "Find files", H.telescope_files() },
           { "r", "󰄉 ", "Recent files", ":Telescope oldfiles <CR>" },
-          { "g", " ", "Grep", H.telescope("live_grep") },
+          { "g", " ", "Grep", H.telescope("live_grep") },
           { "c", " ", "Config", "<Cmd>e $MYVIMRC<CR>" },
           { "s", "󰦛 ", "Restore session", function() require("persistence").load() end, },
           { "l", "󰒲 ", "Lazy", "<Cmd>Lazy<CR>" },
