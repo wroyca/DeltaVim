@@ -5,9 +5,6 @@ local M = {}
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
 ---@class DeltaVim.Options
 M.DEFAULT = {
-  ---DeltaVim configurations
-  ---@type DeltaVim.Config
-  config = {},
   ---vim.g
   g = {
     mapleader = " ",
@@ -59,20 +56,16 @@ M.DEFAULT = {
   },
 }
 
----@type DeltaVim.Options
-local CONFIG
+function M.init() end
 
-function M.init()
-  CONFIG = Utils.reduce(
+function M.setup()
+  ---@type DeltaVim.Options
+  local config = Utils.reduce(
     "table",
     {},
     M.DEFAULT,
     Utils.load_config("config.options") or {}
   )
-end
-
-function M.setup()
-  require("deltavim.config").update(CONFIG.config)
 
   -- Other options.
   vim.opt.shortmess:append({ W = true, I = true, c = true })
@@ -81,10 +74,10 @@ function M.setup()
     vim.opt.shortmess:append({ C = true })
   end
 
-  for k, v in pairs(CONFIG.g) do
+  for k, v in pairs(config.g) do
     vim.g[k] = v
   end
-  for k, v in pairs(CONFIG.o) do
+  for k, v in pairs(config.o) do
     vim.opt[k] = v
   end
 end

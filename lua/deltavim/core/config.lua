@@ -32,7 +32,10 @@ function M.init()
   fix_lazy()
 end
 
-function M.setup()
+---@param opts DeltaVim.Config?
+function M.setup(opts)
+  Config.update(opts or {})
+
   if not M.check_version() then
     Log.error(
       "**DeltaVim** needs **lazy.nvim** version %s to work properly.",
