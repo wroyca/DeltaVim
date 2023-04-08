@@ -331,7 +331,6 @@ return {
     "goolord/alpha-nvim",
     event = "VimEnter",
     opts = function()
-      local dashboard = require("alpha.themes.dashboard")
       local logo = {
         "██████╗ ███████╗██╗  ████████╗ █████╗ ██╗   ██╗██╗███╗   ███╗",
         "██╔══██╗██╔════╝██║  ╚══██╔══╝██╔══██╗██║   ██║██║████╗ ████║",
@@ -340,46 +339,22 @@ return {
         "██████╔╝███████╗███████╗██║   ██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║",
         "╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝",
       }
-
-      ---@param key string
-      ---@param icon string
-      ---@param desc string
-      ---@param action string|function
-      local function button(key, icon, desc, action)
-        local opts = { noremap = true, silent = true, nowait = true }
-        if type(action) == "function" then
-          opts.callback = action
-          action = ""
-        end
-        local btn = dashboard.button(key, icon .. " " .. desc, action, opts)
-        -- TODO: PR to LazyVim
-        btn.opts.hl = "DashboardCenter"
-        btn.opts.hl_shortcut = "DashboardShortCut"
-        return btn
-      end
-
-      -- header
-      dashboard.section.header.val = logo
-      dashboard.section.header.opts.hl = "DashboardHeader"
-      -- body
-      -- stylua: ignore
-      dashboard.section.buttons.val = {
-        button("f", " ", " Find file", H.telescope_files()),
-        button("n", " ", " New file", "<Cmd>ene<BAR>startinsert<CR>"),
-        button("r", "󰄉 ", " Recent files", ":Telescope oldfiles <CR>"),
-        button("g", " ", " Find text", H.telescope("live_grep")),
-        button("c", " ", " Config", "<Cmd>e $MYVIMRC<CR>"),
-        button("s", "󰦛 ", " Restore session", function() require("persistence").load() end),
-        button("l", "󰒲 ", " Lazy", "<Cmd>Lazy<CR>"),
-        button("q", " ", " Quit", "<Cmd>qa<CR>"),
+      ---@class DeltaVim.Config.Alpha
+      return {
+        header = logo,
+        -- stylua: ignore
+        ---@type {[1]:string,[2]:string,[3]:string,[4]:string|fun()}[]
+        buttons = {
+          { "n", " ", "New file", "<Cmd>ene<BAR>startinsert<CR>" },
+          { "f", "󰱼 ", "Find files", H.telescope_files() },
+          { "r", "󰄉 ", "Recent files", ":Telescope oldfiles <CR>" },
+          { "g", " ", "Grep", H.telescope("live_grep") },
+          { "c", " ", "Config", "<Cmd>e $MYVIMRC<CR>" },
+          { "s", "󰦛 ", "Restore session", function() require("persistence").load() end, },
+          { "l", "󰒲 ", "Lazy", "<Cmd>Lazy<CR>" },
+          { "q", " ", "Quit", "<Cmd>qa<CR>" },
+        },
       }
-      dashboard.section.buttons.opts.hl = "DashboardCenter"
-      -- footer
-      -- stylua: ignore
-      dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
-      dashboard.section.footer.opts.hl = "DashboardFooter"
-      dashboard.opts.layout[1].val = 8
-      return dashboard
     end,
     keys = function()
       return Keymap.Collector()
@@ -388,7 +363,36 @@ return {
         })
         :collect_lazy()
     end,
-    config = function(_, dashboard)
+    ---@param opts DeltaVim.Config.Alpha
+    config = function(_, opts)
+      local dashboard = require("alpha.themes.dashboard")
+
+      -- header
+      dashboard.section.header.val = opts.header
+      dashboard.section.header.opts.hl = "DashboardHeader"
+      -- body
+      local buttons = {}
+      for _, btn in ipairs(opts.buttons) do
+        local key, icon, desc, action = unpack(btn) --[[@as any]]
+        local o = { noremap = true, silent = true, nowait = true }
+        if type(action) == "function" then
+          o.callback = action
+          action = ""
+        end
+        local button = dashboard.button(key, icon .. " " .. desc, action, o)
+        -- TODO: PR to LazyVim
+        button.opts.hl = "DashboardCenter"
+        button.opts.hl_shortcut = "DashboardShortCut"
+        table.insert(buttons, button)
+      end
+      dashboard.section.buttons.val = buttons
+      dashboard.section.buttons.opts.hl = "DashboardCenter"
+      -- footer
+      -- stylua: ignore
+      dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
+      dashboard.section.footer.opts.hl = "DashboardFooter"
+      dashboard.opts.layout[1].val = 8
+
       -- Close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then
         vim.cmd.close()
