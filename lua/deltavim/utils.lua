@@ -175,7 +175,7 @@ function M.load_config(mod)
     or type(ret) == "boolean"
   then
     return ret
-  else
+  elseif ret ~= nil then
     Log.error("Module '%s' should return a function/table/boolean", mod)
   end
 end
