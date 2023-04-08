@@ -65,7 +65,6 @@ return {
     end,
   },
 
-  -- TODO: PR to LazyVim
   {
     "akinsho/toggleterm.nvim",
     cmd = "ToggleTerm",
@@ -139,7 +138,6 @@ return {
   -- Search/replace in multiple files
   {
     "nvim-pack/nvim-spectre",
-    -- TODO: PR to LazyVim
     cmd = "Spectre",
     keys = function()
       -- stylua: ignore
@@ -214,7 +212,6 @@ return {
           { "@search.implementations", builtin("lsp_implementations"), "Implementations" },
           { "@search.references", builtin("lsp_references"), "References" },
           { "@search.type_definitions", builtin("lsp_type_definitions"), "Type definitions" },
-          -- TODO: PR to LazyVim
           { "@search.document_diagnostics", diagnostics(true), "Document diagnostics" },
           { "@search.workspace_diagnostics", diagnostics(false), "Workspace diagnostics" },
           { "@search.document_errors", diagnostics(false, "E"), "Document errors" },
@@ -538,7 +535,6 @@ return {
         :map({
           { "@goto.next_todo", todo("jump_next"), "Next todo" },
           { "@goto.prev_todo", todo("jump_prev"), "Prev todo" },
-          -- TODO: PR to LazyVim
           { "@search.todo", telescope(), "Todo" },
           { "@search.todo_fixme", telescope(keywords), "Todo/Fix/Fixme" },
           { "@quickfix.todo", trouble(), "Todo" },

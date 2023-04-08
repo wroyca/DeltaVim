@@ -29,7 +29,6 @@ return {
     end,
     config = function(_, opts)
       require("notify").setup(opts)
-      -- TODO: PR to LazyVim
       if Utils.has("telescope.nvim") then
         require("telescope").load_extension("notify")
       end
@@ -73,7 +72,6 @@ return {
     end,
     opts = {
       options = {
-        -- TODO: PR to LazyVim
         close_command = H.bufremove(true),
         right_mouse_command = H.bufremove(true),
         diagnostics = "nvim_lsp",
@@ -214,7 +212,6 @@ return {
             function() return " " .. os.date("%R") end,
           },
         },
-        -- TODO: PR to LazyVim
         extensions = {
           "lazy",
           "neo-tree",
@@ -383,7 +380,6 @@ return {
           action = ""
         end
         local button = dashboard.button(key, icon .. " " .. desc, action, o)
-        -- TODO: PR to LazyVim
         button.opts.hl = "DashboardCenter"
         button.opts.hl_shortcut = "DashboardShortCut"
         table.insert(buttons, button)

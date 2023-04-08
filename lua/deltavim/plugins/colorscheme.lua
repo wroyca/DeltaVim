@@ -11,7 +11,6 @@ return {
     "catppuccin/nvim",
     name = "catppuccin",
     lazy = true,
-    -- TODO: PR to LazyVim
     opts = {
       flavour = "mocha",
       integrations = {

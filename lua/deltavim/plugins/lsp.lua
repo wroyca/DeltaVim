@@ -182,7 +182,6 @@ return {
         :collect_lazy()
     end,
     ---@class DeltaVim.Config.NullLs
-    -- TODO: PR to LazyVim
     opts = {
       sources_with = {
         ---Null-ls formatters and options passed to `formatter:with(options)`.

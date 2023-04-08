@@ -108,7 +108,6 @@ M.DEFAULT = {
   { "<Leader>sR", "@search.resume" },
   { "<Leader>ss", "@search.document_symbols" },
   { "<Leader>sS", "@search.workspace_symbols" },
-  -- TODO: PR to LazyVim
   { "<Leader>st", "@search.todo" },
   { "<Leader>sT", "@search.todo_fixme" },
   { "<Leader>sw", "@search.words" },
