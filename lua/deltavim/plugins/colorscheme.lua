@@ -15,13 +15,15 @@ return {
     opts = {
       flavour = "mocha",
       integrations = {
+        cmp = true,
         dashboard = true,
         gitsigns = true,
+        illuminate = true,
+        indent_blankline = { enabled = true },
+        lsp_trouble = true,
+        markdown = true,
         mason = true,
         mini = true,
-        neotree = true,
-        noice = true,
-        cmp = true,
         native_lsp = {
           enabled = true,
           virtual_text = {
@@ -38,11 +40,13 @@ return {
           },
         },
         navic = { enabled = true },
-        treesitter = true,
+        neotree = true,
+        noice = true,
         notify = true,
+        semantic_tokens = true,
         telescope = true,
-        lsp_trouble = true,
-        illuminate = true,
+        treesitter = true,
+        treesitter_context = true,
         which_key = true,
       },
       custom_highlights = function(c)
