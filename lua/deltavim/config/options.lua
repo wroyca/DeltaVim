@@ -64,7 +64,7 @@ function M.setup()
     "table",
     {},
     M.DEFAULT,
-    Utils.load_config("config.options") or {}
+    Utils.load_config("custom.options") or {}
   )
 
   -- Other options.

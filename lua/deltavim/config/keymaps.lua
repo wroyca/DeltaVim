@@ -216,7 +216,7 @@ function M.init()
       "list",
       {},
       M.DEFAULT,
-      Utils.load_config("config.keymaps") or {}
+      Utils.load_config("custom.keymaps") or {}
     )
   )
 end

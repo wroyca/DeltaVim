@@ -44,7 +44,7 @@ function M.init()
       "list",
       {},
       M.DEFAULT,
-      Utils.load_config("config.autocmds") or {}
+      Utils.load_config("custom.autocmds") or {}
     )
   )
 end
