@@ -151,7 +151,7 @@ function Collector:_map_preset(preset)
     -- Reduce arguments
     local new = inp.args
     for k, t in pairs(schema) do
-      if new[k] ~= nil then args[k] = Utils.reduce(t, args[k] or {}, new[k]) end
+      args[k] = Utils.reduce(t, args[k] or {}, new[k])
     end
   end
   -- 2) Collect output tables from custom function

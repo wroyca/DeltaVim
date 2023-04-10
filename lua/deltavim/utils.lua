@@ -307,7 +307,7 @@ function M.list_to_set(list)
 end
 
 ---@alias DeltaVim.Utils.ReduceType "list"|"map"|"table"
----@alias DeltaVim.Utils.Reducer table|(fun(dst:table):table)|boolean
+---@alias DeltaVim.Utils.Reducer table|(fun(dst:table):table)|boolean|nil
 
 ---Merges values into a single value.
 ---Note: this mutates the dst.
@@ -319,10 +319,10 @@ function M.reduce_with(f, dst, ...)
   for _, val in ipairs({ ... }) do
     if type(val) == "function" then
       dst = val(dst)
+    elseif type(val) == "table" then
+      dst = f(dst, val)
     elseif val == false then
       dst = {}
-    elseif val ~= true then
-      dst = f(dst, val)
     end
   end
   return dst
