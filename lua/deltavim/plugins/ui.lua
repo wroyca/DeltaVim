@@ -31,7 +31,9 @@ return {
     config = function(_, opts)
       require("notify").setup(opts)
       -- TODO: PR to LazyVim
-      require("telescope").load_extension("notify")
+      if Utils.has("telescope.nvim") then
+        require("telescope").load_extension("notify")
+      end
     end,
   },
 
