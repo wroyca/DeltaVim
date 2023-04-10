@@ -233,6 +233,7 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     opts = {
       char = "│",
+      context_char = "│",
       filetype_exclude = {
         "alpha",
         "dashboard",
