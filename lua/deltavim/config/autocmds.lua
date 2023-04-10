@@ -29,7 +29,7 @@ M.DEFAULT = {
   { "@highlight_yank", true },
   { "@last_loc", true },
   { "@resize_splits", true },
-  { "@ruler", ft = { lua = 80 } },
+  { "@rulers", ft = { lua = 80 } },
   { "@spell", ft = { "gitcommit", "markdown" } },
   { "@trim_whitespace", true },
   { "@wrap", ft = { "gitcommit", "markdown" } },
@@ -82,10 +82,10 @@ function M.setup()
   ---@class DeltaVim.Autocmds.Ruler
   ---@field ft table<string,integer|integer[]>
   ---@type DeltaVim.Autocmd.Schema
-  local ruler_args = { ft = "map" }
+  local rulers_args = { ft = "map" }
 
   ---@type DeltaVim.Autocmd.With
-  local function ruler(src)
+  local function rulers(src)
     ---@type DeltaVim.Autocmd[]
     local autocmds = {}
     for ft, offs in pairs(src.args.ft) do
@@ -147,7 +147,7 @@ function M.setup()
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
     { "@last_loc", "BufReadPost", last_loc  },
     { "@resize_splits", "VimResized", "tabdo wincmd =" },
-    { "@ruler", with = ruler, args = ruler_args },
+    { "@rulers", with = rulers, args = rulers_args },
     { "@spell", with = spell, args = spell_args },
     { "@trim_whitespace", "BufWritePre", trim_whitespace },
     { "@wrap", with = wrap, args = wrap_args },
