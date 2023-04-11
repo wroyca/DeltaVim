@@ -166,6 +166,18 @@ return {
         },
       }
 
+      ---@param document boolean
+      ---@param level? string
+      local function diagnostics(document, level)
+        local bufnr
+        if document then bufnr = 0 end
+        local severity = level and vim.diagnostic.severity[level] or nil
+        return H.telescope(
+          "diagnostics",
+          { bufnr = bufnr, severity = severity }
+        )
+      end
+
       local builtin = H.telescope
       -- stylua: ignore
       return Keymap.Collector()
@@ -192,8 +204,12 @@ return {
           { "@search.references", builtin("lsp_references"), "References" },
           { "@search.type_definitions", builtin("lsp_type_definitions"), "Type definitions" },
           -- TODO: PR to LazyVim
-          { "@search.document_diagnostics", builtin("diagnostics", { bufnr = 0 }), "Document diagnostics" },
-          { "@search.workspace_diagnostics", builtin("diagnostics"), "Workspace diagnostics" },
+          { "@search.document_diagnostics", diagnostics(true), "Document diagnostics" },
+          { "@search.workspace_diagnostics", diagnostics(false), "Workspace diagnostics" },
+          { "@search.document_errors", diagnostics(false, "E"), "Document errors" },
+          { "@search.workspace_errors", diagnostics(true, "E"), "Workspace errors" },
+          { "@search.document_warnings", diagnostics(false, "W"), "Document warnings" },
+          { "@search.workspace_warnings", diagnostics(true, "W"), "Workspace warnings" },
           { "@search.document_symbols", builtin("lsp_document_symbols", symbols), "Document symbols" },
           { "@search.workspace_symbols", builtin("lsp_workspace_symbols", symbols), "Workspace symbols" },
           -- others
@@ -429,7 +445,10 @@ return {
 
   -- Better diagnostics list
   {
-    "folke/trouble.nvim",
+    -- FIXME: https://github.com/folke/trouble.nvim/pull/274
+    -- "folke/trouble.nvim",
+    "loichyan/trouble.nvim",
+    branch = "feat-diagnostic-opts",
     cmd = { "TroubleToggle", "Trouble" },
     keys = function()
       local tb = H.trouble
@@ -449,19 +468,36 @@ return {
         end
       end
 
+      ---@param document boolean
+      ---@param level? string
+      local function diagnostics(document, level)
+        local cmd
+        if document then
+          cmd = "document_diagnostics"
+        else
+          cmd = "workspace_diagnostics"
+        end
+        local severity = level and vim.diagnostic.severity[level] or nil
+        return H.trouble(cmd, { bufnr = bufnr, severity = severity })
+      end
+
       -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@goto.prev_quickfix", goto_qf(false), "Prev quickfix" },
           { "@goto.next_quickfix", goto_qf(true), "Next quickfix" },
           { "@quickfix.definitions", tb("lsp_definitions"), "Definitions" },
-          { "@quickfix.document_diagnostics", tb("document_diagnostics"), "Document diagnostics" },
+          { "@quickfix.document_diagnostics", diagnostics(true), "Document diagnostics" },
+          { "@quickfix.workspace_diagnostics", diagnostics(false), "Workspace diagnostics" },
+          { "@quickfix.document_errors", diagnostics(true, "E"), "Document errors" },
+          { "@quickfix.workspace_errors", diagnostics(false, "E"), "Workspace errors" },
+          { "@quickfix.document_warnings", diagnostics(true, "W"), "Document warnings" },
+          { "@quickfix.workspace_warnings", diagnostics(false, "W"), "Workspace warnings" },
           { "@quickfix.implementations", tb("lsp_implementations"), "Implementations" },
           { "@quickfix.location_list", tb("loclist"), "Location list" },
           { "@quickfix.quickfix_list", tb("quickfix"), "Quickfix dist" },
           { "@quickfix.references", tb("lsp_references"), "References" },
           { "@quickfix.type_definitions", tb("lsp_type_definitions"), "Type definitions" },
-          { "@quickfix.workspace_diagnostics", tb("workspace_diagnostics"), "Workspace diagnostics" },
         })
         :collect_lazy()
     end,

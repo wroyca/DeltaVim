@@ -74,6 +74,14 @@ function M.keymaps(client, buffer)
 
   local function format() M.format(buffer) end
 
+  ---@param level? string
+  local function diagnostics(level)
+    local severity = level and vim.diagnostic.severity[level] or nil
+    return {
+      function() vim.diagnosti.open_float({ severity = severity }) end,
+    }
+  end
+
   -- stylua: ignore
   KEYMAPS = KEYMAPS or Keymap.Collector()
     :map({
@@ -86,7 +94,9 @@ function M.keymaps(client, buffer)
       { "@lsp.format", { format, "documentRangeFormatting" }, "Format range", mode = "x" },
       { "@lsp.hover", lsp("hover", "hover"), "Hover" },
       { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
-      { "@lsp.line_diagnostics", { vim.diagnostic.open_float }, "Line diagnostics" },
+      { "@lsp.line_diagnostics", diagnostics(), "Line diagnostics" },
+      { "@lsp.line_errors", diagnostics("E"), "Line errors" },
+      { "@lsp.line_warnings", diagnostics("W"), "Line warnings" },
       { "@lsp.references", lsp("references", "references"), "References" },
       { "@lsp.rename", lsp("rename", "rename"), "Rename" },
       { "@lsp.signature_help",  lsp("signature_help", "signatureHelp") , "Signature help" },
@@ -94,10 +104,10 @@ function M.keymaps(client, buffer)
       -- goto
       { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
       { "@goto.prev_diagnostic", goto_diagnostic(false), "Prev diagnostic" },
-      { "@goto.next_error", goto_diagnostic(true, "ERROR"), "Next error" },
-      { "@goto.prev_error", goto_diagnostic(false, "ERROR"), "Prev error" },
-      { "@goto.next_warning", goto_diagnostic(true, "WARN"), "Next warning" },
-      { "@goto.prev_warning", goto_diagnostic(false, "WARN"), "Prev warning" },
+      { "@goto.next_error", goto_diagnostic(true, "E"), "Next error" },
+      { "@goto.prev_error", goto_diagnostic(false, "E"), "Prev error" },
+      { "@goto.next_warning", goto_diagnostic(true, "W"), "Next warning" },
+      { "@goto.prev_warning", goto_diagnostic(false, "W"), "Prev warning" },
     })
     :collect()
 
