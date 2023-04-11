@@ -187,15 +187,15 @@ return {
           { "@search.git_commits", builtin("git_commits"), "Git commits" },
           { "@search.git_status", builtin("git_status"), "Git status" },
           -- lsp
-          { "@search.lsp_definitions", builtin("lsp_definitions"), "References" },
-          { "@search.lsp_implementations", builtin("lsp_implementations"), "Implementations" },
-          { "@search.lsp_references", builtin("lsp_references"), "References" },
-          { "@search.lsp_type_definitions", builtin("lsp_type_definitions"), "Type definitions" },
+          { "@search.definitions", builtin("lsp_definitions"), "References" },
+          { "@search.implementations", builtin("lsp_implementations"), "Implementations" },
+          { "@search.references", builtin("lsp_references"), "References" },
+          { "@search.type_definitions", builtin("lsp_type_definitions"), "Type definitions" },
           -- TODO: PR to LazyVim
-          { "@search.lsp_document_diagnostics", builtin("diagnostics", { bufnr = 0 }), "Document diagnostics" },
-          { "@search.lsp_workspace_diagnostics", builtin("diagnostics"), "Workspace diagnostics" },
-          { "@search.lsp_document_symbols", builtin("lsp_document_symbols", symbols), "Document symbols" },
-          { "@search.lsp_workspace_symbols", builtin("lsp_workspace_symbols", symbols), "Workspace symbols" },
+          { "@search.document_diagnostics", builtin("diagnostics", { bufnr = 0 }), "Document diagnostics" },
+          { "@search.workspace_diagnostics", builtin("diagnostics"), "Workspace diagnostics" },
+          { "@search.document_symbols", builtin("lsp_document_symbols", symbols), "Document symbols" },
+          { "@search.workspace_symbols", builtin("lsp_workspace_symbols", symbols), "Workspace symbols" },
           -- others
           { "@search.autocommands", builtin("autocommands"), "Auto Commands" },
           { "@search.colorschemes", builtin("colorscheme", { enable_preview = true }), "Colorschemes" },
