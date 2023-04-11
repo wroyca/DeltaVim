@@ -78,7 +78,7 @@ function M.keymaps(client, buffer)
   local function diagnostics(level)
     local severity = level and vim.diagnostic.severity[level] or nil
     return {
-      function() vim.diagnosti.open_float({ severity = severity }) end,
+      function() vim.diagnostic.open_float({ severity = severity }) end,
     }
   end
 
