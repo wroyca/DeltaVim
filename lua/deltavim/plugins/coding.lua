@@ -147,12 +147,12 @@ return {
             return string.format("[%s]", name:upper())
           end,
           source_dups = {
-            buffer = 1,
+            buffer = 0,
             luasnip = 1,
-            nvim_lsp = 0,
+            nvim_lsp = 1,
             path = 1,
           },
-          default_source_dup = 0,
+          default_source_dup = 1,
           max_width = function() return math.floor(vim.o.columns * 0.4) end,
         },
         sorting = {
