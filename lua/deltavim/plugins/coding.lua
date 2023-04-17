@@ -157,7 +157,7 @@ return {
         },
         sorting = {
           comparators = {
-            comparator.kind,
+            function(a, b) return comparator.order(b, a) end,
             comparator.score,
             comparator.recently_used,
           },
