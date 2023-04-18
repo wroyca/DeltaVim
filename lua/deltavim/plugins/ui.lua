@@ -12,7 +12,6 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@notify.clear", function() require("notify").dismiss(opts) end, "Clear notifications" },
           { "@search.notifications", H.telescope({ "notify" }), "Notifications" },
         })
         :collect_lazy()
@@ -319,6 +318,7 @@ return {
       return Keymap.Collector()
         :map({
           { "@notify.all", cmd("all"), "All notifications" },
+          { "@notify.dismiss", cmd("dismiss"), "Dismiss notifications" },
           { "@notify.history", cmd("history"), "Notification history" },
           { "@notify.last", cmd("last"), "Last notification" },
           { "@notify.redirect", redirect, "Redirect to notification", mode = "c" },

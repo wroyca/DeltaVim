@@ -162,7 +162,7 @@ M.DEFAULT = {
   { "gI", "@search.implementations" },
   { "gk", "@lsp.signature_help", mode = "n" },
   { "gr", "@search.references" },
-  { "gt", "@search.type_definitions" },
+  { "gy", "@search.type_definitions" },
   { "K", "@lsp.hover" },
   { "<C-k>", "@lsp.signature_help", mode = "i" },
   { "<Leader>ca", "@lsp.code_action" },
@@ -177,6 +177,7 @@ M.DEFAULT = {
   { "<S-Enter>", "@notify.redirect" },
   { "<Leader>un", "@notify.clear" },
   { "<Leader>sna", "@notify.all" },
+  { "<Leader>snd", "@notify.clear" },
   { "<Leader>snh", "@notify.history" },
   { "<Leader>snl", "@notify.last" },
   -- buffer

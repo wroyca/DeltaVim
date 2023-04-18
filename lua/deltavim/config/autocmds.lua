@@ -10,6 +10,7 @@ M.DEFAULT = {
   {
     "@close_with_q",
     ft = {
+      "checkhealth",
       "git",
       "help",
       "lspinfo",
@@ -52,6 +53,7 @@ end
 function M.setup()
   ---@type DeltaVim.Autocmd.Callback
   local function auto_create_dir(ev)
+    if ev.match:match("^%w%w+://") then return end
     local file = vim.loop.fs_realpath(ev.match) or ev.match
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
   end
