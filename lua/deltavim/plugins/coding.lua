@@ -124,8 +124,8 @@ return {
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "buffer", keyword_length = 3 },
+          { name = "path", keyword_length = 3 },
         }),
         formatting = {
           source_names = {
@@ -157,9 +157,12 @@ return {
         },
         sorting = {
           comparators = {
-            function(a, b) return comparator.order(b, a) end,
-            comparator.score,
+            comparator.locality,
             comparator.recently_used,
+            comparator.exact,
+            comparator.score,
+            comparator.offset,
+            comparator.order,
           },
         },
         experimental = {
