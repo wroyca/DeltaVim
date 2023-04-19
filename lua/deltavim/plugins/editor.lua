@@ -406,8 +406,6 @@ return {
   -- References
   {
     "RRethy/vim-illuminate",
-    -- TODO: PR to LazyVim
-    cmd = "IlluminateToggle",
     event = { "BufReadPost", "BufNewFile" },
     keys = function()
       return Keymap.Collector()
