@@ -67,6 +67,7 @@ return {
   -- TODO: PR to LazyVim
   {
     "akinsho/toggleterm.nvim",
+    cmd = "ToggleTerm",
     keys = function()
       ---@param dir fun():string
       local function toggle(dir)
