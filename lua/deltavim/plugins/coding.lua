@@ -101,7 +101,7 @@ return {
           { "@cmp.super_tab", super_tab, key = "<Tab>" },
           { "@cmp.super_stab", super_stab, key = "<S-Tab>" },
           { "@cmp.abort", mapping.abort() },
-          { "@cmp.complete", mapping.complete({}) },
+          { "@cmp.complete", mapping.complete() },
           { "@cmp.confirm", confirm() },
           { "@cmp.confirm_replace", confirm(cmp.ConfirmBehavior.Replace) },
           { "@cmp.confirm_insert", confirm(cmp.ConfirmBehavior.Insert) },
