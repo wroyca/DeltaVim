@@ -212,34 +212,36 @@ end
 ---Note: This mutates the first list.
 ---@generic T
 ---@param dst T[]
+---@param t1 T[]?
 ---@param ... T[]
-function M.concat(dst, ...)
-  for _, val in ipairs({ ... }) do
-    for _, t in ipairs(val) do
-      table.insert(dst, t)
-    end
+local function concat(dst, t1, ...)
+  if t1 == nil then return dst end
+  for _, t in ipairs(t1) do
+    table.insert(dst, t)
   end
-  return dst
+  return concat(dst, ...)
 end
+M.concat = concat
 
 ---Merge tables into a signle table.
 ---Note: This mutates the first table.
 ---@generic T: table
 ---@param dst T
+---@param t1 T?
 ---@param ... T
 ---@return T
-function M.merge(dst, ...)
-  for _, val in ipairs({ ... }) do
-    for k, v in pairs(val) do
-      if v == vim.NIL then
-        dst[k] = nil
-      else
-        dst[k] = v
-      end
+local function merge(dst, t1, ...)
+  if t1 == nil then return dst end
+  for k, v in pairs(t1) do
+    if v == vim.NIL then
+      dst[k] = nil
+    else
+      dst[k] = v
     end
   end
-  return dst
+  return merge(dst, ...)
 end
+M.merge = merge
 
 ---Returns whether given table is a list.
 ---Note: An empty table is not considered as a list.
@@ -255,10 +257,16 @@ end
 
 local function is_table(t) return type(t) == "table" and not M.is_list(t) end
 
+---Recursively merge tables into a signle table.
+---Note: This mutates the first table.
 ---@generic T: table
 ---@param dst T
-local function deep_merge(dst, tbl)
-  for k, v in pairs(tbl) do
+---@param t1 T?
+---@param ... T
+---@return T
+local function deep_merge(dst, t1, ...)
+  if t1 == nil then return dst end
+  for k, v in pairs(t1) do
     if is_table(dst[k]) and is_table(v) then
       deep_merge(dst[k], v)
     elseif v == vim.NIL then
@@ -267,20 +275,9 @@ local function deep_merge(dst, tbl)
       dst[k] = v
     end
   end
+  return deep_merge(dst, ...)
 end
-
----Recursively merge tables into a signle table.
----Note: This mutates the first table.
----@generic T: table
----@param dst T
----@param ... T
----@return T
-function M.deep_merge(dst, ...)
-  for _, val in ipairs({ ... }) do
-    deep_merge(dst, val)
-  end
-  return dst
-end
+M.deep_merge = deep_merge
 
 ---Constructs a table from the given table, `false` values will be removed and
 ---`true` values will be replaced with empty tables.
@@ -309,26 +306,28 @@ function M.list_to_set(list)
 end
 
 ---@alias DeltaVim.Utils.ReduceType "list"|"map"|"table"
----@alias DeltaVim.Utils.Reducer table|(fun(dst:table):table)|boolean|nil
+---@alias DeltaVim.Utils.Reducer table|(fun(dst:table):table)|boolean
 
 ---Merges values into a single value.
 ---Note: this mutates the dst.
 ---@param f fun(dst:table,new:table):table
 ---@param dst table
+---@param t1 DeltaVim.Utils.Reducer?
 ---@param ... DeltaVim.Utils.Reducer
 ---@return table
-function M.reduce_with(f, dst, ...)
-  for _, val in ipairs({ ... }) do
-    if type(val) == "function" then
-      dst = val(dst)
-    elseif type(val) == "table" then
-      dst = f(dst, val)
-    elseif val == false then
-      dst = {}
-    end
+local function reduce_with(f, dst, t1, ...)
+  if t1 == nil then
+    return dst
+  elseif type(t1) == "table" then
+    dst = f(dst, t1)
+  elseif type(t1) == "function" then
+    dst = t1(dst)
+  elseif t1 == false then
+    dst = {}
   end
-  return dst
+  return reduce_with(f, dst, ...)
 end
+M.reduce_with = reduce_with
 
 ---@param ty DeltaVim.Utils.ReduceType
 ---@param dst table
