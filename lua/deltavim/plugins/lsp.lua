@@ -25,10 +25,16 @@ return {
       diagnostics = {
         underline = true,
         update_in_insert = false,
-        virtual_text = { spacing = 4, prefix = "●" },
+        virtual_text = {
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
+        },
         severity_sort = true,
         float = { border = Config.border },
       },
+      -- Global capabilities
+      capabilities = {},
       ---Automatically format on save
       autoformat = true,
       ---Options for `vim.lsp.buf.format()`
@@ -72,17 +78,37 @@ return {
         Lsp.keymaps(client, buffer)
       end)
 
-      -- Config diagnostics
+      -- Config sign icons
       for name, icon in pairs(Config.icons.diagnostics) do
         name = "DiagnosticSign" .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
       end
-      vim.diagnostic.config(opts.diagnostics)
+
+      -- Overwrite prefix
+      local diagnostics = { virtual_text = {} }
+      if
+        type(opts.diagnostics.virtual_text) == "table"
+        and opts.diagnostics.virtual_text.prefix == "icons"
+        and vim.fn.has("nvim-0.10.0")
+      then
+        local icons = {}
+        for k, v in pairs(Config.icons.diagnostics) do
+          icons[k:upper()] = v
+        end
+        diagnostics.virtual_text.prefix = function(d) return icons[d.severity] end
+      end
+
+      -- Update configuration
+      vim.diagnostic.config(Utils.deep_merge({}, opts.diagnostics, diagnostics))
 
       -- Update capabilities
-      local capabilities = Utils.has("nvim-cmp")
-          and require("cmp_nvim_lsp").default_capabilities()
-        or {}
+      local capabilities = Utils.deep_merge(
+        {},
+        vim.lsp.protocol.make_client_capabilities(),
+        Utils.has("nvim-cmp") and require("cmp_nvim_lsp").default_capabilities()
+          or {},
+        opts.capabilities or {}
+      )
 
       local function setup(server)
         local server_opts = Utils.deep_merge({

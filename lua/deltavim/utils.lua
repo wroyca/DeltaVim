@@ -241,6 +241,8 @@ function M.merge(dst, ...)
   return dst
 end
 
+---Returns whether given table is a list.
+---Note: An empty table is not considered as a list.
 ---@param tbl table
 function M.is_list(tbl)
   local i = 1
@@ -248,7 +250,7 @@ function M.is_list(tbl)
     if tbl[i] == nil then return false end
     i = i + 1
   end
-  return true
+  return i > 1
 end
 
 local function is_table(t) return type(t) == "table" and not M.is_list(t) end
