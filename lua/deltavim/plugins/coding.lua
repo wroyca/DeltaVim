@@ -160,6 +160,7 @@ return {
             comparator.locality,
             comparator.recently_used,
             comparator.exact,
+            comparator.kind,
             comparator.score,
             comparator.offset,
             comparator.order,
