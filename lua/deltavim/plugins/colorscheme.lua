@@ -55,7 +55,6 @@ return {
           LeapLabelPrimary = { fg = c.green, bold = true },
           LeapLabelSecondary = { fg = c.blue, bold = true },
           LeapBackdrop = { fg = c.overlay0 },
-          NavicText = { fg = c.text, bg = c.none },
         }
       end,
     },
