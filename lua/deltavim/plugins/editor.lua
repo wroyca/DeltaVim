@@ -40,6 +40,7 @@ return {
       filesystem = {
         bind_to_cwd = false,
         follow_current_file = true,
+        use_libuv_file_watcher = true,
       },
       window = {
         mappings = {
@@ -85,6 +86,11 @@ return {
               id = 999,
               direction = "tab",
               shade_terminals = false,
+              on_close = function()
+                if package.loaded["neo-tree.sources.git_status"] then
+                  require("neo-tree.sources.git_status").refresh()
+                end
+              end,
             })
             :toggle()
         end
@@ -113,13 +119,17 @@ return {
       float_opts = { border = Config.border },
       ---@param term Terminal
       on_open = function(term)
-          -- stylua: ignore
-          Keymap.Collector()
-            :map({
-              { "@terminal.hide", function() term:toggle() end, "Hide terminal", mode = "t" },
+        Keymap.Collector()
+          :map({
+            {
+              "@terminal.hide",
+              function() term:toggle() end,
+              "Hide terminal",
+              mode = "t",
               buffer = term.bufnr,
-            })
-            :collect_and_set()
+            },
+          })
+          :collect_and_set()
       end,
       shade_terminals = true,
       shading_factor = -15,
