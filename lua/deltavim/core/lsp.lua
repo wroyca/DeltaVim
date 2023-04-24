@@ -165,4 +165,25 @@ function M.set_keymaps(client, buffer, keymaps)
   end
 end
 
+---@param server string
+---@return table?
+function M.get_config(server)
+  local configs = require("lspconfig.configs")
+  return rawget(configs, server)
+end
+
+---Disable a lsp server before setup.
+---@param server string
+---@param cond fun(config:table,root:string): boolean
+function M.disable(server, cond)
+  local util = require("lspconfig.util")
+  local def = M.lsp_get_config(server)
+  def.document_config.on_new_config = util.add_hook_before(
+    def.document_config.on_new_config,
+    function(config, root)
+      if cond(config, root) then config.enabled = false end
+    end
+  )
+end
+
 return M

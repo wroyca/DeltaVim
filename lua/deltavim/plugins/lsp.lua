@@ -147,6 +147,19 @@ return {
         require("mason-lspconfig").setup_handlers({ setup })
       end
 
+      -- Resolve conflicts between denols and tsserver
+      -- Credit: https://github.com/LazyVim/LazyVim/blob/d565684/lua/lazyvim/plugins/lsp/init.lua#L158-L164
+      -- License: MIT
+      if Lsp.get_config("denols") and Lsp.get_config("tsserver") then
+        local is_deno =
+          require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+        Lsp.disable("tsserver", is_deno)
+        Lsp.disable(
+          "denols",
+          function(root_dir) return not is_deno(root_dir) end
+        )
+      end
+
       -- Set LspInfo border
       require("lspconfig.ui.windows").default_options.border = Config.border
     end,
