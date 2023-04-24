@@ -1,6 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 return {
   -- Lspconfig
@@ -68,12 +68,12 @@ return {
     ---@param opts DeltaVim.Config.Lsp
     config = function(_, opts)
       local Lsp = require("deltavim.core.lsp")
-      local servers = Utils.copy_as_table(opts.servers)
+      local servers = Util.copy_as_table(opts.servers)
 
       -- Setup autoformat and keymaps
       Lsp.AUTOFORMAT = opts.autoformat
       Lsp.FORMAT_OPTS = opts.format
-      Utils.on_lsp_attach(function(client, buffer)
+      Util.on_lsp_attach(function(client, buffer)
         Lsp.autoformat(client, buffer)
         Lsp.keymaps(client, buffer)
       end)
@@ -99,19 +99,19 @@ return {
       end
 
       -- Update configuration
-      vim.diagnostic.config(Utils.deep_merge({}, opts.diagnostics, diagnostics))
+      vim.diagnostic.config(Util.deep_merge({}, opts.diagnostics, diagnostics))
 
       -- Update capabilities
-      local capabilities = Utils.deep_merge(
+      local capabilities = Util.deep_merge(
         {},
         vim.lsp.protocol.make_client_capabilities(),
-        Utils.has("nvim-cmp") and require("cmp_nvim_lsp").default_capabilities()
+        Util.has("nvim-cmp") and require("cmp_nvim_lsp").default_capabilities()
           or {},
         opts.capabilities or {}
       )
 
       local function setup(server)
-        local server_opts = Utils.deep_merge({
+        local server_opts = Util.deep_merge({
           capabilities = capabilities,
         }, servers[server] or {})
 
@@ -123,7 +123,7 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      local has_mason = Utils.has("mason-lspconfig.nvim")
+      local has_mason = Util.has("mason-lspconfig.nvim")
       local available = has_mason
           and vim.tbl_keys(
             require("mason-lspconfig.mappings.server").lspconfig_to_package
@@ -168,7 +168,7 @@ return {
   { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
   { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },
   -- stylua: ignore
-  { "hrsh7th/cmp-nvim-lsp", cond = function() return Utils.has("nvim-cmp") end },
+  { "hrsh7th/cmp-nvim-lsp", cond = function() return Util.has("nvim-cmp") end },
 
   -- Formatters/linters
   {
@@ -207,13 +207,13 @@ return {
     config = function(_, opts)
       local builtins = require("null-ls").builtins
       ---@type any[]
-      local sources = Utils.concat({}, opts.sources or {})
+      local sources = Util.concat({}, opts.sources or {})
       for key, val in pairs(opts.sources_with) do
-        for k, v in pairs(Utils.copy_as_table(val)) do
+        for k, v in pairs(Util.copy_as_table(val)) do
           table.insert(sources, builtins[key][k].with(v))
         end
       end
-      require("null-ls").setup(Utils.merge({}, opts, { sources = sources }))
+      require("null-ls").setup(Util.merge({}, opts, { sources = sources }))
     end,
   },
 

@@ -305,15 +305,15 @@ function M.list_to_set(list)
   return set
 end
 
----@alias DeltaVim.Utils.ReduceType "list"|"map"|"table"
----@alias DeltaVim.Utils.Reducer table|(fun(dst:table):table)|boolean
+---@alias DeltaVim.Util.ReduceType "list"|"map"|"table"
+---@alias DeltaVim.Util.Reducer table|(fun(dst:table):table)|boolean
 
 ---Merges values into a single value.
 ---Note: this mutates the dst.
 ---@param f fun(dst:table,new:table):table
 ---@param dst table
----@param t1 DeltaVim.Utils.Reducer?
----@param ... DeltaVim.Utils.Reducer
+---@param t1 DeltaVim.Util.Reducer?
+---@param ... DeltaVim.Util.Reducer
 ---@return table
 local function reduce_with(f, dst, t1, ...)
   if t1 == nil then
@@ -329,9 +329,9 @@ local function reduce_with(f, dst, t1, ...)
 end
 M.reduce_with = reduce_with
 
----@param ty DeltaVim.Utils.ReduceType
+---@param ty DeltaVim.Util.ReduceType
 ---@param dst table
----@param ... DeltaVim.Utils.Reducer
+---@param ... DeltaVim.Util.Reducer
 function M.reduce(ty, dst, ...)
   local f
   if ty == "list" then

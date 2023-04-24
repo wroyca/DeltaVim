@@ -1,5 +1,5 @@
 local Autocmd = require("deltavim.core.autocmd")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 local M = {}
 
@@ -41,11 +41,11 @@ local CONFIG
 
 function M.init()
   CONFIG = Autocmd.load(
-    Utils.reduce(
+    Util.reduce(
       "list",
       {},
       M.DEFAULT,
-      Utils.load_config("custom.autocmds") or {}
+      Util.load_config("custom.autocmds") or {}
     )
   )
 end
@@ -68,7 +68,7 @@ function M.setup()
     ---@type DeltaVim.Autocmd.Callback
     local function cb(ev)
       vim.bo[ev.buf].buflisted = false
-      Utils.keymap("n", "q", "<Cmd>close<CR>", { buffer = ev.buf })
+      Util.keymap("n", "q", "<Cmd>close<CR>", { buffer = ev.buf })
     end
     return { "FileType", cb, pattern = src.args.ft }
   end

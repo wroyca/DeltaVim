@@ -1,4 +1,4 @@
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 local M = {}
 
@@ -60,11 +60,11 @@ function M.init() end
 
 function M.setup()
   ---@type DeltaVim.Options
-  local config = Utils.reduce(
+  local config = Util.reduce(
     "table",
     {},
     M.DEFAULT,
-    Utils.load_config("custom.options") or {}
+    Util.load_config("custom.options") or {}
   )
 
   -- Other options.

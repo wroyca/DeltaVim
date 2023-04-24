@@ -1,6 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 local H = require("deltavim.helpers")
 
 return {
@@ -29,10 +29,10 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@explorer.toggle", toggle(Utils.get_root), "Toggle explorer" },
-          { "@explorer.toggle_cwd", toggle(Utils.get_cwd), "Toggle explorer (cwd)" },
-          { "@explorer.focus", focus(Utils.get_root), "Focus explorer" },
-          { "@explorer.focus_cwd", focus(Utils.get_cwd), "Focus explorer (cwd)" },
+          { "@explorer.toggle", toggle(Util.get_root), "Toggle explorer" },
+          { "@explorer.toggle_cwd", toggle(Util.get_cwd), "Toggle explorer (cwd)" },
+          { "@explorer.focus", focus(Util.get_root), "Focus explorer" },
+          { "@explorer.focus_cwd", focus(Util.get_cwd), "Focus explorer (cwd)" },
         })
         :collect_lazy()
     end,
@@ -98,10 +98,10 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@terminal.open", toggle(Utils.get_root), "Open terminal" },
-          { "@terminal.open_cwd", toggle(Utils.get_cwd), "Open terminal (cwd)" },
-          { "@terminal.lazygit", lazygit(Utils.get_root), "Lazygit" },
-          { "@terminal.lazygit_cwd", lazygit(Utils.get_cwd), "Lazygit (cwd)" },
+          { "@terminal.open", toggle(Util.get_root), "Open terminal" },
+          { "@terminal.open_cwd", toggle(Util.get_cwd), "Open terminal (cwd)" },
+          { "@terminal.lazygit", lazygit(Util.get_root), "Lazygit" },
+          { "@terminal.lazygit_cwd", lazygit(Util.get_cwd), "Lazygit (cwd)" },
         })
         :collect_lazy()
     end,
@@ -156,9 +156,9 @@ return {
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
     keys = function()
-      local function get_root() return { cwd = Utils.get_root() } end
+      local function get_root() return { cwd = Util.get_root() } end
 
-      local function get_cwd() return { cwd = Utils.get_cwd() } end
+      local function get_cwd() return { cwd = Util.get_cwd() } end
 
       local symbols = {
         symbols = {
@@ -297,7 +297,7 @@ return {
         })
         :collect_lazy()
     end,
-    config = function(_, opts) Utils.merge(require("leap").opts, opts) end,
+    config = function(_, opts) Util.merge(require("leap").opts, opts) end,
   },
   {
     "ggandor/flit.nvim",
@@ -348,7 +348,7 @@ return {
           { "@surround.add", "Add surrounding" },
         })
         :collect_lhs_table()
-      opts = Utils.deep_merge({ operators = operators }, opts)
+      opts = Util.deep_merge({ operators = operators }, opts)
       wk.setup(opts)
       -- Register groups
       wk.register(opts.groups)
@@ -442,7 +442,7 @@ return {
       Keymap.set(keymaps)
 
       -- Also set it after loading ftplugins, since a lot overwrite `[[`` and `]]`
-      Utils.autocmd(
+      Util.autocmd(
         "FileType",
         function(ev) Keymap.set(keymaps, { buffer = ev.buf }) end
       )

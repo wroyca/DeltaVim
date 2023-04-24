@@ -1,5 +1,5 @@
 local Keymap = require("deltavim.core.keymap")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 local M = {}
 
@@ -212,11 +212,11 @@ local CONFIG
 
 function M.init()
   CONFIG = Keymap.load(
-    Utils.reduce(
+    Util.reduce(
       "list",
       {},
       M.DEFAULT,
-      Utils.load_config("custom.keymaps") or {}
+      Util.load_config("custom.keymaps") or {}
     )
   )
 end
@@ -306,7 +306,7 @@ function M.setup()
     { "@tab.first", "<Cmd>tabfirst<CR>", "First tab" },
     { "@tab.new", "<Cmd>tabnew<CR>", "New tab" },
     { "@tab.close", "<Cmd>tabclose<CR>", "Close tab" },
-    -- Utils
+    -- Util
     { "@util.save", "<Cmd>w<CR><Esc>", "Save file", mode = { "*", "i", "x" } },
     { "@util.new_file", "<Cmd>enew<CR>", "New file" },
     { "@util.search_this", "*N", "Search this word", mode = { "n", "x" } },
@@ -345,7 +345,7 @@ function M.setup()
     },
   }
   for k, v in pairs(fallback) do
-    if not Utils.has(k) then Utils.concat(presets, v) end
+    if not Util.has(k) then Util.concat(presets, v) end
   end
   CONFIG:map(presets):collect_and_set()
 end

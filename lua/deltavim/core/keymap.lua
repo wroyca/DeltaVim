@@ -1,7 +1,7 @@
 -- Manage keymaps.
 
 local Log = require("deltavim.core.log")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 ---@class DeltaVim.Keymap.Options
 ---@field buffer? integer
@@ -94,7 +94,7 @@ local function get_mode(mode)
   if type(mode) == "string" then
     return { mode }
   else
-    return mode or Utils.KEYMAP_MODE
+    return mode or Util.KEYMAP_MODE
   end
 end
 
@@ -104,7 +104,7 @@ end
 local function get_opts(src, init)
   ---@type DeltaVim.Keymap.Options
   local opts = init or {}
-  for k in pairs(Utils.KEYMAP_OPTS) do
+  for k in pairs(Util.KEYMAP_OPTS) do
     opts[k] = opts[k] or src[k]
   end
   return opts
@@ -162,7 +162,7 @@ function Collector:_map_preset(preset, input)
     mode = input.mode
   -- Otherwise, only common modes will be selected.
   else
-    local supported = Utils.list_to_set(get_mode(pmode))
+    local supported = Util.list_to_set(get_mode(pmode))
     if supported["*"] then
       mode = input.mode
     else
@@ -194,8 +194,8 @@ end
 function Collector:map(presets)
   local opts = get_opts(presets)
   for _, preset in ipairs(presets) do
-    local name, variant = Utils.split(preset[1], ":")
-    preset = Utils.merge({}, opts, { variant = variant }, preset)
+    local name, variant = Util.split(preset[1], ":")
+    preset = Util.merge({}, opts, { variant = variant }, preset)
     for _, input in ipairs(get(name) or {}) do
       self:_map_preset(preset, input)
     end
@@ -208,8 +208,8 @@ end
 function Collector:map_unique(presets)
   local opts = get_opts(presets)
   for _, preset in ipairs(presets) do
-    local name, variant = Utils.split(preset[1], ":")
-    preset = Utils.merge({}, opts, { variant = variant }, preset)
+    local name, variant = Util.split(preset[1], ":")
+    preset = Util.merge({}, opts, { variant = variant }, preset)
     local input = get(name)
     if input then
       if #input > 1 then
@@ -238,7 +238,7 @@ function Collector:collect_lazy(init)
   for _, keymap in ipairs(self:collect()) do
     table.insert(
       keymaps,
-      Utils.merge({
+      Util.merge({
         keymap[1],
         keymap[2],
         mode = keymap.mode,
@@ -276,11 +276,11 @@ function M.load(keymaps)
   local opts = get_opts(keymaps)
   for _, mapping in ipairs(keymaps) do
     ---@type DeltaVim.Keymap
-    mapping = Utils.merge({}, mapping, opts)
+    mapping = Util.merge({}, mapping, opts)
     local key = mapping[1]
     local rhs = mapping[2]
     local desc = mapping[3] or mapping.desc
-    if type(rhs) == "string" and Utils.starts_with(rhs, "@") then
+    if type(rhs) == "string" and Util.starts_with(rhs, "@") then
       if key == false then
         remove_input(rhs)
       else
@@ -291,7 +291,7 @@ function M.load(keymaps)
         else
           k = key --[[@as string]]
         end
-        local r, v = Utils.split(rhs, ":")
+        local r, v = Util.split(rhs, ":")
         add_input({
           ---@diagnostic disable-next-line:assign-type-mismatch
           k,
@@ -318,11 +318,11 @@ end
 ---@param opts? DeltaVim.Keymap.Options
 function M.set(keymaps, opts)
   for _, keymap in ipairs(keymaps) do
-    Utils.keymap(
+    Util.keymap(
       keymap.mode,
       keymap[1],
       keymap[2],
-      Utils.merge({}, opts or {}, keymap.opts)
+      Util.merge({}, opts or {}, keymap.opts)
     )
   end
 end

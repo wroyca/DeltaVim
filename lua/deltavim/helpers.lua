@@ -1,6 +1,6 @@
 -- Helpers to create keymaps/autocmds.
 
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 local M = {}
 
@@ -28,7 +28,7 @@ end
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
 ---@param opts? table
 local function telescope_files(opts)
-  opts = Utils.merge({}, opts or { cwd = Utils.get_cwd() })
+  opts = Util.merge({}, opts or { cwd = Util.get_cwd() })
   local cmd = "find_files"
   if vim.loop.fs_stat(opts.cwd .. "/.git") then
     opts.show_untracked = true
@@ -50,7 +50,7 @@ end
 ---@param mode string
 ---@param opts? table
 local function trouble(mode, opts)
-  opts = Utils.merge({ mode = mode }, opts or {})
+  opts = Util.merge({ mode = mode }, opts or {})
   require("trouble").toggle(opts)
 end
 

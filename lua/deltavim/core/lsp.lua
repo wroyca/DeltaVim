@@ -1,5 +1,5 @@
 local Keymap = require("deltavim.core.keymap")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 local M = {}
 
@@ -9,7 +9,7 @@ M.FORMAT_OPTS = {}
 ---@param buffer integer
 function M.format(buffer)
   local use_nls = M.nls_supports(buffer, "documentFormatting")
-  vim.lsp.buf.format(Utils.deep_merge({
+  vim.lsp.buf.format(Util.deep_merge({
     bufnr = buffer,
     filter = function(client)
       return use_nls and client.name == "null-ls"
@@ -34,7 +34,7 @@ function M.autoformat(client, buffer)
 
   if M.supports(client, buffer, "documentFormatting") then
     vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
-    Utils.autocmd("BufWritePre", function()
+    Util.autocmd("BufWritePre", function()
       if M.AUTOFORMAT then M.format(buffer) end
     end, { buffer = buffer })
   end
@@ -160,7 +160,7 @@ function M.set_keymaps(client, buffer, keymaps)
       rhs = m[2]
     end
     if not cap or M.supports(client, buffer, cap) then
-      Utils.keymap(m.mode, m[1], rhs, Utils.merge({ buffer = buffer }, m.opts))
+      Util.keymap(m.mode, m[1], rhs, Util.merge({ buffer = buffer }, m.opts))
     end
   end
 end

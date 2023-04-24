@@ -1,6 +1,6 @@
 local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 local H = require("deltavim.helpers")
 
 return {
@@ -23,13 +23,13 @@ return {
     },
     init = function()
       -- Install notify when `noice` is disabled
-      if not Utils.has("noice.nvim") and Utils.has("notify") then
-        Utils.on_very_lazy(function() vim.notify = require("notify") end)
+      if not Util.has("noice.nvim") and Util.has("notify") then
+        Util.on_very_lazy(function() vim.notify = require("notify") end)
       end
     end,
     config = function(_, opts)
       require("notify").setup(opts)
-      if Utils.has("telescope.nvim") then
+      if Util.has("telescope.nvim") then
         require("telescope").load_extension("notify")
       end
     end,
@@ -253,7 +253,7 @@ return {
       options = { try_as_border = true },
     },
     init = function()
-      Utils.autocmd(
+      Util.autocmd(
         "FileType",
         function() vim.b.miniindentscope_disable = true end,
         {
@@ -305,7 +305,7 @@ return {
           local key = src[1] --[[@as string]]
           return function()
             if not require("noice.lsp").scroll(delta) then
-              return Utils.feedkey(key)
+              return Util.feedkey(key)
             end
           end
         end
@@ -395,7 +395,7 @@ return {
       -- Close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then
         vim.cmd.close()
-        Utils.autocmd(
+        Util.autocmd(
           "User",
           function() require("lazy").show() end,
           { pattern = "AlphaReady" }
@@ -405,7 +405,7 @@ return {
       require("alpha").setup(dashboard.opts)
 
       -- Show plugins summary
-      Utils.autocmd("User", function()
+      Util.autocmd("User", function()
         local stats = require("lazy").stats()
         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
         -- stylua: ignore
@@ -420,9 +420,9 @@ return {
     "SmiteshP/nvim-navic",
     lazy = true,
     init = function()
-      if Utils.has("nvim-navic") then
+      if Util.has("nvim-navic") then
         vim.g.navic_silence = true
-        Utils.on_lsp_attach(function(client, buffer)
+        Util.on_lsp_attach(function(client, buffer)
           if client.server_capabilities.documentSymbolProvider then
             require("nvim-navic").attach(client, buffer)
           end

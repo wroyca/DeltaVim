@@ -1,6 +1,6 @@
 -- Manage auto commands.
 
-local Utils = require("deltavim.utils")
+local Util = require("deltavim.util")
 
 ---@class DeltaVim.Autocmd.Options
 ---@field group? string|integer
@@ -45,7 +45,7 @@ local Utils = require("deltavim.utils")
 
 ---@alias DeltaVim.Autocmd.With fun(src:DeltaVim.Autocmd.Input):DeltaVim.CustomAutocmd|DeltaVim.CustomAutocmd[]|{grouped?:boolean|string}
 
----@alias DeltaVim.Autocmd.Schema table<string,DeltaVim.Utils.ReduceType>
+---@alias DeltaVim.Autocmd.Schema table<string,DeltaVim.Util.ReduceType>
 
 ---@class DeltaVim.Autocmd.Preset: DeltaVim.Keymap.Options
 ---Preset name
@@ -81,7 +81,7 @@ local M = {}
 local function get_opts(src, init)
   ---@type DeltaVim.Autocmd.Options
   local opts = init or {}
-  for k in pairs(Utils.AUTOCMD_OPTS) do
+  for k in pairs(Util.AUTOCMD_OPTS) do
     opts[k] = opts[k] or src[k]
   end
   return opts
@@ -93,7 +93,7 @@ local function get_args(src)
   ---@type table<string,any>
   local args = {}
   for k, v in pairs(src) do
-    if type(k) == "string" and Utils.AUTOCMD_OPTS[k] == nil then args[k] = v end
+    if type(k) == "string" and Util.AUTOCMD_OPTS[k] == nil then args[k] = v end
   end
   return args
 end
@@ -151,7 +151,7 @@ function Collector:_map_preset(preset)
     -- Reduce arguments
     local new = inp.args
     for k, t in pairs(schema) do
-      args[k] = Utils.reduce(t, args[k] or {}, new[k] or {})
+      args[k] = Util.reduce(t, args[k] or {}, new[k] or {})
     end
   end
   -- 2) Collect output tables from custom function
@@ -168,7 +168,7 @@ function Collector:_map_preset(preset)
         self:add({
           o[1],
           o[2],
-          opts = Utils.merge({ group = group }, get_opts(o)),
+          opts = Util.merge({ group = group }, get_opts(o)),
         })
       end
     else
@@ -195,7 +195,7 @@ end
 function Collector:map(presets)
   local opts = get_opts(presets)
   for _, preset in ipairs(presets) do
-    self:_map_preset(Utils.merge({}, preset, opts))
+    self:_map_preset(Util.merge({}, preset, opts))
   end
   return self
 end
@@ -215,11 +215,11 @@ function M.load(autocmds)
   local collector = Collector.new()
   local gopts = get_opts(autocmds)
   for _, autocmd in ipairs(autocmds) do
-    autocmd = Utils.merge({}, autocmd, gopts)
+    autocmd = Util.merge({}, autocmd, gopts)
     local event = autocmd[1]
     local cmd = autocmd[2]
     local desc = autocmd[3] or autocmd.desc
-    if type(event) == "string" and Utils.starts_with(event, "@") then
+    if type(event) == "string" and Util.starts_with(event, "@") then
       if cmd == false then
         remove_input(event)
       else
@@ -244,7 +244,7 @@ end
 ---@param autocmds DeltaVim.Autocmd.Output[]
 function M.set(autocmds)
   for _, autocmd in ipairs(autocmds) do
-    Utils.autocmd(autocmd[1], autocmd[2], autocmd.opts)
+    Util.autocmd(autocmd[1], autocmd[2], autocmd.opts)
   end
 end
 
