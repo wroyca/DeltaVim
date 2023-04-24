@@ -487,7 +487,7 @@ return {
           cmd = "workspace_diagnostics"
         end
         local severity = level and vim.diagnostic.severity[level] or nil
-        return H.trouble(cmd, { bufnr = bufnr, severity = severity })
+        return H.trouble(cmd, { severity = severity })
       end
 
       -- stylua: ignore
