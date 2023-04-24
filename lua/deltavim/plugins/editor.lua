@@ -138,7 +138,7 @@ return {
 
   -- Search/replace in multiple files
   {
-    "windwp/nvim-spectre",
+    "nvim-pack/nvim-spectre",
     -- TODO: PR to LazyVim
     cmd = "Spectre",
     keys = function()
