@@ -98,6 +98,7 @@ return {
       -- stylua: ignore
       return Keymap.Collector()
         :map({
+          { "@terminal.select", "<Cmd>TermSelect<CR>", "Select terminal" },
           { "@terminal.open", toggle(Util.get_root), "Open terminal" },
           { "@terminal.open_cwd", toggle(Util.get_cwd), "Open terminal (cwd)" },
           { "@terminal.lazygit", lazygit(Util.get_root), "Lazygit" },
