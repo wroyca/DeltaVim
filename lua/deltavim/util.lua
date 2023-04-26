@@ -2,7 +2,36 @@ local Log = require("deltavim.core.log")
 
 local M = {}
 
-M.ROOT_PATTERNS = { ".git" }
+---@param path? string
+---@return string?
+function M.get_lsp_root(path)
+  if not path then return end
+  ---@type string[]
+  local roots = {}
+  for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+    local workspace = client.config.workspace_folders
+    local paths = workspace
+        and vim.tbl_map(
+          function(ws) return vim.uri_to_fname(ws.uri) end,
+          workspace
+        )
+      or client.config.root_dir and { client.config.root_dir }
+      or {}
+    for _, p in ipairs(paths) do
+      local r = vim.loop.fs_realpath(p)
+      if r and path:find(r, 1, true) then table.insert(roots, r) end
+    end
+  end
+  table.sort(roots, function(a, b) return #a > #b end)
+  return roots[1]
+end
+
+---Patterns to lookup the root directory of the current buffer.
+---@type (string|fun(path:string?):string?)[]
+M.ROOT_PATTERNS = {
+  M.get_lsp_root,
+  ".git",
+}
 
 ---Returns the root directory based on:
 ---* lsp workspace folders
@@ -15,35 +44,18 @@ function M.get_root()
   ---@type string?
   local path = vim.api.nvim_buf_get_name(0)
   path = path ~= "" and vim.loop.fs_realpath(path) or nil
-  ---@type string[]
-  local roots = {}
-  if path then
-    for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-      local workspace = client.config.workspace_folders
-      local paths = workspace
-          and vim.tbl_map(
-            function(ws) return vim.uri_to_fname(ws.uri) end,
-            workspace
-          )
-        or client.config.root_dir and { client.config.root_dir }
-        or {}
-      for _, p in ipairs(paths) do
-        local r = vim.loop.fs_realpath(p)
-        if r and path:find(r, 1, true) then roots[#roots + 1] = r end
-      end
-    end
-  end
-  table.sort(roots, function(a, b) return #a > #b end)
-  ---@type string?
-  local root = roots[1]
-  if not root then
-    path = path and vim.fs.dirname(path) or M.get_cwd()
+  for _, p in ipairs(M.ROOT_PATTERNS) do
     ---@type string?
-    root = vim.fs.find(M.ROOT_PATTERNS, { path = path, upward = true })[1]
-    root = root and vim.fs.dirname(root) or M.get_cwd()
+    local root
+    if type(p) == "string" then
+      root = vim.fs.find(p, { path = path or M.get_cwd(), upward = true })[1]
+      root = root and vim.fs.dirname(root) or nil
+    elseif type(p) == "function" then
+      root = p(path)
+    end
+    if root then return root end
   end
-  ---@cast root string
-  return root
+  return M.get_cwd()
 end
 
 ---@return string
