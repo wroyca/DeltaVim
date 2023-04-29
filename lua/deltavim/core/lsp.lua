@@ -141,6 +141,7 @@ local CAPABILITY_MAP = {
 ---@return boolean
 function M.nls_supports(buffer, cap)
   return CAPABILITY_MAP[cap] ~= nil
+    and package.loaded["null-ls"]
     and #require("null-ls.sources").get_available(
         vim.bo[buffer].ft,
         require("null-ls").methods[CAPABILITY_MAP[cap]]
