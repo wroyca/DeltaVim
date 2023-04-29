@@ -82,6 +82,7 @@ M.DEFAULT = {
   { "<Leader>fF", "@search.files_cwd" },
   { "<Leader>fn", "@util.new_file" },
   { "<Leader>fr", "@search.oldfiles" },
+  { "<Leader>fR", "@search.oldfiles_cwd" },
   -- terminal
   { "<C-t>", "@terminal.open" },
   { "<C-t>", "@terminal.hide" },
@@ -212,12 +213,7 @@ local CONFIG
 
 function M.init()
   CONFIG = Keymap.load(
-    Util.reduce(
-      "list",
-      {},
-      M.DEFAULT,
-      Util.load_config("custom.keymaps") or {}
-    )
+    Util.reduce("list", {}, M.DEFAULT, Util.load_config("custom.keymaps") or {})
   )
 end
 

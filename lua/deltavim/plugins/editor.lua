@@ -205,6 +205,7 @@ return {
           { "@search.files", H.telescope_files(get_root), "Files" },
           { "@search.files_cwd", H.telescope_files(get_cwd), "Files (cwd)" },
           { "@search.oldfiles", builtin("oldfiles"), "Recent files" },
+          { "@search.oldfiles_cwd", builtin("oldfiles", get_cwd), "Recent files (cwd)" },
           -- git
           { "@search.git_commits", builtin("git_commits"), "Git commits" },
           { "@search.git_status", builtin("git_status"), "Git status" },
