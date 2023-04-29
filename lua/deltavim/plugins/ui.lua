@@ -8,7 +8,6 @@ return {
   {
     "rcarriga/nvim-notify",
     keys = function()
-      local opts = { silent = true, pending = true }
       -- stylua: ignore
       return Keymap.Collector()
         :map({
@@ -369,7 +368,7 @@ return {
 
       -- header
       dashboard.section.header.val = opts.header
-      dashboard.section.header.opts.hl = "DashboardHeader"
+      dashboard.section.header.opts.hl = "AlphaHeader"
       -- body
       local buttons = {}
       for _, btn in ipairs(opts.buttons) do
@@ -380,16 +379,15 @@ return {
           action = ""
         end
         local button = dashboard.button(key, icon .. " " .. desc, action, o)
-        button.opts.hl = "DashboardCenter"
-        button.opts.hl_shortcut = "DashboardShortCut"
+        button.opts.hl = "AlphaButtons"
+        button.opts.hl_shortcut = "AlphaShortCut"
         table.insert(buttons, button)
       end
       dashboard.section.buttons.val = buttons
-      dashboard.section.buttons.opts.hl = "DashboardCenter"
       -- footer
       -- stylua: ignore
       dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
-      dashboard.section.footer.opts.hl = "DashboardFooter"
+      dashboard.section.footer.opts.hl = "AlphaFooter"
       dashboard.opts.layout[1].val = 8
 
       -- Close Lazy and re-open when the dashboard is ready

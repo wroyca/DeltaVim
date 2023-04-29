@@ -14,8 +14,8 @@ return {
     opts = {
       flavour = "mocha",
       integrations = {
+        alpha = true,
         cmp = true,
-        dashboard = true,
         gitsigns = true,
         illuminate = true,
         indent_blankline = { enabled = true },
