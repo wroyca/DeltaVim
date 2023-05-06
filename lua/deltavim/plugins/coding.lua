@@ -157,13 +157,10 @@ return {
         },
         sorting = {
           comparators = {
-            comparator.locality,
-            comparator.recently_used,
             comparator.exact,
-            comparator.kind,
+            comparator.recently_used,
             comparator.score,
-            comparator.offset,
-            comparator.order,
+            comparator.kind,
           },
         },
         experimental = {
