@@ -64,7 +64,6 @@ return {
     opts = function()
       local cmp = require("cmp")
       local mapping = cmp.mapping
-      local bordered = cmp.config.window.bordered
       local comparator = cmp.config.compare
 
       local super_tab = mapping(function(fallback)
@@ -167,10 +166,6 @@ return {
           ghost_text = {
             hl_group = "LspCodeLens",
           },
-        },
-        window = {
-          completion = bordered(Config.border),
-          documentation = bordered(Config.border),
         },
       }
     end,
