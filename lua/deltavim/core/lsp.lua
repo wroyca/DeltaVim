@@ -6,8 +6,9 @@ local M = {}
 M.AUTOFORMAT = true
 M.FORMAT_OPTS = {}
 
----@param buffer integer
+---@param buffer? integer
 function M.format(buffer)
+  buffer = buffer or 0
   local use_nls = M.nls_supports(buffer, "documentFormatting")
   vim.lsp.buf.format(Util.deep_merge({
     bufnr = buffer,
@@ -43,9 +44,7 @@ end
 ---@type DeltaVim.Keymap.Output[]
 local KEYMAPS
 
----@param client table
----@param buffer integer
-function M.keymaps(client, buffer)
+local function make_keymaps()
   ---@param cmd string
   ---@param has string
   ---@param opts? table
@@ -72,8 +71,6 @@ function M.keymaps(client, buffer)
     },
   })
 
-  local function format() M.format(buffer) end
-
   ---@param level? string
   local function diagnostics(level)
     local severity = level and vim.diagnostic.severity[level] or nil
@@ -83,15 +80,15 @@ function M.keymaps(client, buffer)
   end
 
   -- stylua: ignore
-  KEYMAPS = KEYMAPS or Keymap.Collector()
+  return Keymap.Collector()
     :map({
       -- lsp
       { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "*", "x" } },
       { "@lsp.code_action_source", code_action_source, "Source action", mode = { "*", "x" } },
       { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
       { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
-      { "@lsp.format", { format, "documentFormatting" }, "Format document", mode = "*" },
-      { "@lsp.format", { format, "documentRangeFormatting" }, "Format range", mode = "x" },
+      { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "*" },
+      { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
       { "@lsp.hover", lsp("hover", "hover"), "Hover" },
       { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
       { "@lsp.line_diagnostics", diagnostics(), "Line diagnostics" },
@@ -110,7 +107,13 @@ function M.keymaps(client, buffer)
       { "@goto.prev_warning", goto_diagnostic(false, "W"), "Prev warning" },
     })
     :collect()
+end
 
+---@param client table
+---@param buffer integer
+function M.keymaps(client, buffer)
+  -- stylua: ignore
+  KEYMAPS = KEYMAPS or make_keymaps()
   M.set_keymaps(client, buffer, KEYMAPS)
 end
 
