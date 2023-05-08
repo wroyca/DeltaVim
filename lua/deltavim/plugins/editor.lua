@@ -453,10 +453,7 @@ return {
 
   -- Better diagnostics list
   {
-    -- FIXME: https://github.com/folke/trouble.nvim/pull/274
-    -- "folke/trouble.nvim",
-    "loichyan/trouble.nvim",
-    branch = "feat-diagnostic-opts",
+    "folke/trouble.nvim",
     cmd = { "TroubleToggle", "Trouble" },
     keys = function()
       local tb = H.trouble
@@ -479,14 +476,11 @@ return {
       ---@param document boolean
       ---@param level? string
       local function diagnostics(document, level)
-        local cmd
-        if document then
-          cmd = "document_diagnostics"
-        else
-          cmd = "workspace_diagnostics"
-        end
         local severity = level and vim.diagnostic.severity[level] or nil
-        return H.trouble(cmd, { severity = severity })
+        return H.trouble(
+          "deltavim",
+          { workspace = not document, severity = severity }
+        )
       end
 
       -- stylua: ignore
