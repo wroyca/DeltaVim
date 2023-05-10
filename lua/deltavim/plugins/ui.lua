@@ -234,6 +234,7 @@ return {
         "dashboard",
         "help",
         "lazy",
+        "mason",
         "neo-tree",
         "Trouble",
       },
