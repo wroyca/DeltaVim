@@ -210,12 +210,6 @@ return {
       local npairs = require("nvim-autopairs")
       npairs.setup(opts)
       npairs.add_rules(opts.rules or {})
-      if Util.has("nvim-cmp") then
-        require("cmp").event:on(
-          "confirm_done",
-          require("nvim-autopairs.completion.cmp").on_confirm_done()
-        )
-      end
     end,
   },
 
