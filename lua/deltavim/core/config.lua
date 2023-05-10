@@ -80,7 +80,7 @@ end
 ---Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
 ---@param timeout? number
 function M.lazy_notify(timeout)
-  timeout = timeout or 500
+  timeout = timeout or 1000
   ---@type table[]
   local notifications = {}
   local function temp(...) table.insert(notifications, vim.F.pack_len(...)) end
