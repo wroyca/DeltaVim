@@ -159,7 +159,7 @@ return {
             comparator.exact,
             comparator.recently_used,
             comparator.score,
-            comparator.kind,
+            comparator.order,
           },
         },
         experimental = {
