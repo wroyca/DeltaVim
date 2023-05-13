@@ -380,7 +380,7 @@ return {
           changedelete = { text = "▎" },
           untracked = { text = "▎" },
         },
-        preview_config = { border = Config.border },
+        preview_config = { border = "none" },
         on_attach = function(buffer)
           -- stylua: ignore
           keymaps = keymaps or Keymap.Collector()

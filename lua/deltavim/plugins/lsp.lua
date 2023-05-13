@@ -31,7 +31,6 @@ return {
           prefix = "●",
         },
         severity_sort = true,
-        float = { border = Config.border },
       },
       -- Global capabilities
       capabilities = {},
