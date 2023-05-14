@@ -504,6 +504,16 @@ return {
         :collect_lazy()
     end,
     opts = { use_diagnostic_signs = true },
+    config = function(_, opts)
+      -- Refersh diagnostics
+      Util.autocmd(
+        "DiagnosticChanged",
+        function()
+          require("trouble").refresh({ auto = true, provider = "deltavim" })
+        end
+      )
+      require("trouble").setup(opts)
+    end,
   },
 
   -- Todo comments
