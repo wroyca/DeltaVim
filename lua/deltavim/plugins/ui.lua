@@ -71,8 +71,8 @@ return {
     end,
     opts = {
       options = {
-        close_command = H.bufremove(true),
-        right_mouse_command = H.bufremove(true),
+        close_command = H.bufremove(false),
+        right_mouse_command = H.bufremove(false),
         diagnostics = "nvim_lsp",
         always_show_bufferline = false,
         diagnostics_indicator = function(_, _, diag)
