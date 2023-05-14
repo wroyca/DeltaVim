@@ -22,7 +22,7 @@ return {
     },
     init = function()
       -- Install notify when `noice` is disabled
-      if not Util.has("noice.nvim") and Util.has("notify") then
+      if not Util.has("noice.nvim") and Util.has("nvim-notify") then
         Util.on_very_lazy(function() vim.notify = require("notify") end)
       end
     end,
