@@ -244,6 +244,7 @@ return {
         :collect_rhs_table()
       return {
         mappings = mappings,
+        n_lines = 500,
         search_method = "cover",
       }
     end,
@@ -313,7 +314,6 @@ return {
     opts = function()
       local ai = require("mini.ai")
       return {
-        n_lines = 500,
         custom_textobjects = {
           c = ai.gen_spec.treesitter({
             a = "@class.outer",
@@ -328,7 +328,8 @@ return {
             i = { "@block.inner", "@conditional.inner", "@loop.inner" },
           }),
         },
-        search_method = "cover_or_next",
+        n_lines = 500,
+        search_method = "cover",
       }
     end,
     config = function(_, opts)
