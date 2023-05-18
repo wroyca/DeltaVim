@@ -156,10 +156,11 @@ return {
         },
         sorting = {
           comparators = {
-            comparator.exact,
             comparator.recently_used,
+            comparator.locality,
             comparator.score,
             comparator.order,
+            comparator.exact,
           },
         },
         experimental = {

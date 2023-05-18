@@ -202,8 +202,12 @@ return {
           { "@search.words", builtin("grep_string", get_root), "Words" },
           { "@search.words_cwd", builtin("grep_string", get_cwd), "Words (cwd)" },
           -- files
-          { "@search.files", H.telescope_files(get_root), "Files" },
-          { "@search.files_cwd", H.telescope_files(get_cwd), "Files (cwd)" },
+          { "@search.files", builtin("find_files", get_root), "Files" },
+          { "@search.files_cwd", builtin("find_files", get_cwd), "Files (cwd)" },
+          { "@search.gitfiles", builtin("git_files", get_root), "Git files" },
+          { "@search.gitfiles_cwd", builtin("git_files", get_cwd), "Git files (cwd)" },
+          { "@search.autofiles", H.telescope_files(get_root), "Tracked files" },
+          { "@search.autofiles_cwd", H.telescope_files(get_cwd), "Tracked files (cwd)" },
           { "@search.oldfiles", builtin("oldfiles"), "Recent files" },
           { "@search.oldfiles_cwd", builtin("oldfiles", get_cwd), "Recent files (cwd)" },
           -- git
