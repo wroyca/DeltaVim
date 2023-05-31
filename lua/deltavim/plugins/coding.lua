@@ -260,8 +260,7 @@ return {
         :map({
             { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
             { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
-            -- TODO: Rename to @textobject.comment
-            { "@select.comment", desc = "Comment", mode = "o" },
+            { "@textobject.comment", desc = "Comment", mode = "o" },
         })
         :collect_lazy()
     end,

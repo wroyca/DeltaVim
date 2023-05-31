@@ -406,8 +406,8 @@ return {
               -- toggle
               { "@toggle.blame_line", gs("toggle_current_line_blame"), "Toggle blame line" },
               -- select
-              { "@select.hunk", gs("select_hunk"), "Select hunk", mode = "o" },
-              { "@select.hunk", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk", mode = "x" },
+              { "@textobject.hunk", gs("select_hunk"), "Select hunk", mode = "o" },
+              { "@textobject.hunk", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk", mode = "x" },
             })
             :collect()
           Keymap.set(keymaps, { buffer = buffer })

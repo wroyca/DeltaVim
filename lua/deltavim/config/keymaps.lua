@@ -116,7 +116,7 @@ M.DEFAULT = {
   -- git
   { "]h", "@goto.next_hunk" },
   { "[h", "@goto.prev_hunk" },
-  { "ih", "@select.hunk" },
+  { "ih", "@textobject.hunk" },
   { "<Leader>gc", "@search.git_commits" },
   { "<Leader>gg", "@terminal.lazygit" },
   { "<Leader>gG", "@terminal.lazygit_cwd" },
