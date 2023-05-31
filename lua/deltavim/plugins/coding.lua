@@ -253,54 +253,34 @@ return {
 
   -- Comments
   {
-    "numToStr/Comment.nvim",
+    "echasnovski/mini.comment",
     keys = function()
       -- stylua: ignore
       return Keymap.Collector()
         :map({
-            { "@comment.toggle_line", desc = "Toggle line comment" },
-            { "@comment.toggle_block", desc = "Toggle block comment" },
-            { "@comment.oplead_line", desc = "Toggle line comment", mode = { "n", "v" } },
-            { "@comment.oplead_block", desc = "Toggle block comment", mode = { "n", "v" } },
-            { "@comment.insert_above", desc = "Insert comment above" },
-            { "@comment.insert_below", desc = "Insert comment below" },
-            { "@comment.insert_eol", desc = "Insert comment EOL" },
+            { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
+            { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
+            -- TODO: Rename to @textobject.comment
+            { "@select.comment", desc = "Comment", mode = "o" },
         })
         :collect_lazy()
     end,
     opts = function()
-      ---@type fun(...)
-      local pre_hook
+      local mappings = Keymap.Collector()
+        :map_unique({
+          { "@comment.toggle", "comment" },
+          { "@comment.toggle_line", "comment_line" },
+          { "@select.comment", "textobject" },
+        })
+        :collect_rhs_table()
       return {
-        toggler = Keymap.Collector()
-          :map_unique({
-            { "@comment.toggle_line", "line" },
-            { "@comment.toggle_block", "block" },
-          })
-          :collect_rhs_table(),
-        opleader = Keymap.Collector()
-          :map_unique({
-            { "@comment.oplead_line", "line" },
-            { "@comment.oplead_block", "block" },
-          })
-          :collect_rhs_table(),
-        extra = Keymap.Collector()
-          :map_unique({
-            { "@comment.insert_above", "above" },
-            { "@comment.insert_below", "below" },
-            { "@comment.insert_eol", "eol" },
-          })
-          :collect_rhs_table(),
-        pre_hook = function(...)
-          pre_hook = pre_hook
-            or require("ts_context_commentstring.integrations.comment_nvim").create_pre_hook()
-          return pre_hook(...)
-        end,
-        hooks = {
-          pre = function()
-            require("ts_context_commentstring.internal").update_commentstring({})
+        options = {
+          custom_commentstring = function()
+            return require("ts_context_commentstring.internal").calculate_commentstring({})
+              or vim.bo.commentstring
           end,
         },
+        mappings = mappings,
       }
     end,
   },
