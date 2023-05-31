@@ -199,19 +199,18 @@ return {
 
   -- Auto pairs
   {
-    "windwp/nvim-autopairs",
+    "echasnovski/mini.pairs",
     event = "VeryLazy",
-    ---@class DeltaVim.Config.Autopairs
     opts = {
-      ---@type any[]
-      rules = {},
+      mappings = {
+        ["'"] = {
+          action = "closeopen",
+          pair = "''",
+          neigh_pattern = "[^%a\\&<].",
+          register = { cr = false },
+        },
+      },
     },
-    ---@param opts DeltaVim.Config.Autopairs
-    config = function(_, opts)
-      local npairs = require("nvim-autopairs")
-      npairs.setup(opts)
-      npairs.add_rules(opts.rules or {})
-    end,
   },
 
   -- Surround
