@@ -261,8 +261,8 @@ return {
         i = {
           ["<C-t>"] = open_with_trouble,
           ["<A-t>"] = open_selected_with_trouble,
-          ["<A-i>"] = H.telescope_files({ no_ignore = true }),
-          ["<A-h>"] = H.telescope_files({ hidden = true }),
+          ["<A-i>"] = H.telescope_search_current({ no_ignore = true }),
+          ["<A-h>"] = H.telescope_search_current({ hidden = true }),
           ["<C-Down>"] = action("cycle_history_next"),
           ["<C-Up>"] = action("cycle_history_prev"),
           ["<C-f>"] = action("preview_scrolling_down"),

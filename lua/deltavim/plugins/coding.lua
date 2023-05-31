@@ -2,13 +2,13 @@ local Config = require("deltavim.config")
 local Keymap = require("deltavim.core.keymap")
 local Util = require("deltavim.util")
 
-local install_jsregexp =
-  "echo -e 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
 return {
   -- Snippets
   {
     "L3MON4D3/LuaSnip",
-    build = (not jit.os:find("Windows")) and install_jsregexp or nil,
+    build = (not jit.os:find("Windows"))
+        and "echo -e 'NOTE: jsregexp is optional, so not a big deal if it fails to build\n'; make install_jsregexp"
+      or nil,
     dependencies = { "friendly-snippets" },
     keys = function()
       ---@param dir integer
@@ -249,7 +249,6 @@ return {
         search_method = "cover",
       }
     end,
-    config = function(_, opts) require("mini.surround").setup(opts) end,
   },
 
   -- Comments

@@ -15,6 +15,9 @@ M.DEFAULT = {
       "help",
       "lspinfo",
       "man",
+      "neotest-output",
+      "neotest-output-panel",
+      "neotest-summary",
       "notify",
       "null-ls-info",
       "PlenaryTestPopup",
@@ -22,8 +25,8 @@ M.DEFAULT = {
       "query",
       "spectre_panel",
       "startuptime",
-      "tsplayground",
       "TelescopePrompt",
+      "tsplayground",
       "vim",
     },
   },
@@ -31,9 +34,9 @@ M.DEFAULT = {
   { "@last_loc", true },
   { "@resize_splits", true },
   { "@rulers", ft = { lua = 80 } },
-  { "@spell", ft = { "gitcommit", "markdown" } },
+  { "@spell", ft = { "gitcommit", "markdown", "tex" } },
   { "@trim_whitespace", true },
-  { "@wrap", ft = { "gitcommit", "markdown" } },
+  { "@wrap", ft = { "gitcommit", "markdown", "tex" } },
 }
 
 ---@type DeltaVim.Autocmd.Collector

@@ -262,6 +262,7 @@ function M.setup()
     end
   end
 
+  local is_vscode = not not vim.g.vscode
   -- stylua: ignore
   ---@type DeltaVim.Keymap.Presets
   local presets = {
@@ -274,18 +275,18 @@ function M.setup()
     { "@enhanced.shr", ">gv", key = ">", mode = "x" },
     { "@enhanced.esc", "<Cmd>noh<CR><Esc>", key = "<Esc>", mode = { "n", "i" } },
     -- Move & split windows
-    { "@window.move_down", "<C-w>j", "Goto down window" },
-    { "@window.move_up", "<C-w>k", "Goto up window" },
-    { "@window.move_left", "<C-w>h", "Goto left window" },
-    { "@window.move_right", "<C-w>l", "Goto right window" },
+    { "@window.move_down", "<C-w>j", "Goto down window", remap = is_vscode },
+    { "@window.move_up", "<C-w>k", "Goto up window", remap = is_vscode },
+    { "@window.move_left", "<C-w>h", "Goto left window", remap = is_vscode },
+    { "@window.move_right", "<C-w>l", "Goto right window", remap = is_vscode },
     { "@window.increase_height", "<Cmd>vertical resize +2<CR>", "Increase window height" },
     { "@window.decrease_height", "<Cmd>vertical resize -2<CR>", "Decrease window height" },
-    { "@window.increase_width", "<Cmd>resize +2<CR>", "Increase window width" },
-    { "@window.decrease_width", "<Cmd>resize -2<CR>", "Decrease window width" },
-    { "@window.switch_back", "<C-w>p", "Switch window back" },
-    { "@window.close", "<C-w>c", "Close window" },
-    { "@window.split", "<C-w>s", "Split window" },
-    { "@window.vsplit", "<C-w>v", "Split window vertically" },
+    { "@window.increase_width", "<Cmd>resize +2<CR>", "Increase window width", remap = is_vscode },
+    { "@window.decrease_width", "<Cmd>resize -2<CR>", "Decrease window width", remap = is_vscode },
+    { "@window.switch_back", "<C-w>p", "Switch window back", remap = is_vscode },
+    { "@window.close", "<C-w>c", "Close window", remap = is_vscode },
+    { "@window.split", "<C-w>s", "Split window", remap = is_vscode },
+    { "@window.vsplit", "<C-w>v", "Split window vertically", remap = is_vscode },
     -- Buffer
     { "@buffer.switch_back", "<Cmd>e #<CR>", "Switch buffer back" },
     -- Toggle UI/options

@@ -47,6 +47,14 @@ function M.telescope_files(opts)
   end
 end
 
+function M.telescope_search_current(opts)
+  return function()
+    if type(opts) == "function" then opts = opts() end
+    local line = require("telescope.actions.state").get_current_line()
+    telescope_files(Util.merge({ default_text = line }, opts))
+  end
+end
+
 ---@param mode string
 ---@param opts? table
 local function trouble(mode, opts)

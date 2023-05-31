@@ -164,7 +164,7 @@ return {
     end,
   },
   { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
-  { "folke/neodev.nvim", opts = { experimental = { pathStrict = true } } },
+  { "folke/neodev.nvim", config = true },
   { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },
   -- stylua: ignore
   { "hrsh7th/cmp-nvim-lsp", cond = function() return Util.has("nvim-cmp") end },

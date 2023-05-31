@@ -10,6 +10,13 @@ local CONFIG = {
   ---@type string|fun()
   colorscheme = function() require("tokyonight").load() end,
   icons = {
+    dap = {
+      Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
+      Breakpoint = " ",
+      BreakpointCondition = " ",
+      BreakpointRejected = { " ", "DiagnosticError" },
+      LogPoint = ".>",
+    },
     diagnostics = {
       Error = " ",
       Warn = " ",

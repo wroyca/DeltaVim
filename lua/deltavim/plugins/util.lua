@@ -40,6 +40,7 @@ return {
         "curdir",
         "globals",
         "help",
+        "skiprtp",
         "tabpages",
         "winsize",
       },
