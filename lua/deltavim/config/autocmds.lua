@@ -128,7 +128,7 @@ function M.setup()
   ---@param ev DeltaVim.Autocmd.Event
   local function trim_whitespace(ev)
     if vim.b[ev.buf]["deltavim.config.autocmds.trim_whitespace"] ~= false then
-      vim.cmd([[s/\s\+$//e]])
+      vim.cmd([[%s/\s\+$//e]])
     end
   end
 
