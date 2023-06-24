@@ -161,21 +161,6 @@ return {
 
       local function get_cwd() return { cwd = Util.get_cwd() } end
 
-      local symbols = {
-        symbols = {
-          "Class",
-          "Constructor",
-          "Field",
-          "Function",
-          "Interface",
-          "Method",
-          "Module",
-          "Property",
-          "Struct",
-          "Trait",
-        },
-      }
-
       ---@param document boolean
       ---@param level? string
       local function diagnostics(document, level)
@@ -224,8 +209,8 @@ return {
           { "@search.workspace_errors", diagnostics(true, "E"), "Workspace errors" },
           { "@search.document_warnings", diagnostics(false, "W"), "Document warnings" },
           { "@search.workspace_warnings", diagnostics(true, "W"), "Workspace warnings" },
-          { "@search.document_symbols", builtin("lsp_document_symbols", symbols), "Document symbols" },
-          { "@search.workspace_symbols", builtin("lsp_workspace_symbols", symbols), "Workspace symbols" },
+          { "@search.document_symbols", builtin("lsp_document_symbols"), "Document symbols" },
+          { "@search.workspace_symbols", builtin("lsp_workspace_symbols"), "Workspace symbols" },
           -- others
           { "@search.autocommands", builtin("autocommands"), "Auto Commands" },
           { "@search.colorschemes", builtin("colorscheme", { enable_preview = true }), "Colorschemes" },
