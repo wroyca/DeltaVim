@@ -62,6 +62,7 @@ return {
         :map({
           { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
           { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
+          { "@buffer.close_others", "<Cmd>BufferLineCloseLeft<CR><Cmd>BufferLineCloseRight<CR>", "Close other buffers" },
           { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
           { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
           { "@buffer.prev", "<Cmd>BufferLineCyclePrev<CR>", "Prev buffer" },
