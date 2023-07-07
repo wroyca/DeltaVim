@@ -65,6 +65,7 @@ return {
       local cmp = require("cmp")
       local mapping = cmp.mapping
       local comparator = cmp.config.compare
+      local defaults = require("cmp.config.default")()
 
       local super_tab = mapping(function(fallback)
         local luasnip = require("luasnip")
@@ -154,15 +155,7 @@ return {
           default_source_dup = 1,
           max_width = function() return math.floor(vim.o.columns * 0.4) end,
         },
-        sorting = {
-          comparators = {
-            comparator.recently_used,
-            comparator.locality,
-            comparator.score,
-            comparator.order,
-            comparator.exact,
-          },
-        },
+        sorting = defaults.sorting,
         experimental = {
           ghost_text = {
             hl_group = "CmpChostText",
