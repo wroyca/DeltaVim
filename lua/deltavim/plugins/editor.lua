@@ -37,6 +37,12 @@ return {
         :collect_lazy()
     end,
     opts = {
+      sources = {
+        "buffers",
+        "document_symbols",
+        "filesystem",
+        "git_status",
+      },
       filesystem = {
         bind_to_cwd = false,
         follow_current_file = true,
