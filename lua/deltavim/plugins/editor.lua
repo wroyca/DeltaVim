@@ -315,7 +315,7 @@ return {
     event = "VeryLazy",
     opts = {
       plugins = { spelling = true },
-      groups = {
+      defaults = {
         mode = { "n", "x" },
         ["]"] = { name = "+next" },
         ["["] = { name = "+prev" },
@@ -348,8 +348,8 @@ return {
         :collect_lhs_table()
       opts = Util.deep_merge({ operators = operators }, opts)
       wk.setup(opts)
-      -- Register groups
-      wk.register(opts.groups)
+      -- Register defaults
+      wk.register(opts.defaults)
     end,
   },
 
