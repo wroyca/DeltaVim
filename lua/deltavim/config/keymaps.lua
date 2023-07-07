@@ -267,8 +267,8 @@ function M.setup()
   ---@type DeltaVim.Keymap.Presets
   local presets = {
     -- Improve some keys.
-    { "@enhanced.j", "v:count == 0 ? 'gj' : 'j'", key = "j", mode = "n", expr = true },
-    { "@enhanced.k", "v:count == 0 ? 'gk' : 'k'", key = "k", mode = "n", expr = true },
+    { "@enhanced.j", "v:count == 0 ? 'gj' : 'j'", key = "j", mode = { "n", "x" }, expr = true },
+    { "@enhanced.k", "v:count == 0 ? 'gk' : 'k'", key = "k", mode = { "n", "x" }, expr = true },
     { "@enhanced.n", "'Nn'[v:searchforward]", "Next search", key = "n", mode = { "n", "x", "o" }, expr = true },
     { "@enhanced.N", "'nN'[v:searchforward]", "Prev search", key = "N", mode = { "n", "x", "o" }, expr = true },
     { "@enhanced.shl", "<gv", key = "<", mode = "x" },
