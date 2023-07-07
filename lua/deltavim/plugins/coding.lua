@@ -165,13 +165,18 @@ return {
         },
         experimental = {
           ghost_text = {
-            hl_group = "LspCodeLens",
+            hl_group = "CmpChostText",
           },
         },
       }
     end,
     ---@param opts DeltaVim.Config.Cmp
     config = function(_, opts)
+      vim.api.nvim_set_hl(
+        0,
+        "CmpChostText",
+        { link = "Comment", default = true }
+      )
       local icons = Config.icons
       local formatting = opts.formatting
       require("cmp").setup(Util.deep_merge({
