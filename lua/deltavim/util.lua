@@ -158,7 +158,7 @@ end
 
 ---@param plugin string
 function M.has(plugin)
-  local plug = require("lazy.core.config").plugins[plugin]
+  local plug = require("lazy.core.config").spec.plugins[plugin]
   if not plug then return false end
   if type(plug.cond) == "function" then
     return plug.cond() ~= false
