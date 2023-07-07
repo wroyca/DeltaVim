@@ -31,7 +31,7 @@ M.DEFAULT = {
     },
   },
   { "@highlight_yank", true },
-  { "@last_loc", true },
+  { "@last_loc", exclude = { "gitcommit" } },
   { "@resize_splits", true },
   { "@rulers", ft = { lua = 80 } },
   { "@spell", ft = { "gitcommit", "markdown", "tex" } },
@@ -76,12 +76,26 @@ function M.setup()
     return { "FileType", cb, pattern = src.args.ft }
   end
 
-  local function last_loc()
-    local mark = vim.api.nvim_buf_get_mark(0, '"')
-    local lcount = vim.api.nvim_buf_line_count(0)
-    if mark[1] > 0 and mark[1] <= lcount then
-      pcall(vim.api.nvim_win_set_cursor, 0, mark)
-    end
+  ---@class DeltaVim.Autocmds.LastLoc
+  ---@field exclude string[]
+  ---@type DeltaVim.Autocmd.Schema
+  local last_loc_args = { exclude = "list" }
+
+  ---@type DeltaVim.Autocmd.With
+  local function last_loc(src)
+    local exclude = src.args.exclude
+    return {
+      "BufReadPost",
+      function()
+        local buf = vim.api.nvim_get_current_buf()
+        if vim.tbl_contains(exclude, vim.bo[buf].filetype) then return end
+        local mark = vim.api.nvim_buf_get_mark(buf, '"')
+        local lcount = vim.api.nvim_buf_line_count(buf)
+        if mark[1] > 0 and mark[1] <= lcount then
+          pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+      end,
+    }
   end
 
   ---@class DeltaVim.Autocmds.Ruler
@@ -114,7 +128,7 @@ function M.setup()
   end
 
   ---@class DeltaVim.Autocmds.Spell
-  ---@field ft table<string,boolean>
+  ---@field ft string[]
   ---@type DeltaVim.Autocmd.Schema
   local spell_args = { ft = "list" }
 
@@ -133,7 +147,7 @@ function M.setup()
   end
 
   ---@class DeltaVim.Autocmds.Wrap
-  ---@field ft table<string,boolean>
+  ---@field ft string[]
   ---@type DeltaVim.Autocmd.Schema
   local wrap_args = { ft = "list" }
 
@@ -150,7 +164,7 @@ function M.setup()
     { "@checktime", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
     { "@close_with_q", with = close_with_q, args = close_with_q_args },
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
-    { "@last_loc", "BufReadPost", last_loc  },
+    { "@last_loc", with = last_loc, args = last_loc_args },
     { "@resize_splits", "VimResized", "tabdo wincmd =" },
     { "@rulers", with = rulers, args = rulers_args },
     { "@spell", with = spell, args = spell_args },
