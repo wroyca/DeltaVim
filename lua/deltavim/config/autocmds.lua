@@ -20,14 +20,14 @@ M.DEFAULT = {
       "neotest-summary",
       "notify",
       "null-ls-info",
-      "PlenaryTestPopup",
       "qf",
       "query",
       "spectre_panel",
       "startuptime",
-      "TelescopePrompt",
       "tsplayground",
       "vim",
+      "PlenaryTestPopup",
+      "TelescopePrompt",
     },
   },
   { "@highlight_yank", true },
@@ -43,20 +43,15 @@ M.DEFAULT = {
 local CONFIG
 
 function M.init()
-  CONFIG = Autocmd.load(
-    Util.reduce(
-      "list",
-      {},
-      M.DEFAULT,
-      Util.load_config("custom.autocmds") or {}
-    )
-  )
+  CONFIG = Autocmd.load(Util.reduce("list", {}, M.DEFAULT, Util.load_config("custom.autocmds") or {}))
 end
 
 function M.setup()
   ---@type DeltaVim.Autocmd.Callback
   local function auto_create_dir(ev)
-    if ev.match:match("^%w%w+://") then return end
+    if ev.match:match("^%w%w+://") then
+      return
+    end
     local file = vim.loop.fs_realpath(ev.match) or ev.match
     vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
   end
@@ -88,7 +83,9 @@ function M.setup()
       "BufReadPost",
       function()
         local buf = vim.api.nvim_get_current_buf()
-        if vim.tbl_contains(exclude, vim.bo[buf].filetype) then return end
+        if vim.tbl_contains(exclude, vim.bo[buf].filetype) then
+          return
+        end
         local mark = vim.api.nvim_buf_get_mark(buf, '"')
         local lcount = vim.api.nvim_buf_line_count(buf)
         if mark[1] > 0 and mark[1] <= lcount then
@@ -119,7 +116,9 @@ function M.setup()
       end
       table.insert(autocmds, {
         "FileType",
-        function() vim.opt_local.colorcolumn = cc end,
+        function()
+          vim.opt_local.colorcolumn = cc
+        end,
         pattern = ft,
       })
     end
@@ -135,7 +134,9 @@ function M.setup()
   ---@type DeltaVim.Autocmd.With
   local function spell(src)
     ---@type DeltaVim.Autocmd.Callback
-    local function cb() vim.opt_local.spell = true end
+    local function cb()
+      vim.opt_local.spell = true
+    end
     return { "FileType", cb, pattern = src.args.ft }
   end
 
@@ -154,15 +155,17 @@ function M.setup()
   ---@type DeltaVim.Autocmd.With
   local function wrap(src)
     ---@type DeltaVim.Autocmd.Callback
-    local function cb() vim.opt_local.wrap = true end
+    local function cb()
+      vim.opt_local.wrap = true
+    end
     return { "FileType", cb, pattern = src.args.ft }
   end
 
-  -- stylua: ignore
   CONFIG:map({
     { "@auto_create_dir", "BufWritePre", auto_create_dir },
     { "@checktime", { "FocusGained", "TermClose", "TermLeave" }, "checktime" },
     { "@close_with_q", with = close_with_q, args = close_with_q_args },
+    -- stylua: ignore
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
     { "@last_loc", with = last_loc, args = last_loc_args },
     { "@resize_splits", "VimResized", "tabdo wincmd =" },

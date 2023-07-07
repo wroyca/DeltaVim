@@ -8,7 +8,9 @@ local CONFIG = {
   -- TODO: set border for more plugins
   border = "rounded",
   ---@type string|fun()
-  colorscheme = function() require("tokyonight").load() end,
+  colorscheme = function()
+    require("tokyonight").load()
+  end,
   icons = {
     dap = {
       Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
@@ -71,6 +73,8 @@ local CONFIG = {
 setmetatable(M, { __index = CONFIG })
 
 ---@param cfg DeltaVim.Config
-function M.update(cfg) Util.deep_merge(CONFIG, cfg) end
+function M.update(cfg)
+  Util.deep_merge(CONFIG, cfg)
+end
 
 return M

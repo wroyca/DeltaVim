@@ -5,7 +5,9 @@ return {
   {
     "dstein64/vim-startuptime",
     cmd = "StartupTime",
-    config = function() vim.g.startuptime_tries = 10 end,
+    config = function()
+      vim.g.startuptime_tries = 10
+    end,
   },
 
   -- Session management
@@ -16,7 +18,9 @@ return {
       ---@param cmd string
       ---@param args? any
       local function persistence(cmd, args)
-        return function() require("persistence")[cmd](args) end
+        return function()
+          require("persistence")[cmd](args)
+        end
       end
 
       local function quit_silently()
@@ -24,7 +28,6 @@ return {
         vim.cmd.qa()
       end
 
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@session.quit_silently", quit_silently, "Quit without saving" },

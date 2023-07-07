@@ -93,7 +93,9 @@ local function get_args(src)
   ---@type table<string,any>
   local args = {}
   for k, v in pairs(src) do
-    if type(k) == "string" and Util.AUTOCMD_OPTS[k] == nil then args[k] = v end
+    if type(k) == "string" and Util.AUTOCMD_OPTS[k] == nil then
+      args[k] = v
+    end
   end
   return args
 end
@@ -106,19 +108,25 @@ local INPUT = {}
 ---@return DeltaVim.Autocmd.Inputs?
 local function get(preset)
   local ret = INPUT[preset]
-  if ret then ret.visited = true end
+  if ret then
+    ret.visited = true
+  end
   return ret
 end
 
 ---@param input DeltaVim.Autocmd.Input
 local function add_input(input)
   local name = input[1]
-  if INPUT[name] == nil then INPUT[name] = {} end
+  if INPUT[name] == nil then
+    INPUT[name] = {}
+  end
   table.insert(INPUT[name], input)
 end
 
 ---@param name string
-local function remove_input(name) INPUT[name] = nil end
+local function remove_input(name)
+  INPUT[name] = nil
+end
 
 ---@class DeltaVim.Autocmd.Collector
 ---@field private _output DeltaVim.Autocmd.Output[]
@@ -139,7 +147,9 @@ end
 ---@param preset DeltaVim.Autocmd.Preset
 function Collector:_map_preset(preset)
   local input = get(preset[1])
-  if input == nil then return self end
+  if input == nil then
+    return self
+  end
   -- 1) Merge input tables.
   ---@type DeltaVim.Autocmd.Input
   local desc
@@ -207,7 +217,9 @@ function Collector:collect()
   return ret
 end
 
-function Collector:collect_and_set() M.set(self:collect()) end
+function Collector:collect_and_set()
+  M.set(self:collect())
+end
 
 ---Loads auto commands.
 ---@param autocmds DeltaVim.Autocmds

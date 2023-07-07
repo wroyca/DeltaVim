@@ -5,24 +5,29 @@ local M = {}
 ---@param path? string
 ---@return string?
 function M.get_lsp_root(path)
-  if not path then return end
+  if not path then
+    return
+  end
   ---@type string[]
   local roots = {}
   for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
     local workspace = client.config.workspace_folders
     local paths = workspace
-        and vim.tbl_map(
-          function(ws) return vim.uri_to_fname(ws.uri) end,
-          workspace
-        )
+        and vim.tbl_map(function(ws)
+          return vim.uri_to_fname(ws.uri)
+        end, workspace)
       or client.config.root_dir and { client.config.root_dir }
       or {}
     for _, p in ipairs(paths) do
       local r = vim.loop.fs_realpath(p)
-      if r and path:find(r, 1, true) then table.insert(roots, r) end
+      if r and path:find(r, 1, true) then
+        table.insert(roots, r)
+      end
     end
   end
-  table.sort(roots, function(a, b) return #a > #b end)
+  table.sort(roots, function(a, b)
+    return #a > #b
+  end)
   return roots[1]
 end
 
@@ -53,7 +58,9 @@ function M.get_root()
     elseif type(p) == "function" then
       root = p(path)
     end
-    if root then return root end
+    if root then
+      return root
+    end
   end
   return M.get_cwd()
 end
@@ -135,31 +142,40 @@ function M.try(f, opts)
   local msg = opts.msg
   local on_error = opts.on_error
   local ok, ret = pcall(f)
-  if ok then return true, ret end
-  if msg then Log.error(msg, ret) end
-  if on_error then on_error(ret) end
+  if ok then
+    return true, ret
+  end
+  if msg then
+    Log.error(msg, ret)
+  end
+  if on_error then
+    on_error(ret)
+  end
   return false
 end
 
 ---Registers a callback on the VeryLazy event.
 ---@param cb fun(buffer:integer)
 function M.on_very_lazy(cb)
-  M.autocmd("User", function(ev) cb(ev.buf) end, { pattern = "VeryLazy" })
+  M.autocmd("User", function(ev)
+    cb(ev.buf)
+  end, { pattern = "VeryLazy" })
 end
 
 ---Registers a callback on the LspAttach event.
 ---@param cb fun(client:table,buffer:integer)
 function M.on_lsp_attach(cb)
-  M.autocmd(
-    "LspAttach",
-    function(ev) cb(vim.lsp.get_client_by_id(ev.data.client_id), ev.buf) end
-  )
+  M.autocmd("LspAttach", function(ev)
+    cb(vim.lsp.get_client_by_id(ev.data.client_id), ev.buf)
+  end)
 end
 
 ---@param plugin string
 function M.has(plugin)
   local plug = require("lazy.core.config").spec.plugins[plugin]
-  if not plug then return false end
+  if not plug then
+    return false
+  end
   if type(plug.cond) == "function" then
     return plug.cond() ~= false
   else
@@ -179,13 +195,11 @@ end
 ---@return (table|fun(dst:table):table|nil|boolean)?
 function M.load_config(mod)
   local _, ret = M.try(function()
-    if M.has_module(mod) then return require(mod) end
+    if M.has_module(mod) then
+      return require(mod)
+    end
   end, ("Failed to load module '%s'"):format(mod))
-  if
-    type(ret) == "table"
-    or type(ret) == "function"
-    or type(ret) == "boolean"
-  then
+  if type(ret) == "table" or type(ret) == "function" or type(ret) == "boolean" then
     return ret
   elseif ret ~= nil then
     Log.error("Module '%s' should return a function/table/boolean", mod)
@@ -195,17 +209,15 @@ end
 ---@param key string
 ---@param mode? string
 function M.feedkey(key, mode)
-  vim.api.nvim_feedkeys(
-    vim.api.nvim_replace_termcodes(key, true, false, true),
-    mode or "n",
-    false
-  )
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), mode or "n", false)
 end
 
 ---Checks if a string starts with another.
 ---@param s string
 ---@param pat string
-function M.starts_with(s, pat) return s:sub(1, #pat) == pat end
+function M.starts_with(s, pat)
+  return s:sub(1, #pat) == pat
+end
 
 ---Splits a string
 ---@param s string
@@ -227,7 +239,9 @@ end
 ---@param t1 T[]?
 ---@param ... T[]
 local function concat(dst, t1, ...)
-  if t1 == nil then return dst end
+  if t1 == nil then
+    return dst
+  end
   for _, t in ipairs(t1) do
     table.insert(dst, t)
   end
@@ -243,7 +257,9 @@ M.concat = concat
 ---@param ... T
 ---@return T
 local function merge(dst, t1, ...)
-  if t1 == nil then return dst end
+  if t1 == nil then
+    return dst
+  end
   for k, v in pairs(t1) do
     if v == vim.NIL then
       dst[k] = nil
@@ -261,13 +277,17 @@ M.merge = merge
 function M.is_list(tbl)
   local i = 1
   for _ in pairs(tbl) do
-    if tbl[i] == nil then return false end
+    if tbl[i] == nil then
+      return false
+    end
     i = i + 1
   end
   return i > 1
 end
 
-local function is_table(t) return type(t) == "table" and not M.is_list(t) end
+local function is_table(t)
+  return type(t) == "table" and not M.is_list(t)
+end
 
 ---Recursively merge tables into a signle table.
 ---Note: This mutates the first table.
@@ -277,7 +297,9 @@ local function is_table(t) return type(t) == "table" and not M.is_list(t) end
 ---@param ... T
 ---@return T
 local function deep_merge(dst, t1, ...)
-  if t1 == nil then return dst end
+  if t1 == nil then
+    return dst
+  end
   for k, v in pairs(t1) do
     if is_table(dst[k]) and is_table(v) then
       deep_merge(dst[k], v)

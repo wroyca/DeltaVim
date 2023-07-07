@@ -8,7 +8,9 @@ return {
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
-    deactivate = function() vim.cmd("Neotree close") end,
+    deactivate = function()
+      vim.cmd("Neotree close")
+    end,
     keys = function()
       ---@param dir fun():string
       ---@return fun()
@@ -26,7 +28,6 @@ return {
         end
       end
 
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@explorer.toggle", toggle(Util.get_root), "Toggle explorer" },
@@ -66,7 +67,9 @@ return {
       vim.g.neo_tree_remove_legacy_commands = 1
       if vim.fn.argc() == 1 then
         local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
-        if stat and stat.type == "directory" then require("neo-tree") end
+        if stat and stat.type == "directory" then
+          require("neo-tree")
+        end
       end
     end,
   },
@@ -78,7 +81,9 @@ return {
       ---@param dir fun():string
       local function toggle(dir)
         ---@type Terminal
-        return function() require("toggleterm").toggle(vim.v.count1, nil, dir()) end
+        return function()
+          require("toggleterm").toggle(vim.v.count1, nil, dir())
+        end
       end
 
       ---@param dir fun():string
@@ -101,7 +106,6 @@ return {
         end
       end
 
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@terminal.select", "<Cmd>TermSelect<CR>", "Select terminal" },
@@ -129,7 +133,9 @@ return {
           :map({
             {
               "@terminal.hide",
-              function() term:toggle() end,
+              function()
+                term:toggle()
+              end,
               "Hide terminal",
               mode = "t",
               buffer = term.bufnr,
@@ -148,10 +154,10 @@ return {
     cmd = "Spectre",
     opts = { open_cmd = "noswapfile vnew" },
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
-          { "@search.replace", function() require("spectre").open() end, "Replace in files" }
+          -- stylua: ignore
+          { "@search.replace", function() require("spectre").open() end, "Replace in files" },
         })
         :collect_lazy()
     end,
@@ -164,24 +170,26 @@ return {
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
     keys = function()
-      local function get_root() return { cwd = Util.get_root() } end
+      local function get_root()
+        return { cwd = Util.get_root() }
+      end
 
-      local function get_cwd() return { cwd = Util.get_cwd() } end
+      local function get_cwd()
+        return { cwd = Util.get_cwd() }
+      end
 
       ---@param document boolean
       ---@param level? string
       local function diagnostics(document, level)
         local bufnr
-        if document then bufnr = 0 end
+        if document then
+          bufnr = 0
+        end
         local severity = level and vim.diagnostic.severity[level] or nil
-        return H.telescope(
-          "diagnostics",
-          { bufnr = bufnr, severity = severity }
-        )
+        return H.telescope("diagnostics", { bufnr = bufnr, severity = severity })
       end
 
       local builtin = H.telescope
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           -- buffers
@@ -237,7 +245,9 @@ return {
     opts = function()
       ---@param name string
       local function action(name)
-        return function(...) return require("telescope.actions")[name](...) end
+        return function(...)
+          return require("telescope.actions")[name](...)
+        end
       end
 
       local function open_with_trouble(...)
@@ -245,7 +255,6 @@ return {
       end
 
       local function open_selected_with_trouble(...)
-        -- stylua: ignore
         return require("trouble.providers.telescope").open_selected_with_trouble(...)
       end
 
@@ -284,7 +293,6 @@ return {
       local function leap(name, key, desc)
         return { name, key, desc, mode = { "n", "x", "o" }, remap = false }
       end
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           leap("@leap.forward_to", "<Plug>(leap-forward-to)", "Leap forward to"),
@@ -295,7 +303,9 @@ return {
         })
         :collect_lazy()
     end,
-    config = function(_, opts) Util.merge(require("leap").opts, opts) end,
+    config = function(_, opts)
+      Util.merge(require("leap").opts, opts)
+    end,
   },
   {
     "ggandor/flit.nvim",
@@ -361,7 +371,9 @@ return {
       ---@param name string
       ---@param args? any
       local function gs(name, args)
-        return function() require("gitsigns")[name](args) end
+        return function()
+          require("gitsigns")[name](args)
+        end
       end
 
       ---@type DeltaVim.Keymap.Output[]
@@ -378,30 +390,30 @@ return {
         },
         preview_config = { border = "none" },
         on_attach = function(buffer)
-          -- stylua: ignore
-          keymaps = keymaps or Keymap.Collector()
-            :map({
-              -- git
-              { "@git.blame_line", gs("blame_line"), "Blame line" },
-              { "@git.blame_line_full", gs("blame_line", { full = true }), "Blame line (full)" },
-              { "@git.diffthis", gs("diffthis"), "Diff this" },
-              { "@git.diffthis_last", gs("diffthis", "~"), "Diff this (last)" },
-              { "@git.preview_hunk", gs("preview_hunk"), "Preview hunk" },
-              { "@git.reset_buffer", gs("reset_buffer"), "Reset buffer" },
-              { "@git.reset_hunk", gs("reset_hunk"), "Reset hunk" },
-              { "@git.stage_buffer", gs("stage_buffer"), "Stage buffer" },
-              { "@git.stage_hunk", gs("stage_hunk"), "State hunk" },
-              { "@git.undo_stage_hunk", gs("undo_stage_hunk"), "Undo stage hunk" },
-              -- goto
-              { "@goto.next_hunk", gs("next_hunk"), "Next hunk" },
-              { "@goto.prev_hunk", gs("prev_hunk"), "Prev hunk" },
-              -- toggle
-              { "@toggle.blame_line", gs("toggle_current_line_blame"), "Toggle blame line" },
-              -- select
-              { "@textobject.hunk", gs("select_hunk"), "Select hunk", mode = "o" },
-              { "@textobject.hunk", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk", mode = "x" },
-            })
-            :collect()
+          keymaps = keymaps
+            or Keymap.Collector()
+              :map({
+                -- git
+                { "@git.blame_line", gs("blame_line"), "Blame line" },
+                { "@git.blame_line_full", gs("blame_line", { full = true }), "Blame line (full)" },
+                { "@git.diffthis", gs("diffthis"), "Diff this" },
+                { "@git.diffthis_last", gs("diffthis", "~"), "Diff this (last)" },
+                { "@git.preview_hunk", gs("preview_hunk"), "Preview hunk" },
+                { "@git.reset_buffer", gs("reset_buffer"), "Reset buffer" },
+                { "@git.reset_hunk", gs("reset_hunk"), "Reset hunk" },
+                { "@git.stage_buffer", gs("stage_buffer"), "Stage buffer" },
+                { "@git.stage_hunk", gs("stage_hunk"), "State hunk" },
+                { "@git.undo_stage_hunk", gs("undo_stage_hunk"), "Undo stage hunk" },
+                -- goto
+                { "@goto.next_hunk", gs("next_hunk"), "Next hunk" },
+                { "@goto.prev_hunk", gs("prev_hunk"), "Prev hunk" },
+                -- toggle
+                { "@toggle.blame_line", gs("toggle_current_line_blame"), "Toggle blame line" },
+                -- select
+                { "@textobject.hunk", gs("select_hunk"), "Select hunk", mode = "o" },
+                { "@textobject.hunk", ":<C-U>Gitsigns select_hunk<CR>", "Select hunk", mode = "x" },
+              })
+              :collect()
           Keymap.set(keymaps, { buffer = buffer })
         end,
       }
@@ -431,10 +443,11 @@ return {
 
       ---@param cmd string
       local function il(cmd)
-        return function() illuminate[cmd]() end
+        return function()
+          illuminate[cmd]()
+        end
       end
 
-      -- stylua: ignore
       local keymaps = Keymap.Collector()
         :map({
           { "@goto.prev_reference", il("goto_prev_reference"), "Prev reference" },
@@ -444,10 +457,9 @@ return {
       Keymap.set(keymaps)
 
       -- Also set it after loading ftplugins, since a lot overwrite `[[`` and `]]`
-      Util.autocmd(
-        "FileType",
-        function(ev) Keymap.set(keymaps, { buffer = ev.buf }) end
-      )
+      Util.autocmd("FileType", function(ev)
+        Keymap.set(keymaps, { buffer = ev.buf })
+      end)
     end,
   },
 
@@ -477,13 +489,9 @@ return {
       ---@param level? string
       local function diagnostics(document, level)
         local severity = level and vim.diagnostic.severity[level] or nil
-        return H.trouble(
-          "deltavim",
-          { workspace = not document, severity = severity }
-        )
+        return H.trouble("deltavim", { workspace = not document, severity = severity })
       end
 
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@goto.prev_quickfix", goto_qf(false), "Prev quickfix" },
@@ -506,12 +514,9 @@ return {
     opts = { use_diagnostic_signs = true },
     config = function(_, opts)
       -- Refersh diagnostics
-      Util.autocmd(
-        "DiagnosticChanged",
-        function()
-          require("trouble").refresh({ auto = true, provider = "deltavim" })
-        end
-      )
+      Util.autocmd("DiagnosticChanged", function()
+        require("trouble").refresh({ auto = true, provider = "deltavim" })
+      end)
       require("trouble").setup(opts)
     end,
   },
@@ -524,7 +529,9 @@ return {
     keys = function()
       ---@param name string
       local function todo(name)
-        return function() require("todo-comments")[name]() end
+        return function()
+          require("todo-comments")[name]()
+        end
       end
 
       ---@param args? table
@@ -533,10 +540,11 @@ return {
       end
 
       ---@param args? table
-      local function trouble(args) return H.trouble("todo", args) end
+      local function trouble(args)
+        return H.trouble("todo", args)
+      end
 
       local keywords = { keywords = "TODO,FIX,FIXME" }
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@goto.next_todo", todo("jump_next"), "Next todo" },

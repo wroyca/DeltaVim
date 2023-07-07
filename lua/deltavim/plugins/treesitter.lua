@@ -10,7 +10,6 @@ return {
     event = { "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-treesitter-textobjects" },
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@treesitter.icrement_selection", desc = "Icrement selection", mode = { "n", "x" } },
@@ -62,8 +61,7 @@ return {
             if opts.textobjects[mod] and opts.textobjects[mod].enable then
               local Loader = require("lazy.core.loader")
               Loader.disabled_rtp_plugins["nvim-treesitter-textobjects"] = nil
-              local plugin =
-                require("lazy.core.config").plugins["nvim-treesitter-textobjects"]
+              local plugin = require("lazy.core.config").plugins["nvim-treesitter-textobjects"]
               require("lazy.core.loader").source_runtime(plugin.dir, "plugin")
               break
             end
@@ -80,7 +78,6 @@ return {
       -- Disable rtp plugin, as we only need its queries for mini.ai. In case
       -- other textobject modules are enabled, we will load them once
       -- nvim-treesitter is loaded
-      -- stylua: ignore
       require("lazy.core.loader").disable_rtp_plugin("nvim-treesitter-textobjects")
       load_textobjects = true
     end,

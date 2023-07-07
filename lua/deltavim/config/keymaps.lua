@@ -212,9 +212,7 @@ M.DEFAULT = {
 local CONFIG
 
 function M.init()
-  CONFIG = Keymap.load(
-    Util.reduce("list", {}, M.DEFAULT, Util.load_config("custom.keymaps") or {})
-  )
+  CONFIG = Keymap.load(Util.reduce("list", {}, M.DEFAULT, Util.load_config("custom.keymaps") or {}))
 end
 
 function M.setup()
@@ -233,7 +231,9 @@ function M.setup()
   ---@param values? {[1]:any,[2]:any}
   local function toggle(opt, values)
     if not values then
-      return function() toggle_boolean(opt) end
+      return function()
+        toggle_boolean(opt)
+      end
     else
       return function()
         if vim.opt_local[opt]:get() == values[1] then
@@ -263,7 +263,6 @@ function M.setup()
   end
 
   local is_vscode = not not vim.g.vscode
-  -- stylua: ignore
   ---@type DeltaVim.Keymap.Presets
   local presets = {
     -- Improve some keys.
@@ -342,7 +341,9 @@ function M.setup()
     },
   }
   for k, v in pairs(fallback) do
-    if not Util.has(k) then Util.concat(presets, v) end
+    if not Util.has(k) then
+      Util.concat(presets, v)
+    end
   end
   CONFIG:map(presets):collect_and_set()
 end

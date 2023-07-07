@@ -60,12 +60,7 @@ function M.init() end
 
 function M.setup()
   ---@type DeltaVim.Options
-  local config = Util.reduce(
-    "table",
-    {},
-    M.DEFAULT,
-    Util.load_config("custom.options") or {}
-  )
+  local config = Util.reduce("table", {}, M.DEFAULT, Util.load_config("custom.options") or {})
 
   -- Other options.
   vim.opt.shortmess:append({ W = true, I = true, c = true })

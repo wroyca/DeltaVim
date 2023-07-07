@@ -19,9 +19,13 @@ end
 ---@param opts? table|fun():table
 function M.telescope(cmd, opts)
   if type(opts) == "function" then
-    return function() telescope(cmd, opts()) end
+    return function()
+      telescope(cmd, opts())
+    end
   else
-    return function() telescope(cmd, opts) end
+    return function()
+      telescope(cmd, opts)
+    end
   end
 end
 
@@ -41,15 +45,21 @@ end
 ---@param opts? table|fun():table
 function M.telescope_files(opts)
   if type(opts) == "function" then
-    return function() telescope_files(opts()) end
+    return function()
+      telescope_files(opts())
+    end
   else
-    return function() telescope_files(opts) end
+    return function()
+      telescope_files(opts)
+    end
   end
 end
 
 function M.telescope_search_current(opts)
   return function()
-    if type(opts) == "function" then opts = opts() end
+    if type(opts) == "function" then
+      opts = opts()
+    end
     local line = require("telescope.actions.state").get_current_line()
     telescope_files(Util.merge({ default_text = line }, opts))
   end
@@ -67,15 +77,21 @@ end
 ---@param opts? table|fun():table
 function M.trouble(mode, opts)
   if type(opts) == "function" then
-    return function() trouble(mode, opts()) end
+    return function()
+      trouble(mode, opts())
+    end
   else
-    return function() trouble(mode, opts) end
+    return function()
+      trouble(mode, opts)
+    end
   end
 end
 
 ---@param force? boolean
 function M.bufremove(force)
-  return function(n) require("mini.bufremove").delete(n or 0, force) end
+  return function(n)
+    require("mini.bufremove").delete(n or 0, force)
+  end
 end
 
 return M

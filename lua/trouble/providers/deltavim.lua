@@ -5,7 +5,9 @@ local Util = require("trouble.util")
 ---@param options TroubleOptions
 return function(_, buf, cb, options)
   local args = options.cmd_options
-  if args.workspace then buf = nil end
+  if args.workspace then
+    buf = nil
+  end
 
   local items = {}
 

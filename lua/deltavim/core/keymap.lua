@@ -84,7 +84,9 @@ local INPUT = {}
 ---@return DeltaVim.Keymap.Inputs?
 local function get(preset)
   local ret = INPUT[preset]
-  if ret then ret.visited = true end
+  if ret then
+    ret.visited = true
+  end
   return ret
 end
 
@@ -113,12 +115,16 @@ end
 ---@param mapping DeltaVim.Keymap.Input
 local function add_input(mapping)
   local name = mapping[2]
-  if not INPUT[name] then INPUT[name] = {} end
+  if not INPUT[name] then
+    INPUT[name] = {}
+  end
   table.insert(INPUT[name], mapping)
 end
 
 ---@param name string
-local function remove_input(name) INPUT[name] = nil end
+local function remove_input(name)
+  INPUT[name] = nil
+end
 
 ---Collects and maps keymaps.
 ---@class DeltaVim.Keymap.Collector
@@ -142,7 +148,9 @@ end
 ---@param input DeltaVim.Keymap.Input
 function Collector:_map_preset(preset, input)
   -- 1) Check if variant matches.
-  if preset.variant ~= input.variant then return end
+  if preset.variant ~= input.variant then
+    return
+  end
   -- 2) Select common modes.
   ---@type string[]
   local mode
@@ -168,9 +176,13 @@ function Collector:_map_preset(preset, input)
     else
       mode = {}
       for _, m in ipairs(input.mode) do
-        if supported[m] then table.insert(mode, m) end
+        if supported[m] then
+          table.insert(mode, m)
+        end
       end
-      if #mode == 0 then return end
+      if #mode == 0 then
+        return
+      end
     end
   end
   -- 3) Generate output.
@@ -229,7 +241,9 @@ function Collector:collect()
 end
 
 ---@param opts? DeltaVim.Keymap.Options
-function Collector:collect_and_set(opts) M.set(self:collect(), opts) end
+function Collector:collect_and_set(opts)
+  M.set(self:collect(), opts)
+end
 
 ---Constructs a list of tables that could be used as keys of `lazy.nvim`.
 ---@param init? table[]
@@ -318,12 +332,7 @@ end
 ---@param opts? DeltaVim.Keymap.Options
 function M.set(keymaps, opts)
   for _, keymap in ipairs(keymaps) do
-    Util.keymap(
-      keymap.mode,
-      keymap[1],
-      keymap[2],
-      Util.merge({}, opts or {}, keymap.opts)
-    )
+    Util.keymap(keymap.mode, keymap[1], keymap[2], Util.merge({}, opts or {}, keymap.opts))
   end
 end
 

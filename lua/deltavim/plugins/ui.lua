@@ -8,7 +8,6 @@ return {
   {
     "rcarriga/nvim-notify",
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@search.notifications", H.telescope({ "notify" }), "Notifications" },
@@ -17,13 +16,19 @@ return {
     end,
     opts = {
       timeout = 3000,
-      max_height = function() return math.floor(vim.o.lines * 0.4) end,
-      max_width = function() return math.floor(vim.o.columns * 0.4) end,
+      max_height = function()
+        return math.floor(vim.o.lines * 0.4)
+      end,
+      max_width = function()
+        return math.floor(vim.o.columns * 0.4)
+      end,
     },
     init = function()
       -- Install notify when `noice` is disabled
       if not Util.has("noice.nvim") and Util.has("nvim-notify") then
-        Util.on_very_lazy(function() vim.notify = require("notify") end)
+        Util.on_very_lazy(function()
+          vim.notify = require("notify")
+        end)
       end
     end,
     config = function(_, opts)
@@ -57,11 +62,11 @@ return {
     "akinsho/bufferline.nvim",
     event = "VeryLazy",
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@buffer.close_left", "<Cmd>BufferLineCloseLeft<CR>", "Close left buffers" },
           { "@buffer.close_right", "<Cmd>BufferLineCloseRight<CR>", "Close right buffers" },
+          -- stylua: ignore
           { "@buffer.close_others", "<Cmd>BufferLineCloseLeft<CR><Cmd>BufferLineCloseRight<CR>", "Close other buffers" },
           { "@buffer.close_ungrouped", "<Cmd>BufferLineGroupClose ungrouped<CR>", "Close ungrouped buffers" },
           { "@buffer.toggle_pin", "<Cmd>BufferLineTogglePin<CR>", "Toggle pin" },
@@ -80,8 +85,12 @@ return {
           local icons = Config.icons.diagnostics
           ---@type string[]
           local s = {}
-          if diag.error then table.insert(s, icons.Error .. diag.error) end
-          if diag.warning then table.insert(s, icons.Warn .. diag.warning) end
+          if diag.error then
+            table.insert(s, icons.Error .. diag.error)
+          end
+          if diag.warning then
+            table.insert(s, icons.Warn .. diag.warning)
+          end
           return table.concat(s, " ")
         end,
         offsets = {
@@ -98,7 +107,6 @@ return {
   {
     "echasnovski/mini.bufremove",
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@buffer.close", H.bufremove(), "Delete buffer" },
@@ -140,9 +148,7 @@ return {
         return function()
           ---@type {foreground?:number}?
           local hl = vim.api.nvim_get_hl_by_name(name, true)
-          return hl
-            and hl.foreground
-            and { fg = string.format("#%06x", hl.foreground) }
+          return hl and hl.foreground and { fg = string.format("#%06x", hl.foreground) }
         end
       end
 
@@ -178,16 +184,22 @@ return {
             },
           },
           lualine_x = {
-            -- stylua: ignore
             {
-              function() return require("noice").api.status.command.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.command.has() end,
+              function()
+                return require("noice").api.status.command.get()
+              end,
+              cond = function()
+                return package.loaded["noice"] and require("noice").api.status.command.has()
+              end,
               color = fg("Statement"),
             },
-            -- stylua: ignore
             {
-              function() return require("noice").api.status.mode.get() end,
-              cond = function() return package.loaded["noice"] and require("noice").api.status.mode.has() end,
+              function()
+                return require("noice").api.status.mode.get()
+              end,
+              cond = function()
+                return package.loaded["noice"] and require("noice").api.status.mode.has()
+              end,
               color = fg("Constant"),
             },
             {
@@ -209,7 +221,9 @@ return {
             { "location", padding = { left = 0, right = 1 } },
           },
           lualine_z = {
-            function() return " " .. os.date("%R") end,
+            function()
+              return " " .. os.date("%R")
+            end,
           },
         },
         extensions = {
@@ -257,21 +271,19 @@ return {
       options = { try_as_border = true },
     },
     init = function()
-      Util.autocmd(
-        "FileType",
-        function() vim.b.miniindentscope_disable = true end,
-        {
-          pattern = {
-            "alpha",
-            "dashboard",
-            "help",
-            "lazy",
-            "mason",
-            "neo-tree",
-            "Trouble",
-          },
-        }
-      )
+      Util.autocmd("FileType", function()
+        vim.b.miniindentscope_disable = true
+      end, {
+        pattern = {
+          "alpha",
+          "dashboard",
+          "help",
+          "lazy",
+          "mason",
+          "neo-tree",
+          "Trouble",
+        },
+      })
     end,
   },
 
@@ -309,10 +321,14 @@ return {
     keys = function()
       ---@param name string
       local function cmd(name)
-        return function() require("noice").cmd(name) end
+        return function()
+          require("noice").cmd(name)
+        end
       end
 
-      local function redirect() require("noice").redirect(vim.fn.getcmdline()) end
+      local function redirect()
+        require("noice").redirect(vim.fn.getcmdline())
+      end
 
       ---@param delta number
       ---@return DeltaVim.Keymap.With
@@ -327,7 +343,6 @@ return {
         end
       end
 
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@notify.all", cmd("all"), "All notifications" },
@@ -358,7 +373,6 @@ return {
       ---@class DeltaVim.Config.Alpha
       return {
         header = logo,
-        -- stylua: ignore
         ---@type {[1]:string,[2]:string,[3]:string,[4]:string|fun()}[]
         buttons = {
           { "n", "󱪝 ", "New file", "<Cmd>ene<BAR>startinsert<CR>" },
@@ -366,7 +380,8 @@ return {
           { "r", "󰄉 ", "Recent files", ":Telescope oldfiles <CR>" },
           { "g", " ", "Grep", H.telescope("live_grep") },
           { "c", " ", "Config", "<Cmd>e $MYVIMRC<CR>" },
-          { "s", "󰦛 ", "Restore session", function() require("persistence").load() end, },
+          -- stylua: ignore
+          { "s", "󰦛 ", "Restore session", function() require("persistence").load() end },
           { "l", "󰒲 ", "Lazy", "<Cmd>Lazy<CR>" },
           { "q", " ", "Quit", "<Cmd>qa<CR>" },
         },
@@ -402,7 +417,6 @@ return {
       end
       dashboard.section.buttons.val = buttons
       -- footer
-      -- stylua: ignore
       dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
       dashboard.section.footer.opts.hl = "AlphaFooter"
       dashboard.opts.layout[1].val = 8
@@ -410,11 +424,9 @@ return {
       -- Close Lazy and re-open when the dashboard is ready
       if vim.o.filetype == "lazy" then
         vim.cmd.close()
-        Util.autocmd(
-          "User",
-          function() require("lazy").show() end,
-          { pattern = "AlphaReady" }
-        )
+        Util.autocmd("User", function()
+          require("lazy").show()
+        end, { pattern = "AlphaReady" })
       end
 
       require("alpha").setup(dashboard.opts)
@@ -423,7 +435,6 @@ return {
       Util.autocmd("User", function()
         local stats = require("lazy").stats()
         local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-        -- stylua: ignore
         dashboard.section.footer.val = ("⚡ Neovim loaded %s plugins in %s ms"):format(stats.count, ms)
         pcall(vim.cmd.AlphaRedraw)
       end, { pattern = "LazyVimStarted" })

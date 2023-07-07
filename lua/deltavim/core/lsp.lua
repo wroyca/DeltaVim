@@ -13,13 +13,14 @@ function M.format(buffer)
   vim.lsp.buf.format(Util.deep_merge({
     bufnr = buffer,
     filter = function(client)
-      return use_nls and client.name == "null-ls"
-        or not use_nls and client.name ~= "null-ls"
+      return use_nls and client.name == "null-ls" or not use_nls and client.name ~= "null-ls"
     end,
   }, M.FORMAT_OPTS or {}))
 end
 
-function M.toggle_autoformat() M.AUTOFORMAT = not M.AUTOFORMAT end
+function M.toggle_autoformat()
+  M.AUTOFORMAT = not M.AUTOFORMAT
+end
 
 ---@param client table
 ---@param buffer integer
@@ -36,7 +37,9 @@ function M.autoformat(client, buffer)
   if M.supports(client, buffer, "documentFormatting") then
     vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
     Util.autocmd("BufWritePre", function()
-      if M.AUTOFORMAT then M.format(buffer) end
+      if M.AUTOFORMAT then
+        M.format(buffer)
+      end
     end, { buffer = buffer })
   end
 end
@@ -52,7 +55,12 @@ local function make_keymaps()
     if opts == nil then
       return { vim.lsp.buf[cmd], has }
     else
-      return { function() vim.lsp.buf[cmd](opts) end, has }
+      return {
+        function()
+          vim.lsp.buf[cmd](opts)
+        end,
+        has,
+      }
     end
   end
 
@@ -61,7 +69,11 @@ local function make_keymaps()
   local function goto_diagnostic(next, level)
     local f = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
     local severity = level and vim.diagnostic.severity[level] or nil
-    return { function() f({ severity = severity }) end }
+    return {
+      function()
+        f({ severity = severity })
+      end,
+    }
   end
 
   local code_action_source = lsp("code_action", "codeAction", {
@@ -75,11 +87,12 @@ local function make_keymaps()
   local function diagnostics(level)
     local severity = level and vim.diagnostic.severity[level] or nil
     return {
-      function() vim.diagnostic.open_float({ severity = severity }) end,
+      function()
+        vim.diagnostic.open_float({ severity = severity })
+      end,
     }
   end
 
-  -- stylua: ignore
   return Keymap.Collector()
     :map({
       -- lsp
@@ -96,7 +109,7 @@ local function make_keymaps()
       { "@lsp.line_warnings", diagnostics("W"), "Line warnings" },
       { "@lsp.references", lsp("references", "references"), "References" },
       { "@lsp.rename", lsp("rename", "rename"), "Rename" },
-      { "@lsp.signature_help",  lsp("signature_help", "signatureHelp") , "Signature help" },
+      { "@lsp.signature_help", lsp("signature_help", "signatureHelp"), "Signature help" },
       { "@lsp.type_definitions", lsp("type_definition", "typeDefinition"), "Type definitions" },
       -- goto
       { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
@@ -112,7 +125,6 @@ end
 ---@param client table
 ---@param buffer integer
 function M.keymaps(client, buffer)
-  -- stylua: ignore
   KEYMAPS = KEYMAPS or make_keymaps()
   M.set_keymaps(client, buffer, KEYMAPS)
 end
@@ -145,10 +157,7 @@ local CAPABILITY_MAP = {
 function M.nls_supports(buffer, cap)
   return CAPABILITY_MAP[cap] ~= nil
     and package.loaded["null-ls"]
-    and #require("null-ls.sources").get_available(
-        vim.bo[buffer].ft,
-        require("null-ls").methods[CAPABILITY_MAP[cap]]
-      )
+    and #require("null-ls.sources").get_available(vim.bo[buffer].ft, require("null-ls").methods[CAPABILITY_MAP[cap]])
       > 0
 end
 
@@ -182,12 +191,11 @@ end
 function M.disable(server, cond)
   local util = require("lspconfig.util")
   local def = M.lsp_get_config(server)
-  def.document_config.on_new_config = util.add_hook_before(
-    def.document_config.on_new_config,
-    function(config, root)
-      if cond(config, root) then config.enabled = false end
+  def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config, function(config, root)
+    if cond(config, root) then
+      config.enabled = false
     end
-  )
+  end)
 end
 
 return M

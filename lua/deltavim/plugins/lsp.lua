@@ -94,7 +94,9 @@ return {
         for k, v in pairs(Config.icons.diagnostics) do
           icons[k:upper()] = v
         end
-        diagnostics.virtual_text.prefix = function(d) return icons[d.severity] end
+        diagnostics.virtual_text.prefix = function(d)
+          return icons[d.severity]
+        end
       end
 
       -- Update configuration
@@ -104,8 +106,7 @@ return {
       local capabilities = Util.deep_merge(
         {},
         vim.lsp.protocol.make_client_capabilities(),
-        Util.has("nvim-cmp") and require("cmp_nvim_lsp").default_capabilities()
-          or {},
+        Util.has("nvim-cmp") and require("cmp_nvim_lsp").default_capabilities() or {},
         opts.capabilities or {}
       )
 
@@ -115,18 +116,19 @@ return {
         }, servers[server] or {})
 
         if opts.setup[server] then
-          if opts.setup[server](server, server_opts) then return end
+          if opts.setup[server](server, server_opts) then
+            return
+          end
         elseif opts.setup["*"] then
-          if opts.setup["*"](server, server_opts) then return end
+          if opts.setup["*"](server, server_opts) then
+            return
+          end
         end
         require("lspconfig")[server].setup(server_opts)
       end
 
       local has_mason = Util.has("mason-lspconfig.nvim")
-      local available = has_mason
-          and vim.tbl_keys(
-            require("mason-lspconfig.mappings.server").lspconfig_to_package
-          )
+      local available = has_mason and vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
         or {}
 
       ---@type string[]
@@ -150,13 +152,11 @@ return {
       -- Credit: https://github.com/LazyVim/LazyVim/blob/d565684/lua/lazyvim/plugins/lsp/init.lua#L158-L164
       -- License: MIT
       if Lsp.get_config("denols") and Lsp.get_config("tsserver") then
-        local is_deno =
-          require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
+        local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
         Lsp.disable("tsserver", is_deno)
-        Lsp.disable(
-          "denols",
-          function(root_dir) return not is_deno(root_dir) end
-        )
+        Lsp.disable("denols", function(root_dir)
+          return not is_deno(root_dir)
+        end)
       end
 
       -- Set LspInfo border
@@ -242,7 +242,9 @@ return {
       local function ensure_installed()
         for _, name in ipairs(opts.ensure_installed) do
           local p = registry.get_package(name)
-          if not p:is_installed() then p:install() end
+          if not p:is_installed() then
+            p:install()
+          end
         end
       end
       if registry.refresh then

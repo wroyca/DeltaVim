@@ -28,7 +28,9 @@ return {
       end
 
       local function jump(dir)
-        return function() require("luasnip").jump(dir) end
+        return function()
+          require("luasnip").jump(dir)
+        end
       end
 
       return Keymap.Collector()
@@ -47,7 +49,9 @@ return {
   },
   {
     "rafamadriz/friendly-snippets",
-    config = function() require("luasnip.loaders.from_vscode").lazy_load() end,
+    config = function()
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end,
   },
 
   -- Auto completion
@@ -95,7 +99,6 @@ return {
 
       -- Collect key mappings.
       local insert = { behavior = cmp.SelectBehavior.Insert }
-      -- stylua: ignore
       local mappings = Keymap.Collector()
         :map({
           { "@cmp.super_tab", super_tab, key = "<Tab>" },
@@ -118,7 +121,9 @@ return {
           completeopt = "menu,menuone,noinsert",
         },
         snippet = {
-          expand = function(args) require("luasnip").lsp_expand(args.body) end,
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body)
+          end,
         },
         mapping = mappings,
         sources = cmp.config.sources({
@@ -153,7 +158,9 @@ return {
             path = 1,
           },
           default_source_dup = 1,
-          max_width = function() return math.floor(vim.o.columns * 0.4) end,
+          max_width = function()
+            return math.floor(vim.o.columns * 0.4)
+          end,
         },
         sorting = defaults.sorting,
         experimental = {
@@ -165,11 +172,7 @@ return {
     end,
     ---@param opts DeltaVim.Config.Cmp
     config = function(_, opts)
-      vim.api.nvim_set_hl(
-        0,
-        "CmpChostText",
-        { link = "Comment", default = true }
-      )
+      vim.api.nvim_set_hl(0, "CmpChostText", { link = "Comment", default = true })
       local icons = Config.icons
       local formatting = opts.formatting
       require("cmp").setup(Util.deep_merge({
@@ -182,12 +185,9 @@ return {
             if #item.abbr > max_width then
               item.abbr = string.sub(item.abbr, 1, max_width) .. "..."
             end
-            item.kind = icons[item.kind] and icons[item.kind] .. item.kind
-              or item.kind
-            item.menu = formatting.source_names[source]
-              or formatting.default_source_name(source)
-            item.dup = formatting.source_dups[source]
-              or formatting.default_source_dup
+            item.kind = icons[item.kind] and icons[item.kind] .. item.kind or item.kind
+            item.menu = formatting.source_names[source] or formatting.default_source_name(source)
+            item.dup = formatting.source_dups[source] or formatting.default_source_dup
             return item
           end,
         },
@@ -215,7 +215,6 @@ return {
   {
     "echasnovski/mini.surround",
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
           { "@surround.add", desc = "Add surrounding", mode = { "n", "x" } },
@@ -252,12 +251,11 @@ return {
   {
     "echasnovski/mini.comment",
     keys = function()
-      -- stylua: ignore
       return Keymap.Collector()
         :map({
-            { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
-            { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
-            { "@textobject.comment", desc = "Comment", mode = "o" },
+          { "@comment.toggle", desc = "Toggle comment", mode = { "n", "x" } },
+          { "@comment.toggle_line", desc = "Toggle line comment", mode = "n" },
+          { "@textobject.comment", desc = "Comment", mode = "o" },
         })
         :collect_lazy()
     end,
@@ -272,8 +270,7 @@ return {
       return {
         options = {
           custom_commentstring = function()
-            return require("ts_context_commentstring.internal").calculate_commentstring({})
-              or vim.bo.commentstring
+            return require("ts_context_commentstring.internal").calculate_commentstring({}) or vim.bo.commentstring
           end,
         },
         mappings = mappings,

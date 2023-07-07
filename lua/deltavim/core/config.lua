@@ -11,12 +11,16 @@ M.lazy_version = ">=9.1.0"
 
 ---LazyVim may have overwritten options of the Lazy ui, use this to reset.
 local function fix_lazy()
-  if vim.bo.filetype == "lazy" then vim.cmd.doautocmd("VimResized") end
+  if vim.bo.filetype == "lazy" then
+    vim.cmd.doautocmd("VimResized")
+  end
 end
 
 local did_init = false
 function M.init()
-  if did_init then return end
+  if did_init then
+    return
+  end
   did_init = true
 
   -- Delay notifications
@@ -37,10 +41,7 @@ function M.setup(opts)
   Config.update(opts or {})
 
   if not M.check_version() then
-    Log.error(
-      "**DeltaVim** needs **lazy.nvim** version %s to work properly.",
-      M.lazy_version
-    )
+    Log.error("**DeltaVim** needs **lazy.nvim** version %s to work properly.", M.lazy_version)
     error("Exiting")
   end
 
@@ -65,7 +66,9 @@ function M.setup(opts)
     end
   end, {
     msg = "Could not load your colorscheme",
-    on_error = function() vim.cmd.colorscheme("habamax") end,
+    on_error = function()
+      vim.cmd.colorscheme("habamax")
+    end,
   })
 end
 
@@ -83,7 +86,9 @@ function M.lazy_notify(timeout)
   timeout = timeout or 1000
   ---@type table[]
   local notifications = {}
-  local function temp(...) table.insert(notifications, vim.F.pack_len(...)) end
+  local function temp(...)
+    table.insert(notifications, vim.F.pack_len(...))
+  end
 
   local orig = vim.notify
   vim.notify = temp
@@ -95,7 +100,9 @@ function M.lazy_notify(timeout)
     timer:stop()
     check:stop()
     -- Put back the original notify if needed
-    if vim.notify == temp then vim.notify = orig end
+    if vim.notify == temp then
+      vim.notify = orig
+    end
     vim.schedule(function()
       for _, args in ipairs(notifications) do
         vim.notify(vim.F.unpack_len(args))
@@ -105,7 +112,9 @@ function M.lazy_notify(timeout)
 
   -- Wait till vim.notify has been replaced
   check:start(function()
-    if vim.notify ~= temp then replay() end
+    if vim.notify ~= temp then
+      replay()
+    end
   end)
   -- Or if it reached timeout, then something went wrong
   timer:start(timeout, 0, replay)
