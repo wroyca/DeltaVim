@@ -420,7 +420,11 @@ return {
         })
         :collect_lazy()
     end,
-    opts = { delay = 200 },
+    opts = {
+      delay = 200,
+      large_file_cutoff = 2000,
+      large_file_overrides = { providers = { "lsp" } },
+    },
     config = function(_, opts)
       local illuminate = require("illuminate")
       illuminate.configure(opts)
