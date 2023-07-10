@@ -51,8 +51,8 @@ return {
       custom_highlights = function(c)
         return {
           LeapMatch = { fg = c.pink, bold = true },
-          LeapLabelPrimary = { fg = c.green, bold = true },
-          LeapLabelSecondary = { fg = c.blue, bold = true },
+          LeapLabelPrimary = { fg = c.red, bold = true },
+          LeapLabelSecondary = { fg = c.mauve, bold = true },
           LeapBackdrop = { fg = c.overlay0 },
         }
       end,
