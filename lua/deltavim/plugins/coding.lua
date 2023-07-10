@@ -242,7 +242,7 @@ return {
       return {
         mappings = mappings,
         n_lines = 500,
-        search_method = "cover",
+        search_method = "cover_or_next",
       }
     end,
   },
@@ -302,7 +302,7 @@ return {
           }),
         },
         n_lines = 500,
-        search_method = "cover",
+        search_method = "cover_or_next",
       }
     end,
     config = function(_, opts)
