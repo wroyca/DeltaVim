@@ -400,7 +400,7 @@ return {
 
       -- header
       dashboard.section.header.val = opts.header
-      dashboard.section.header.opts.hl = "AlphaHeader"
+      dashboard.section.header.opts.hl = "DashboardHeader"
       -- body
       local buttons = {}
       for _, btn in ipairs(opts.buttons) do
@@ -411,14 +411,15 @@ return {
           action = ""
         end
         local button = dashboard.button(key, icon .. " " .. desc, action, o)
-        button.opts.hl = "AlphaButtons"
-        button.opts.hl_shortcut = "AlphaShortCut"
+        button.opts.hl = "DashboardCenter"
+        button.opts.hl_shortcut = "DashboardShortCut"
         table.insert(buttons, button)
       end
       dashboard.section.buttons.val = buttons
+      dashboard.section.buttons.opts.hl = "DashboardCenter"
       -- footer
       dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
-      dashboard.section.footer.opts.hl = "AlphaFooter"
+      dashboard.section.footer.opts.hl = "DashboardFooter"
       dashboard.opts.layout[1].val = 8
 
       -- Close Lazy and re-open when the dashboard is ready
