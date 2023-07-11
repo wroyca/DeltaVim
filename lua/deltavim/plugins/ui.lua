@@ -75,34 +75,41 @@ return {
         })
         :collect_lazy()
     end,
-    opts = {
-      options = {
-        close_command = H.bufremove(false),
-        right_mouse_command = H.bufremove(false),
-        diagnostics = "nvim_lsp",
-        always_show_bufferline = false,
-        diagnostics_indicator = function(_, _, diag)
-          local icons = Config.icons.diagnostics
-          ---@type string[]
-          local s = {}
-          if diag.error then
-            table.insert(s, icons.Error .. diag.error)
-          end
-          if diag.warning then
-            table.insert(s, icons.Warn .. diag.warning)
-          end
-          return table.concat(s, " ")
-        end,
-        offsets = {
-          {
-            filetype = "neo-tree",
-            text = "Explorer",
-            highlight = "Directory",
-            text_align = "left",
+    opts = function()
+      local highlights
+      if Config.colorscheme == "catppuccin" then
+        highlights = require("catppuccin.groups.integrations.bufferline").get()
+      end
+      return {
+        highlights = highlights,
+        options = {
+          close_command = H.bufremove(false),
+          right_mouse_command = H.bufremove(false),
+          diagnostics = "nvim_lsp",
+          always_show_bufferline = false,
+          diagnostics_indicator = function(_, _, diag)
+            local icons = Config.icons.diagnostics
+            ---@type string[]
+            local s = {}
+            if diag.error then
+              table.insert(s, icons.Error .. diag.error)
+            end
+            if diag.warning then
+              table.insert(s, icons.Warn .. diag.warning)
+            end
+            return table.concat(s, " ")
+          end,
+          offsets = {
+            {
+              filetype = "neo-tree",
+              text = "Explorer",
+              highlight = "Directory",
+              text_align = "left",
+            },
           },
         },
-      },
-    },
+      }
+    end,
   },
   {
     "echasnovski/mini.bufremove",
