@@ -68,15 +68,14 @@ return {
     opts = function()
       local cmp = require("cmp")
       local mapping = cmp.mapping
-      local comparator = cmp.config.compare
       local defaults = require("cmp.config.default")()
 
       local super_tab = mapping(function(fallback)
         local luasnip = require("luasnip")
         if cmp.visible() then
           cmp.select_next_item()
-        elseif luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
+        elseif luasnip.locally_jumpable(1) then
+          luasnip.jump(1)
         else
           fallback()
         end
