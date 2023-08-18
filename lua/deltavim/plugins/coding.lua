@@ -241,7 +241,7 @@ return {
       return {
         mappings = mappings,
         n_lines = 500,
-        search_method = "cover_or_next",
+        search_method = "cover",
       }
     end,
   },
