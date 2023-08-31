@@ -69,6 +69,11 @@ return {
       local Lsp = require("deltavim.core.lsp")
       local servers = Util.copy_as_table(opts.servers)
 
+      if Util.has("neoconf.nvim") then
+        local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
+        require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
+      end
+
       -- Setup autoformat and keymaps
       Lsp.AUTOFORMAT = opts.autoformat
       Lsp.FORMAT_OPTS = opts.format
@@ -163,7 +168,7 @@ return {
       require("lspconfig.ui.windows").default_options.border = Config.border
     end,
   },
-  { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+  { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
   { "folke/neodev.nvim", config = true },
   { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },
   -- stylua: ignore
@@ -220,6 +225,7 @@ return {
   {
     "williamboman/mason.nvim",
     cmd = "Mason",
+    build = ":MasonUpdate",
     keys = function()
       return Keymap.Collector()
         :map({

@@ -7,6 +7,7 @@ return {
   -- File explorer
   {
     "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
     cmd = "Neotree",
     deactivate = function()
       vim.cmd("Neotree close")
@@ -46,7 +47,7 @@ return {
       },
       filesystem = {
         bind_to_cwd = false,
-        follow_current_file = true,
+        follow_current_file = { enabled = true },
         use_libuv_file_watcher = true,
       },
       window = {
@@ -64,7 +65,6 @@ return {
       },
     },
     init = function()
-      vim.g.neo_tree_remove_legacy_commands = 1
       if vim.fn.argc() == 1 then
         local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
         if stat and stat.type == "directory" then

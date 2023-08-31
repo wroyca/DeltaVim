@@ -16,6 +16,7 @@ return {
       integrations = {
         cmp = true,
         dashboard = true,
+        flash = true,
         gitsigns = true,
         illuminate = true,
         indent_blankline = { enabled = true },
@@ -38,7 +39,7 @@ return {
             information = { "undercurl" },
           },
         },
-        navic = { enabled = true },
+        navic = { enabled = true, custom_bg = "lualine" },
         neotree = true,
         noice = true,
         notify = true,
