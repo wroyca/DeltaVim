@@ -285,38 +285,61 @@ return {
 
   -- Easily jump to any location and enhanced f/t motions for Leap
   {
-    "ggandor/leap.nvim",
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    vscode = true,
+    ---@type Flash.Config
+    opts = {
+      modes = {
+        char = {
+          jump_labels = true,
+          jump = {
+            autojump = true,
+            inclusive = true,
+            nohlsearch = true,
+          },
+        },
+      },
+    },
     keys = function()
+      ---@param forward boolean
+      ---@param pos string
+      local function jump(forward, pos)
+        return function()
+          require("flash").jump({
+            search = {
+              forward = forward,
+              wrap = false,
+              multi_window = false,
+            },
+            jump = {
+              autojump = true,
+              inclusive = true,
+              nohlsearch = true,
+              pos = pos,
+            },
+            label = {
+              min_pattern_length = 2,
+            },
+          })
+        end
+      end
+
       ---@param name string
-      ---@param key string
+      ---@param act function
       ---@param desc string
-      local function leap(name, key, desc)
-        return { name, key, desc, mode = { "n", "x", "o" }, remap = false }
+      local function flash(name, act, desc)
+        return { name, act, desc, mode = { "n", "x", "o" } }
       end
-      return Keymap.Collector()
-        :map({
-          leap("@leap.forward_to", "<Plug>(leap-forward-to)", "Leap forward to"),
-          leap("@leap.backward_to", "<Plug>(leap-backward-to)", "Leap backward to"),
-          leap("@leap.forward_till", "<Plug>(leap-forward-till)", "Leap forward till"),
-          leap("@leap.backward_till", "<Plug>(leap-backward-till)", "Leap backward till"),
-          leap("@leap.from_window", "<Plug>(leap-from-window)", "Leap from window"),
-        })
-        :collect_lazy()
+
+      -- stylua: ignore
+      return Keymap.Collector():map({
+        flash("@flash.forward_to", jump(true, "start"), "Flash forward to"),
+        flash("@flash.backward_to", jump(false, "start"), "Flash backward to"),
+        flash("@flash.forward_till", jump(true, "end"), "Flash forward to"),
+        flash("@flash.backward_till", jump(false, "start"), "Flash backward to"),
+      }):collect_lazy()
     end,
-    config = function(_, opts)
-      Util.merge(require("leap").opts, opts)
-    end,
-  },
-  {
-    "ggandor/flit.nvim",
-    keys = function()
-      local keys = {}
-      for _, key in ipairs({ "f", "F", "t", "T" }) do
-        table.insert(keys, { key, mode = { "n", "x", "o" }, desc = key })
-      end
-      return keys
-    end,
-    opts = { labeled_modes = "nx" },
   },
 
   -- Which-key

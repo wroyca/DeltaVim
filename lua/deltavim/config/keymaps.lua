@@ -132,10 +132,11 @@ M.DEFAULT = {
   { "<Leader>ghS", "@git.stage_buffer" },
   { "<Leader>ghs", "@git.stage_hunk" },
   { "<Leader>ghu", "@git.undo_stage_hunk" },
-  -- leap/flit
-  { "s", "@leap.forward_to" },
-  { "S", "@leap.backward_to" },
-  { "gs", "@leap.from_window" },
+  -- flash
+  { "s", mode = { "n" }, "@flash.forward_to" },
+  { "S", mode = { "n" }, "@flash.backward_to" },
+  { "x", mode = { "x", "o" }, "@flash.forward_till" },
+  { "X", mode = { "x", "o" }, "@flash.backward_till" },
   -- goto references
   { "[[", "@goto.prev_reference" },
   { "]]", "@goto.next_reference" },
