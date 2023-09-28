@@ -247,24 +247,28 @@ return {
   -- Indent guides
   {
     "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      char = "│",
-      context_char = "│",
-      filetype_exclude = {
-        "alpha",
-        "dashboard",
-        "help",
-        "lazy",
-        "lazyterm",
-        "mason",
-        "neo-tree",
-        "notify",
-        "toggleterm",
-        "Trouble",
+      indent = {
+        char = "│",
+        tab_char = "│",
       },
-      show_trailing_blankline_indent = false,
-      show_current_context = false,
+      scope = { enabled = false },
+      exclude = {
+        filetypes = {
+          "alpha",
+          "dashboard",
+          "help",
+          "lazy",
+          "lazyterm",
+          "mason",
+          "neo-tree",
+          "notify",
+          "toggleterm",
+          "Trouble",
+        },
+      },
     },
   },
 
