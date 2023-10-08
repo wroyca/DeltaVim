@@ -20,12 +20,20 @@ M.DEFAULT = {
     confirm = true, -- Confirm to save changes before exiting modified buffer
     cursorline = true, -- Enable highlighting of the current line
     expandtab = true, -- Use spaces instead of tabs
+    fillchars = {
+      foldopen = "",
+      foldclose = "",
+      fold = " ",
+      foldsep = " ",
+      diff = "╱",
+      eob = " ",
+    },
     formatoptions = "jcroqlnt", -- tcqj
     grepformat = "%f:%l:%c:%m",
     grepprg = "rg ,--vimgrep",
     ignorecase = true, -- Ignore case
     inccommand = "nosplit", -- preview incremental substitute
-    laststatus = 0,
+    laststatus = 3,
     list = true, -- Show some invisible characters (tabs...
     mouse = "a", -- Enable mouse mode
     number = true, -- Print line number
@@ -43,6 +51,7 @@ M.DEFAULT = {
     smartindent = true, -- Insert indents automatically
     spelllang = { "en" },
     splitbelow = true, -- Put new windows below current
+    splitkeep = "screen",
     splitright = true, -- Put new windows right of current
     tabstop = 2, -- Number of spaces tabs count for
     termguicolors = true, -- True color support
@@ -64,10 +73,6 @@ function M.setup()
 
   -- Other options.
   vim.opt.shortmess:append({ W = true, I = true, c = true })
-  if vim.fn.has("nvim-0.9.0") == 1 then
-    vim.opt.splitkeep = "screen"
-    vim.opt.shortmess:append({ C = true })
-  end
 
   for k, v in pairs(config.g) do
     vim.g[k] = v

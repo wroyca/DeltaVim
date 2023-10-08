@@ -95,6 +95,11 @@ function M.setup()
     }
   end
 
+  local function resize_splits()
+    vim.cmd("tabdo wincmd =")
+    vim.cmd("tabnext " .. vim.fn.tabpagenr())
+  end
+
   ---@class DeltaVim.Autocmds.Ruler
   ---@field ft table<string,integer|integer[]>
   ---@type DeltaVim.Autocmd.Schema
@@ -168,7 +173,7 @@ function M.setup()
     -- stylua: ignore
     { "@highlight_yank", "TextYankPost", function() vim.highlight.on_yank() end },
     { "@last_loc", with = last_loc, args = last_loc_args },
-    { "@resize_splits", "VimResized", "tabdo wincmd =" },
+    { "@resize_splits", "VimResized", resize_splits },
     { "@rulers", with = rulers, args = rulers_args },
     { "@spell", with = spell, args = spell_args },
     { "@trim_whitespace", "BufWritePre", trim_whitespace },
