@@ -32,6 +32,10 @@ return {
         },
         severity_sort = true,
       },
+      -- Inlay hints on Neovim >= 0.10
+      inlay_hints = {
+        enabled = false,
+      },
       -- Global capabilities
       capabilities = {},
       ---Automatically format on save
@@ -44,7 +48,6 @@ return {
       ---LSP Server Settings
       ---@type lspconfig.options|table<string,table|boolean>
       servers = {
-        jsonls = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -86,6 +89,16 @@ return {
       for name, icon in pairs(Config.icons.diagnostics) do
         name = "DiagnosticSign" .. name
         vim.fn.sign_define(name, { text = icon, texthl = name, numhl = "" })
+      end
+
+      -- Enable inlay hints
+      local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
+      if opts.inlay_hints.enabled and inlay_hint then
+        Util.on_attach(function(client, buffer)
+          if client.supports_method("textDocument/inlayHint") then
+            inlay_hint(buffer, true)
+          end
+        end)
       end
 
       -- Overwrite prefix
