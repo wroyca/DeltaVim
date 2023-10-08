@@ -34,7 +34,7 @@ function M.autoformat(client, buffer)
     return
   end
 
-  if M.supports(client, buffer, "documentFormatting") then
+  if M.supports(client, buffer, "formatting") then
     vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
     Util.autocmd("BufWritePre", function()
       if M.AUTOFORMAT then
@@ -132,13 +132,13 @@ end
 ---Checks if a client has the given capability.
 ---@param client table
 ---@param buffer integer
----@param cap string
+---@param method string
 ---@return boolean
-function M.supports(client, buffer, cap)
+function M.supports(client, buffer, method)
   if client.name == "null-ls" then
-    return M.nls_supports(buffer, cap)
+    return M.nls_supports(buffer, method)
   else
-    return client.server_capabilities[cap .. "Provider"] ~= nil
+    return client.supports_method("textDocument/" .. method)
   end
 end
 
@@ -146,18 +146,21 @@ local CAPABILITY_MAP = {
   codeAction = "CODE_ACTION",
   completion = "COMPLETION",
   diagnostics = "DIAGNOSTICS",
-  documentFormatting = "FORMATTING",
-  documentRangeFormatting = "RANGE_FORMATTING",
+  formatting = "FORMATTING",
+  rangeFormatting = "RANGE_FORMATTING",
   hover = "HOVER",
 }
 
 ---@param buffer integer
----@param cap string
+---@param method string
 ---@return boolean
-function M.nls_supports(buffer, cap)
-  return CAPABILITY_MAP[cap] ~= nil
+function M.nls_supports(buffer, method)
+  return CAPABILITY_MAP[method] ~= nil
     and package.loaded["null-ls"]
-    and #require("null-ls.sources").get_available(vim.bo[buffer].ft, require("null-ls").methods[CAPABILITY_MAP[cap]])
+    and #require("null-ls.sources").get_available(
+        vim.bo[buffer].ft,
+        require("null-ls").methods[CAPABILITY_MAP[method]]
+      )
       > 0
 end
 
