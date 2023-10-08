@@ -189,7 +189,7 @@ return {
 
   -- Formatters/linters
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     keys = function()
       return Keymap.Collector()
