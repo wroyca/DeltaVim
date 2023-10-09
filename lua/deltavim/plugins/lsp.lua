@@ -181,11 +181,18 @@ return {
       require("lspconfig.ui.windows").default_options.border = Config.border
     end,
   },
-  { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+  {
+    "folke/neoconf.nvim",
+    cmd = "Neoconf",
+    config = false,
+    dependencies = {
+      "nvim-lspconfig",
+    },
+  },
   { "folke/neodev.nvim", config = true },
   { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },
   -- stylua: ignore
-  { "hrsh7th/cmp-nvim-lsp", cond = function() return Util.has("nvim-cmp") end },
+  { "hrsh7th/cmp-nvim-lsp",              cond = function() return Util.has("nvim-cmp") end },
 
   -- Formatters/linters
   {

@@ -34,14 +34,12 @@ function M.autoformat(client, buffer)
     return
   end
 
-  if M.supports(client, buffer, "formatting") then
-    vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
-    Util.autocmd("BufWritePre", function()
-      if M.AUTOFORMAT then
-        M.format(buffer)
-      end
-    end, { buffer = buffer })
-  end
+  vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
+  Util.autocmd("BufWritePre", function()
+    if M.AUTOFORMAT then
+      M.format(buffer)
+    end
+  end, { buffer = buffer })
 end
 
 ---@type DeltaVim.Keymap.Output[]
@@ -49,18 +47,14 @@ local KEYMAPS
 
 local function make_keymaps()
   ---@param cmd string
-  ---@param has string
   ---@param opts? table
-  local function lsp(cmd, has, opts)
+  local function lsp(cmd, opts)
     if opts == nil then
-      return { vim.lsp.buf[cmd], has }
+      return vim.lsp.buf[cmd]
     else
-      return {
-        function()
-          vim.lsp.buf[cmd](opts)
-        end,
-        has,
-      }
+      return function()
+        vim.lsp.buf[cmd](opts)
+      end
     end
   end
 
@@ -69,48 +63,39 @@ local function make_keymaps()
   local function goto_diagnostic(next, level)
     local f = next and vim.diagnostic.goto_next or vim.diagnostic.goto_prev
     local severity = level and vim.diagnostic.severity[level] or nil
-    return {
-      function()
-        f({ severity = severity })
-      end,
-    }
+    return function()
+      f({ severity = severity })
+    end
   end
 
-  local code_action_source = lsp("code_action", "codeAction", {
-    context = {
-      only = { "source" },
-      diagnostics = {},
-    },
-  })
+  local code_action_source = lsp("code_action", { context = { only = { "source" }, diagnostics = {} } })
 
   ---@param level? string
   local function diagnostics(level)
     local severity = level and vim.diagnostic.severity[level] or nil
-    return {
-      function()
-        vim.diagnostic.open_float({ severity = severity })
-      end,
-    }
+    return function()
+      vim.diagnostic.open_float({ severity = severity })
+    end
   end
 
   return Keymap.Collector()
     :map({
       -- lsp
-      { "@lsp.code_action", lsp("code_action", "codeAction"), "Code action", mode = { "*", "x" } },
+      { "@lsp.code_action", lsp("code_action"), "Code action", mode = { "*", "x" } },
       { "@lsp.code_action_source", code_action_source, "Source action", mode = { "*", "x" } },
-      { "@lsp.declaration", lsp("declaration", "declaration"), "Declaration" },
-      { "@lsp.definitions", lsp("definition", "definition"), "Definitions" },
-      { "@lsp.format", { M.format, "documentFormatting" }, "Format document", mode = "*" },
-      { "@lsp.format", { M.format, "documentRangeFormatting" }, "Format range", mode = "x" },
-      { "@lsp.hover", lsp("hover", "hover"), "Hover" },
-      { "@lsp.implementations", lsp("implementation", "implementation"), "Implementations" },
+      { "@lsp.declaration", lsp("declaration"), "Declaration" },
+      { "@lsp.definitions", lsp("definition"), "Definitions" },
+      { "@lsp.format", M.format, "Format document", mode = "*" },
+      { "@lsp.format", M.format, "Format range", mode = "x" },
+      { "@lsp.hover", lsp("hover"), "Hover" },
+      { "@lsp.implementations", lsp("implementation"), "Implementations" },
       { "@lsp.line_diagnostics", diagnostics(), "Line diagnostics" },
       { "@lsp.line_errors", diagnostics("E"), "Line errors" },
       { "@lsp.line_warnings", diagnostics("W"), "Line warnings" },
-      { "@lsp.references", lsp("references", "references"), "References" },
-      { "@lsp.rename", lsp("rename", "rename"), "Rename" },
-      { "@lsp.signature_help", lsp("signature_help", "signatureHelp"), "Signature help" },
-      { "@lsp.type_definitions", lsp("type_definition", "typeDefinition"), "Type definitions" },
+      { "@lsp.references", lsp("references"), "References" },
+      { "@lsp.rename", lsp("rename"), "Rename" },
+      { "@lsp.signature_help", lsp("signature_help"), "Signature help" },
+      { "@lsp.type_definitions", lsp("type_definition"), "Type definitions" },
       -- goto
       { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
       { "@goto.prev_diagnostic", goto_diagnostic(false), "Prev diagnostic" },
@@ -126,19 +111,8 @@ end
 ---@param buffer integer
 function M.keymaps(client, buffer)
   KEYMAPS = KEYMAPS or make_keymaps()
-  M.set_keymaps(client, buffer, KEYMAPS)
-end
-
----Checks if a client has the given capability.
----@param client table
----@param buffer integer
----@param method string
----@return boolean
-function M.supports(client, buffer, method)
-  if client.name == "null-ls" then
-    return M.nls_supports(buffer, method)
-  else
-    return client.supports_method("textDocument/" .. method)
+  for _, m in ipairs(KEYMAPS) do
+    Util.keymap(m.mode, m[1], m[2], Util.merge({ buffer = buffer }, m.opts))
   end
 end
 
@@ -162,23 +136,6 @@ function M.nls_supports(buffer, method)
         require("null-ls").methods[CAPABILITY_MAP[method]]
       )
       > 0
-end
-
----Set keymaps only server has specified capabilities.
----@param client table
----@param keymaps DeltaVim.Keymap.Output[]
-function M.set_keymaps(client, buffer, keymaps)
-  for _, m in ipairs(keymaps) do
-    local rhs, cap
-    if type(m[2]) == "table" then
-      rhs, cap = unpack(m[2])
-    else
-      rhs = m[2]
-    end
-    if not cap or M.supports(client, buffer, cap) then
-      Util.keymap(m.mode, m[1], rhs, Util.merge({ buffer = buffer }, m.opts))
-    end
-  end
 end
 
 ---@param server string
