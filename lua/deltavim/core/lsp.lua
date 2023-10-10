@@ -27,9 +27,8 @@ end
 function M.autoformat(client, buffer)
   -- Don't format if client disabled it
   if
-      client.config
-      and client.config.capabilities
-      and client.config.capabilities["documentFormattingProvider"] == false
+    client.config and client.config.capabilities and client.config.capabilities["documentFormattingProvider"] == false
+    or not client.supports_method("textDocument/formatting")
   then
     return
   end
@@ -79,32 +78,32 @@ local function make_keymaps()
   end
 
   return Keymap.Collector()
-      :map({
-        -- lsp
-        { "@lsp.code_action",        lsp("code_action"),          "Code action",     mode = { "*", "x" } },
-        { "@lsp.code_action_source", code_action_source,          "Source action",   mode = { "*", "x" } },
-        { "@lsp.declaration",        lsp("declaration"),          "Declaration" },
-        { "@lsp.definitions",        lsp("definition"),           "Definitions" },
-        { "@lsp.format",             M.format,                    "Format document", mode = "*" },
-        { "@lsp.format",             M.format,                    "Format range",    mode = "x" },
-        { "@lsp.hover",              lsp("hover"),                "Hover" },
-        { "@lsp.implementations",    lsp("implementation"),       "Implementations" },
-        { "@lsp.line_diagnostics",   diagnostics(),               "Line diagnostics" },
-        { "@lsp.line_errors",        diagnostics("E"),            "Line errors" },
-        { "@lsp.line_warnings",      diagnostics("W"),            "Line warnings" },
-        { "@lsp.references",         lsp("references"),           "References" },
-        { "@lsp.rename",             lsp("rename"),               "Rename" },
-        { "@lsp.signature_help",     lsp("signature_help"),       "Signature help" },
-        { "@lsp.type_definitions",   lsp("type_definition"),      "Type definitions" },
-        -- goto
-        { "@goto.next_diagnostic",   goto_diagnostic(true),       "Next diagnostic" },
-        { "@goto.prev_diagnostic",   goto_diagnostic(false),      "Prev diagnostic" },
-        { "@goto.next_error",        goto_diagnostic(true, "E"),  "Next error" },
-        { "@goto.prev_error",        goto_diagnostic(false, "E"), "Prev error" },
-        { "@goto.next_warning",      goto_diagnostic(true, "W"),  "Next warning" },
-        { "@goto.prev_warning",      goto_diagnostic(false, "W"), "Prev warning" },
-      })
-      :collect()
+    :map({
+      -- lsp
+      { "@lsp.code_action", lsp("code_action"), "Code action", mode = { "*", "x" } },
+      { "@lsp.code_action_source", code_action_source, "Source action", mode = { "*", "x" } },
+      { "@lsp.declaration", lsp("declaration"), "Declaration" },
+      { "@lsp.definitions", lsp("definition"), "Definitions" },
+      { "@lsp.format", M.format, "Format document", mode = "*" },
+      { "@lsp.format", M.format, "Format range", mode = "x" },
+      { "@lsp.hover", lsp("hover"), "Hover" },
+      { "@lsp.implementations", lsp("implementation"), "Implementations" },
+      { "@lsp.line_diagnostics", diagnostics(), "Line diagnostics" },
+      { "@lsp.line_errors", diagnostics("E"), "Line errors" },
+      { "@lsp.line_warnings", diagnostics("W"), "Line warnings" },
+      { "@lsp.references", lsp("references"), "References" },
+      { "@lsp.rename", lsp("rename"), "Rename" },
+      { "@lsp.signature_help", lsp("signature_help"), "Signature help" },
+      { "@lsp.type_definitions", lsp("type_definition"), "Type definitions" },
+      -- goto
+      { "@goto.next_diagnostic", goto_diagnostic(true), "Next diagnostic" },
+      { "@goto.prev_diagnostic", goto_diagnostic(false), "Prev diagnostic" },
+      { "@goto.next_error", goto_diagnostic(true, "E"), "Next error" },
+      { "@goto.prev_error", goto_diagnostic(false, "E"), "Prev error" },
+      { "@goto.next_warning", goto_diagnostic(true, "W"), "Next warning" },
+      { "@goto.prev_warning", goto_diagnostic(false, "W"), "Prev warning" },
+    })
+    :collect()
 end
 
 ---@param client table
@@ -130,8 +129,8 @@ local CAPABILITY_MAP = {
 ---@return boolean
 function M.nls_supports(buffer, method)
   return CAPABILITY_MAP[method] ~= nil
-      and package.loaded["null-ls"]
-      and #require("null-ls.sources").get_available(
+    and package.loaded["null-ls"]
+    and #require("null-ls.sources").get_available(
         vim.bo[buffer].ft,
         require("null-ls").methods[CAPABILITY_MAP[method]]
       )
