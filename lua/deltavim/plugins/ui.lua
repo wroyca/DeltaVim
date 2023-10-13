@@ -127,26 +127,6 @@ return {
     config = true,
   },
 
-  -- VS Code like winbar
-  {
-    "utilyre/barbecue.nvim",
-    version = "*",
-    event = "VeryLazy",
-    opts = function()
-      local kinds = {}
-      for k, v in pairs(Config.icons.kinds) do
-        -- Remove spaces
-        kinds[k] = v:gsub(" ", "")
-      end
-      return {
-        attach_navic = false,
-        show_dirname = false,
-        show_basename = true,
-        kinds = kinds,
-      }
-    end,
-  },
-
   -- Statusline
   {
     "nvim-lualine/lualine.nvim",
@@ -466,34 +446,10 @@ return {
       if opts.config.center then
         for _, item in ipairs(opts.config.center) do
           item.icon = item.icon .. "  "
-          item.desc = item.desc .. string.rep(" ", 40 - #item.desc)
+          item.desc = item.desc .. string.rep(" ", 36 - #item.desc)
         end
       end
       require("dashboard").setup(opts)
-    end,
-  },
-
-  -- Lsp symbol navigation for lualine
-  {
-    "SmiteshP/nvim-navic",
-    lazy = true,
-    init = function()
-      if Util.has("nvim-navic") then
-        vim.g.navic_silence = true
-        Util.on_lsp_attach(function(client, buffer)
-          if client.server_capabilities.documentSymbolProvider then
-            require("nvim-navic").attach(client, buffer)
-          end
-        end)
-      end
-    end,
-    opts = function()
-      return {
-        separator = " ",
-        highlight = true,
-        depth_limit = 5,
-        icons = Config.icons.kinds,
-      }
     end,
   },
 
