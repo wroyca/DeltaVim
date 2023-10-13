@@ -26,12 +26,6 @@ return {
         mini = true,
         native_lsp = {
           enabled = true,
-          virtual_text = {
-            errors = { "italic" },
-            hints = { "italic" },
-            warnings = { "italic" },
-            information = { "italic" },
-          },
           underlines = {
             errors = { "undercurl" },
             hints = { "undercurl" },
@@ -49,14 +43,6 @@ return {
         treesitter_context = true,
         which_key = true,
       },
-      custom_highlights = function(c)
-        return {
-          LeapMatch = { fg = c.pink, bold = true },
-          LeapLabelPrimary = { fg = c.red, bold = true },
-          LeapLabelSecondary = { fg = c.mauve, bold = true },
-          LeapBackdrop = { fg = c.overlay0 },
-        }
-      end,
     },
   },
 }

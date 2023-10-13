@@ -7,6 +7,7 @@ local M = {}
 M.DEFAULT = {
   ---vim.g
   g = {
+    autoformat = true,
     mapleader = " ",
     maplocalleader = "\\",
     markdown_recommended_style = 0, -- Fix markdown indentation settings

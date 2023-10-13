@@ -78,7 +78,6 @@ return {
       end
 
       -- Setup autoformat and keymaps
-      Lsp.AUTOFORMAT = opts.autoformat
       Lsp.FORMAT_OPTS = opts.format
       Util.on_lsp_attach(function(client, buffer)
         Lsp.autoformat(client, buffer)
@@ -185,9 +184,7 @@ return {
     "folke/neoconf.nvim",
     cmd = "Neoconf",
     config = false,
-    dependencies = {
-      "nvim-lspconfig",
-    },
+    dependencies = { "nvim-lspconfig" },
   },
   { "folke/neodev.nvim", config = true },
   { "williamboman/mason-lspconfig.nvim", lazy = true, config = true },

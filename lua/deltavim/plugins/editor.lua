@@ -9,6 +9,14 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v3.x",
     cmd = "Neotree",
+    init = function()
+      if vim.fn.argc() == 1 then
+        local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
+        if stat and stat.type == "directory" then
+          require("neo-tree")
+        end
+      end
+    end,
     deactivate = function()
       vim.cmd("Neotree close")
     end,
@@ -45,6 +53,12 @@ return {
         "filesystem",
         "git_status",
       },
+      open_files_do_not_replace_types = {
+        "qf",
+        "terminal",
+        "Outline",
+        "Trouble",
+      },
       filesystem = {
         bind_to_cwd = false,
         follow_current_file = { enabled = true },
@@ -64,14 +78,6 @@ return {
         },
       },
     },
-    init = function()
-      if vim.fn.argc() == 1 then
-        local stat = vim.loop.fs_stat(vim.fn.argv(0) --[[@as any]])
-        if stat and stat.type == "directory" then
-          require("neo-tree")
-        end
-      end
-    end,
   },
 
   {
@@ -154,9 +160,9 @@ return {
     cmd = "Spectre",
     opts = { open_cmd = "noswapfile vnew" },
     keys = function()
+        -- stylua: ignore
       return Keymap.Collector()
         :map({
-          -- stylua: ignore
           { "@search.replace", function() require("spectre").open() end, "Replace in files" },
         })
         :collect_lazy()
@@ -169,6 +175,7 @@ return {
     "nvim-telescope/telescope.nvim",
     cmd = "Telescope",
     version = false, -- telescope did only one release, so use HEAD for now
+    dependencies = { "telescope-fzf-native.nvim" },
     keys = function()
       local function get_root()
         return { cwd = Util.get_root() }
@@ -277,9 +284,32 @@ return {
         defaults = {
           prompt_prefix = " ",
           selection_caret = " ",
+          -- Open files in the first window that is an actual file.
+          -- Use the current window if no other window is available.
+          get_selection_window = function()
+            local wins = vim.api.nvim_list_wins()
+            table.insert(wins, 1, vim.api.nvim_get_current_win())
+            for _, win in ipairs(wins) do
+              local buf = vim.api.nvim_win_get_buf(win)
+              if vim.bo[buf].buftype == "" then
+                return win
+              end
+            end
+            return 0
+          end,
           mappings = mappings,
         },
       }
+    end,
+  },
+  {
+    "nvim-telescope/telescope-fzf-native.nvim",
+    build = "make",
+    enabled = vim.fn.executable("make") == 1,
+    config = function()
+      Util.on_load("telescope.nvim", function()
+        require("telescope").load_extension("fzf")
+      end)
     end,
   },
 

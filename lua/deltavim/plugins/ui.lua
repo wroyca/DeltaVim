@@ -22,6 +22,9 @@ return {
       max_width = function()
         return math.floor(vim.o.columns * 0.4)
       end,
+      on_open = function(win)
+        vim.api.nvim_win_set_config(win, { zindex = 100 })
+      end,
     },
     init = function()
       -- Install notify when `noice` is disabled
@@ -148,8 +151,23 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     event = "VeryLazy",
+    init = function()
+      vim.g.lualine_laststatus = vim.o.laststatus
+      if vim.fn.argc(-1) > 0 then
+        -- Set an empty statusline till lualine loads
+        vim.o.statusline = " "
+      else
+        -- Hide the statusline on the starter page
+        vim.o.laststatus = 0
+      end
+    end,
     opts = function()
+      -- PERF: we don't need this lualine require madness 🤷
+      require("lualine_require").require = require
+
       local icons = Config.icons
+
+      vim.o.laststatus = vim.g.lualine_laststatus
 
       local function fg(name)
         return function()
@@ -163,7 +181,7 @@ return {
         options = {
           theme = "auto",
           globalstatus = true,
-          disabled_filetypes = { statusline = { "dashboard", "alpha" } },
+          disabled_filetypes = { statusline = { "dashboard", "alpha", "starter" } },
         },
         sections = {
           lualine_a = { "mode" },
@@ -327,6 +345,7 @@ return {
         bottom_search = true,
         command_palette = true,
         long_message_to_split = true,
+        inc_rename = true,
       },
     },
     keys = function()
@@ -370,86 +389,87 @@ return {
 
   -- Dashboard
   {
-    "goolord/alpha-nvim",
+    "nvimdev/dashboard-nvim",
     event = "VimEnter",
+    -- init = function()
+    --   -- Close Lazy and re-open when the dashboard is ready
+    --   if vim.o.filetype == "lazy" then
+    --     vim.cmd.close()
+    --     vim.api.nvim_create_autocmd("User", {
+    --       pattern = "DashboardLoaded",
+    --       callback = function()
+    --         require("lazy").show()
+    --       end,
+    --     })
+    --   end
+    -- end,
     opts = function()
       local logo = {
+        "                                                             ",
+        "                                                             ",
         "██████╗ ███████╗██╗  ████████╗ █████╗ ██╗   ██╗██╗███╗   ███╗",
         "██╔══██╗██╔════╝██║  ╚══██╔══╝██╔══██╗██║   ██║██║████╗ ████║",
         "██║  ██║█████╗  ██║     ██║   ███████║██║   ██║██║██╔████╔██║",
         "██║  ██║██╔══╝  ██║     ██║   ██╔══██║╚██╗ ██╔╝██║██║╚██╔╝██║",
         "██████╔╝███████╗███████╗██║   ██║  ██║ ╚████╔╝ ██║██║ ╚═╝ ██║",
         "╚═════╝ ╚══════╝╚══════╝╚═╝   ╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝     ╚═╝",
+        "                                                             ",
+        "                                                             ",
       }
       ---@class DeltaVim.Config.Alpha
+
+      ---@param key string
+      ---@param icon string
+      ---@param desc string
+      ---@param action string|function
+      local function btn(key, icon, desc, action)
+        return {
+          key = key,
+          icon = icon,
+          desc = desc,
+          action = action,
+        }
+      end
+
       return {
-        header = logo,
-        ---@type {[1]:string,[2]:string,[3]:string,[4]:string|fun()}[]
-        buttons = {
-          { "n", "󱪝 ", "New file", "<Cmd>ene<BAR>startinsert<CR>" },
-          { "f", "󰱼 ", "Find files", H.telescope_files() },
-          { "r", "󰄉 ", "Recent files", ":Telescope oldfiles <CR>" },
-          { "g", " ", "Grep", H.telescope("live_grep") },
-          { "c", " ", "Config", "<Cmd>e $MYVIMRC<CR>" },
+        theme = "doom",
+        hide = {
+          -- This is taken care of by lualine, enabling this messes up the
+          -- actual laststatus setting after loading a file
+          statusline = false,
+        },
+        config = {
+          header = logo,
           -- stylua: ignore
-          { "s", "󰦛 ", "Restore session", function() require("persistence").load() end },
-          { "l", "󰒲 ", "Lazy", "<Cmd>Lazy<CR>" },
-          { "q", " ", "Quit", "<Cmd>qa<CR>" },
+          center = {
+            btn("n", "󱪝", "New file", "ene | startinsert"),
+            btn("f", "󰱼", "Find files", H.telescope_files()),
+            btn("r", "󰄉", "Recent files", "Telescope oldfiles"),
+            btn("g", "", "Grep", H.telescope("live_grep")),
+            btn("c", "", "Config", "e $MYVIMRC"),
+            btn("s", "󰦛", "Restore session", function() require("persistence").load() end),
+            btn("l", "󰒲", "Lazy", "Lazy"),
+            btn("q", "", "Quit", "qa"),
+          },
+          footer = function()
+            local stats = require("lazy").stats()
+            local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+            return {
+              "",
+              ("⚡ Neovim loaded %s plugins in %s ms"):format(stats.count, ms),
+            }
+          end,
         },
       }
     end,
-    keys = function()
-      return Keymap.Collector()
-        :map({
-          { "@ui.alpha", "<Cmd>Alpha<CR>", "Alpha" },
-        })
-        :collect_lazy()
-    end,
-    ---@param opts DeltaVim.Config.Alpha
     config = function(_, opts)
-      local dashboard = require("alpha.themes.dashboard")
-
-      -- header
-      dashboard.section.header.val = opts.header
-      dashboard.section.header.opts.hl = "DashboardHeader"
-      -- body
-      local buttons = {}
-      for _, btn in ipairs(opts.buttons) do
-        local key, icon, desc, action = unpack(btn) --[[@as any]]
-        local o = { noremap = true, silent = true, nowait = true }
-        if type(action) == "function" then
-          o.callback = action
-          action = ""
+      if opts.config.center then
+        for _, item in ipairs(opts.config.center) do
+          item.icon = item.icon .. "  "
+          item.desc = item.desc .. string.rep(" ", 40 - #item.desc)
         end
-        local button = dashboard.button(key, icon .. " " .. desc, action, o)
-        button.opts.hl = "DashboardCenter"
-        button.opts.hl_shortcut = "DashboardShortCut"
-        table.insert(buttons, button)
       end
-      dashboard.section.buttons.val = buttons
-      dashboard.section.buttons.opts.hl = "DashboardCenter"
-      -- footer
-      dashboard.section.footer.val = ("Hello, %s!"):format(vim.env["USER"] or "NeoVim")
-      dashboard.section.footer.opts.hl = "DashboardFooter"
-      dashboard.opts.layout[1].val = 8
-
-      -- Close Lazy and re-open when the dashboard is ready
-      if vim.o.filetype == "lazy" then
-        vim.cmd.close()
-        Util.autocmd("User", function()
-          require("lazy").show()
-        end, { pattern = "AlphaReady" })
-      end
-
-      require("alpha").setup(dashboard.opts)
-
-      -- Show plugins summary
-      Util.autocmd("User", function()
-        local stats = require("lazy").stats()
-        local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
-        dashboard.section.footer.val = ("⚡ Neovim loaded %s plugins in %s ms"):format(stats.count, ms)
-        pcall(vim.cmd.AlphaRedraw)
-      end, { pattern = "LazyVimStarted" })
+      require("dashboard").setup(opts)
     end,
   },
 

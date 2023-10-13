@@ -3,7 +3,6 @@ local Util = require("deltavim.util")
 
 local M = {}
 
-M.AUTOFORMAT = true
 M.FORMAT_OPTS = {}
 
 ---@param buffer? integer
@@ -19,7 +18,7 @@ function M.format(buffer)
 end
 
 function M.toggle_autoformat()
-  M.AUTOFORMAT = not M.AUTOFORMAT
+  vim.g.autoformat = not vim.g.autoformat
 end
 
 ---@param client table
@@ -35,7 +34,7 @@ function M.autoformat(client, buffer)
 
   vim.b[buffer]["deltavim.config.autocmds.trim_whitespace"] = false
   Util.autocmd("BufWritePre", function()
-    if M.AUTOFORMAT then
+    if vim.g.autoformat then
       M.format(buffer)
     end
   end, { buffer = buffer })

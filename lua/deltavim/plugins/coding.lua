@@ -66,6 +66,8 @@ return {
       "saadparwaiz1/cmp_luasnip",
     },
     opts = function()
+      vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
+
       local cmp = require("cmp")
       local mapping = cmp.mapping
       local defaults = require("cmp.config.default")()
@@ -115,7 +117,7 @@ return {
         :collect_lhs_table()
 
       ---@class DeltaVim.Config.Cmp
-      return {
+      local opts = {
         completion = {
           completeopt = "menu,menuone,noinsert",
         },
@@ -128,8 +130,9 @@ return {
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "luasnip" },
-          { name = "buffer", keyword_length = 3 },
-          { name = "path", keyword_length = 3 },
+          { name = "path" },
+        }, {
+          { name = "buffer" },
         }),
         formatting = {
           source_names = {
@@ -144,7 +147,7 @@ return {
             path = "[PATH]",
             tmux = "[TMUX]",
             treesitter = "[TS]",
-            vsnip = "[SNIPPET]",
+            vsnip = "[SNIP]",
           },
           ---@param name string
           default_source_name = function(name)
@@ -168,6 +171,7 @@ return {
           },
         },
       }
+      return opts
     end,
     ---@param opts DeltaVim.Config.Cmp
     config = function(_, opts)
@@ -238,17 +242,19 @@ return {
           { "@surround.update_n_lines", "update_n_lines" },
         })
         :collect_rhs_table()
-      return {
-        mappings = mappings,
-        n_lines = 500,
-        search_method = "cover",
-      }
+      return { mappings = mappings }
     end,
   },
 
   -- Comments
   {
+    "JoosepAlviste/nvim-ts-context-commentstring",
+    lazy = true,
+    opts = { enable_autocmd = false },
+  },
+  {
     "echasnovski/mini.comment",
+    event = "VeryLazy",
     keys = function()
       return Keymap.Collector()
         :map({
@@ -269,14 +275,13 @@ return {
       return {
         options = {
           custom_commentstring = function()
-            return require("ts_context_commentstring.internal").calculate_commentstring({}) or vim.bo.commentstring
+            return require("ts_context_commentstring.internal").calculate_commentstring() or vim.bo.commentstring
           end,
         },
         mappings = mappings,
       }
     end,
   },
-  { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true },
 
   -- Better text-objects
   {
@@ -299,6 +304,7 @@ return {
             a = { "@block.outer", "@conditional.outer", "@loop.outer" },
             i = { "@block.inner", "@conditional.inner", "@loop.inner" },
           }),
+          t = { "<([%p%w]-)%f[^<%w][^<>]->.-</%1>", "^<.->().*()</[^/]->$" },
         },
         n_lines = 500,
         search_method = "cover_or_next",
