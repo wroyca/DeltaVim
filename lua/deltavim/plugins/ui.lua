@@ -152,7 +152,7 @@ return {
       local function fg(name)
         return function()
           ---@type {foreground?:number}?
-          local hl = vim.api.nvim_get_hl_by_name(name, true)
+          local hl = vim.api.nvim_get_hl(0, { name })
           return hl and hl.foreground and { fg = string.format("#%06x", hl.foreground) }
         end
       end
