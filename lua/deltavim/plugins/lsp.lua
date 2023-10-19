@@ -50,10 +50,13 @@ return {
       servers = {
         lua_ls = {
           settings = {
+            ---@diagnostic disable-next-line: missing-fields
             Lua = {
+              ---@diagnostic disable-next-line: missing-fields
               workspace = {
                 checkThirdParty = false,
               },
+              ---@diagnostic disable-next-line: missing-fields
               completion = {
                 callSnippet = "Replace",
               },

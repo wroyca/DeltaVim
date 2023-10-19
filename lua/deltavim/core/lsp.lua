@@ -105,9 +105,8 @@ local function make_keymaps()
     :collect()
 end
 
----@param client table
 ---@param buffer integer
-function M.keymaps(client, buffer)
+function M.keymaps(_, buffer)
   KEYMAPS = KEYMAPS or make_keymaps()
   for _, m in ipairs(KEYMAPS) do
     Util.keymap(m.mode, m[1], m[2], Util.merge({ buffer = buffer }, m.opts))

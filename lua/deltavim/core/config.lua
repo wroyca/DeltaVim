@@ -93,8 +93,8 @@ function M.lazy_notify(timeout)
   local orig = vim.notify
   vim.notify = temp
 
-  local timer = vim.loop.new_timer() --[[@as uv.uv_timer_t]]
-  local check = vim.loop.new_check() --[[@as uv.uv_check_t]]
+  local timer = vim.loop.new_timer() --[[@as uv_timer_t]]
+  local check = vim.loop.new_check() --[[@as uv_check_t]]
 
   local replay = function()
     timer:stop()

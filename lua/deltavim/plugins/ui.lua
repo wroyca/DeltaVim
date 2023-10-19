@@ -191,18 +191,22 @@ return {
           lualine_x = {
             {
               function()
+                ---@diagnostic disable-next-line: undefined-field
                 return require("noice").api.status.command.get()
               end,
               cond = function()
+                ---@diagnostic disable-next-line: undefined-field
                 return package.loaded["noice"] and require("noice").api.status.command.has()
               end,
               color = fg("Statement"),
             },
             {
               function()
+                ---@diagnostic disable-next-line: undefined-field
                 return require("noice").api.status.mode.get()
               end,
               cond = function()
+                ---@diagnostic disable-next-line: undefined-field
                 return package.loaded["noice"] and require("noice").api.status.mode.has()
               end,
               color = fg("Constant"),

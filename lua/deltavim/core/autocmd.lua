@@ -23,8 +23,6 @@ local Util = require("deltavim.util")
 
 ---@alias DeltaVim.Autocmds DeltaVim.Autocmd[]|DeltaVim.Autocmd.Options
 
----@alias DeltaVim.Autocmd DeltaVim.CustomAutocmd|DeltaVim.PresetAutocmd
-
 ---@class DeltaVim.CustomAutocmd: DeltaVim.BaseAutocmd
 ---Events
 ---@field [1] string|string[]
