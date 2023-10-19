@@ -304,8 +304,8 @@ return {
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    build = "make",
-    enabled = vim.fn.executable("make") == 1,
+    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
+    enabled = vim.fn.executable("cmake") == 1 and (vim.fn.executable("gcc") or vim.fn.executable("clang")),
     config = function()
       Util.on_load("telescope.nvim", function()
         require("telescope").load_extension("fzf")
