@@ -337,7 +337,10 @@ return {
       end
 
       local function redirect()
-        require("noice").redirect(vim.fn.getcmdline())
+        local cmdline = vim.fn.getcmdline()
+        if cmdline ~= nil then
+          require("noice").redirect(cmdline)
+        end
       end
 
       ---@param delta number
