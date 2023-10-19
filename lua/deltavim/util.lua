@@ -166,7 +166,10 @@ end
 ---@param cb fun(client:table,buffer:integer)
 function M.on_lsp_attach(cb)
   M.autocmd("LspAttach", function(ev)
-    cb(vim.lsp.get_client_by_id(ev.data.client_id), ev.buf)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client ~= nil then
+      cb(client, ev.buf)
+    end
   end)
 end
 
