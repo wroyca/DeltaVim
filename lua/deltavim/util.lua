@@ -10,7 +10,7 @@ function M.get_lsp_root(path)
   end
   ---@type string[]
   local roots = {}
-  for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+  for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
     local workspace = client.config.workspace_folders
     local paths = workspace
         and vim.tbl_map(function(ws)
