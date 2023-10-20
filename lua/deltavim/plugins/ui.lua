@@ -152,7 +152,7 @@ return {
       local function fg(name)
         return function()
           ---@type {foreground?:number}?
-          local hl = vim.api.nvim_get_hl_by_name(name, true)
+          local hl = vim.api.nvim_get_hl(0, { name = name })
           return hl and hl.foreground and { fg = string.format("#%06x", hl.foreground) }
         end
       end
@@ -191,18 +191,22 @@ return {
           lualine_x = {
             {
               function()
+                ---@diagnostic disable-next-line: undefined-field
                 return require("noice").api.status.command.get()
               end,
               cond = function()
+                ---@diagnostic disable-next-line: undefined-field
                 return package.loaded["noice"] and require("noice").api.status.command.has()
               end,
               color = fg("Statement"),
             },
             {
               function()
+                ---@diagnostic disable-next-line: undefined-field
                 return require("noice").api.status.mode.get()
               end,
               cond = function()
+                ---@diagnostic disable-next-line: undefined-field
                 return package.loaded["noice"] and require("noice").api.status.mode.has()
               end,
               color = fg("Constant"),
@@ -337,7 +341,10 @@ return {
       end
 
       local function redirect()
-        require("noice").redirect(vim.fn.getcmdline())
+        local cmdline = vim.fn.getcmdline()
+        if cmdline ~= nil then
+          require("noice").redirect(cmdline)
+        end
       end
 
       ---@param delta number

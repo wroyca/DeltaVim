@@ -1,5 +1,6 @@
 local Util = require("deltavim.util")
 
+---@class DeltaVim.Config
 local M = {}
 
 ---@class DeltaVim.Config

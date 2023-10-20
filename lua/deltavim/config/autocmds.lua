@@ -107,7 +107,7 @@ function M.setup()
 
   ---@type DeltaVim.Autocmd.With
   local function rulers(src)
-    ---@type DeltaVim.Autocmd[]
+    ---@class DeltaVim.Autocmd[]
     local autocmds = {}
     for ft, offs in pairs(src.args.ft) do
       ---@type string[]

@@ -10,7 +10,7 @@ function M.get_lsp_root(path)
   end
   ---@type string[]
   local roots = {}
-  for _, client in pairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
+  for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
     local workspace = client.config.workspace_folders
     local paths = workspace
         and vim.tbl_map(function(ws)
@@ -166,7 +166,10 @@ end
 ---@param cb fun(client:table,buffer:integer)
 function M.on_lsp_attach(cb)
   M.autocmd("LspAttach", function(ev)
-    cb(vim.lsp.get_client_by_id(ev.data.client_id), ev.buf)
+    local client = vim.lsp.get_client_by_id(ev.data.client_id)
+    if client ~= nil then
+      cb(client, ev.buf)
+    end
   end)
 end
 
@@ -203,6 +206,25 @@ function M.load_config(mod)
     return ret
   elseif ret ~= nil then
     Log.error("Module '%s' should return a function/table/boolean", mod)
+  end
+end
+
+---@param name string
+---@param fn fun(name:string)
+function M.on_load(name, fn)
+  local Config = require("lazy.core.config")
+  if Config.plugins[name] and Config.plugins[name]._.loaded then
+    fn(name)
+  else
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "LazyLoad",
+      callback = function(event)
+        if event.data == name then
+          fn(name)
+          return true
+        end
+      end,
+    })
   end
 end
 
