@@ -2,6 +2,8 @@ local Log = require("deltavim.core.log")
 
 local M = {}
 
+local get_lsp_clients = vim.lsp.get_clients or vim.lsp.get_active_clients
+
 ---@param path? string
 ---@return string?
 function M.get_lsp_root(path)
@@ -10,7 +12,7 @@ function M.get_lsp_root(path)
   end
   ---@type string[]
   local roots = {}
-  for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+  for _, client in pairs(get_lsp_clients({ bufnr = 0 })) do
     local workspace = client.config.workspace_folders
     local paths = workspace
         and vim.tbl_map(function(ws)
