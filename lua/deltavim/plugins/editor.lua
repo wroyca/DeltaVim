@@ -455,7 +455,7 @@ return {
                 { "@git.reset_buffer", gs("reset_buffer"), "Reset buffer" },
                 { "@git.reset_hunk", gs("reset_hunk"), "Reset hunk" },
                 { "@git.stage_buffer", gs("stage_buffer"), "Stage buffer" },
-                { "@git.stage_hunk", gs("stage_hunk"), "State hunk" },
+                { "@git.stage_hunk", gs("stage_hunk"), "State hunk", mode = { "n", "x" } },
                 { "@git.undo_stage_hunk", gs("undo_stage_hunk"), "Undo stage hunk" },
                 -- goto
                 { "@goto.next_hunk", gs("next_hunk"), "Next hunk" },
