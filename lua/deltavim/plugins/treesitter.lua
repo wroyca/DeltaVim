@@ -5,7 +5,7 @@ return {
     "nvim-treesitter/nvim-treesitter",
     version = false, -- Last release is way too old and doesn't work on Windows
     build = ":TSUpdate",
-    cmd = { "TSUpdate", "TSUpdateSync" },
+    cmd = { "TSUpdate", "TSUpdateSync", "TSInstall" },
     event = { "VeryLazy", "BufReadPost", "BufNewFile" },
     dependencies = { "nvim-treesitter-textobjects" },
     keys = function()
@@ -28,10 +28,12 @@ return {
         ensure_installed = {
           "bash",
           "c",
+          "diff",
           "html",
           "javascript",
           "jsdoc",
           "json",
+          "jsonc",
           "lua",
           "luadoc",
           "luap",
@@ -40,6 +42,7 @@ return {
           "python",
           "query",
           "regex",
+          "toml",
           "tsx",
           "typescript",
           "vim",
@@ -86,15 +89,15 @@ return {
   -- Show context of the current function
   -- {
   --   "nvim-treesitter/nvim-treesitter-context",
-  --   event = "LazyFile",
+  --   event = { "BufReadPost", "BufNewFile" },
   --   enabled = true,
-  --   opts = { mode = "cursor" },
+  --   opts = { mode = "cursor", max_lines = 3 },
   -- },
 
   -- Automatically add closing tags for HTML and JSX
   {
     "windwp/nvim-ts-autotag",
-    event = "InsertEnter",
+    event = { "BufReadPost", "BufNewFile" },
     opts = {},
   },
 }

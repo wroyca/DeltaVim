@@ -38,15 +38,7 @@ return {
         :collect_lazy()
     end,
     opts = {
-      options = {
-        "buffers",
-        "curdir",
-        "globals",
-        "help",
-        "skiprtp",
-        "tabpages",
-        "winsize",
-      },
+      options = vim.opt.sessionoptions:get(),
     },
   },
 

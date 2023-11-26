@@ -42,7 +42,16 @@ M.DEFAULT = {
     pumheight = 10, -- Maximum number of entries in a popup
     relativenumber = true, -- Relative line numbers
     scrolloff = 4, -- Lines of context
-    sessionoptions = { "buffers", "curdir", "tabpages", "winsize" },
+    sessionoptions = {
+      "buffers",
+      "curdir",
+      "folds",
+      "globals",
+      "help",
+      "skiprtp",
+      "tabpages",
+      "winsize",
+    },
     shiftround = true, -- Round indent
     shiftwidth = 2, -- Size of an indent
     showmode = false, -- Dont show mode since we have a statusline

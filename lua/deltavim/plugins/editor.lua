@@ -157,6 +157,7 @@ return {
   -- Search/replace in multiple files
   {
     "nvim-pack/nvim-spectre",
+    build = false,
     cmd = "Spectre",
     opts = { open_cmd = "noswapfile vnew" },
     keys = function()
@@ -167,7 +168,6 @@ return {
         })
         :collect_lazy()
     end,
-    config = true,
   },
 
   -- fuzzy finder
@@ -304,8 +304,8 @@ return {
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
-    build = "cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build",
-    enabled = vim.fn.executable("cmake") == 1 and (vim.fn.executable("gcc") or vim.fn.executable("clang")),
+    build = "make",
+    enabled = vim.fn.executable("cmake") == 1,
     config = function()
       Util.on_load("telescope.nvim", function()
         require("telescope").load_extension("fzf")
@@ -419,7 +419,7 @@ return {
   -- Git signs
   {
     "lewis6991/gitsigns.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     opts = function()
       ---@param name string
       ---@param args? any
@@ -524,17 +524,11 @@ return {
       local tb = H.trouble
 
       local goto_opts = { skip_groups = true, jump = true }
-      ---@param next boolean
-      local function goto_qf(next)
-        local f = next and "next" or "previous"
-        local f2 = next and "cnext" or "cprev"
+      ---@param name string
+      ---@param opts? table
+      local function api(name, opts)
         return function()
-          local trouble = require("trouble")
-          if trouble.is_open() then
-            trouble[f](goto_opts)
-          else
-            vim.cmd(f2)
-          end
+          require("trouble")[name](opts)
         end
       end
 
@@ -547,8 +541,8 @@ return {
 
       return Keymap.Collector()
         :map({
-          { "@goto.prev_quickfix", goto_qf(false), "Prev quickfix" },
-          { "@goto.next_quickfix", goto_qf(true), "Next quickfix" },
+          { "@goto.prev_quickfix", api("next", goto_opts), "Prev quickfix" },
+          { "@goto.next_quickfix", api("previous", goto_opts), "Next quickfix" },
           { "@quickfix.definitions", tb("lsp_definitions"), "Definitions" },
           { "@quickfix.document_diagnostics", diagnostics(true), "Document diagnostics" },
           { "@quickfix.workspace_diagnostics", diagnostics(false), "Workspace diagnostics" },

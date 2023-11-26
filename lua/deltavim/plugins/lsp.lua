@@ -6,7 +6,7 @@ return {
   -- Lspconfig
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       "neoconf.nvim",
       "neodev.nvim",
@@ -197,7 +197,7 @@ return {
   -- Formatters/linters
   {
     "nvimtools/none-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     keys = function()
       return Keymap.Collector()
         :map({

@@ -92,15 +92,9 @@ return {
           always_show_bufferline = false,
           diagnostics_indicator = function(_, _, diag)
             local icons = Config.icons.diagnostics
-            ---@type string[]
-            local s = {}
-            if diag.error then
-              table.insert(s, icons.Error .. diag.error)
-            end
-            if diag.warning then
-              table.insert(s, icons.Warn .. diag.warning)
-            end
-            return table.concat(s, " ")
+            local ret = (diag.error and icons.Error .. diag.error .. " " or "")
+              .. (diag.warning and icons.Warn .. diag.warning or "")
+            return vim.trim(ret)
           end,
           offsets = {
             {
@@ -112,6 +106,17 @@ return {
           },
         },
       }
+    end,
+    config = function(_, opts)
+      require("bufferline").setup(opts)
+      -- Fix bufferline when restoring a session
+      vim.api.nvim_create_autocmd("BufAdd", {
+        callback = function()
+          vim.schedule(function()
+            pcall(nvim_bufferline)
+          end)
+        end,
+      })
     end,
   },
   {
@@ -142,7 +147,7 @@ return {
       end
     end,
     opts = function()
-      -- PERF: we don't need this lualine require madness 🤷
+      -- PERF: we don't need this lualine require madness
       require("lualine_require").require = require
 
       local icons = Config.icons
@@ -278,7 +283,7 @@ return {
   {
     "echasnovski/mini.indentscope",
     version = false, -- wait till new 0.7.0 release to put it back on semver
-    event = { "BufReadPre", "BufNewFile" },
+    event = { "BufReadPost", "BufNewFile" },
     opts = {
       symbol = "│",
       options = { try_as_border = true },
