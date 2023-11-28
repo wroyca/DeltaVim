@@ -242,7 +242,11 @@ return {
           { "@surround.update_n_lines", "update_n_lines" },
         })
         :collect_rhs_table()
-      return { mappings = mappings }
+      return {
+        mappings = mappings,
+        n_lines = 500,
+        search_method = "cover",
+      }
     end,
   },
 
