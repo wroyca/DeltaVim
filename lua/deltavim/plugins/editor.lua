@@ -541,8 +541,8 @@ return {
 
       return Keymap.Collector()
         :map({
-          { "@goto.prev_quickfix", api("next", goto_opts), "Prev quickfix" },
-          { "@goto.next_quickfix", api("previous", goto_opts), "Next quickfix" },
+          { "@goto.prev_quickfix", api("previous", goto_opts), "Prev quickfix" },
+          { "@goto.next_quickfix", api("next", goto_opts), "Next quickfix" },
           { "@quickfix.definitions", tb("lsp_definitions"), "Definitions" },
           { "@quickfix.document_diagnostics", diagnostics(true), "Document diagnostics" },
           { "@quickfix.workspace_diagnostics", diagnostics(false), "Workspace diagnostics" },
