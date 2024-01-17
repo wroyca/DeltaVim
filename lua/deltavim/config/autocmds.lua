@@ -109,20 +109,12 @@ function M.setup()
   local function rulers(src)
     ---@class DeltaVim.Autocmd[]
     local autocmds = {}
-    for ft, offs in pairs(src.args.ft) do
-      ---@type string[]
-      local cc = {}
-      if type(offs) == "table" then
-        for _, v in ipairs(offs) do
-          table.insert(cc, tostring(v))
-        end
-      else
-        table.insert(cc, tostring(offs))
-      end
+    for ft, off in pairs(src.args.ft) do
       table.insert(autocmds, {
         "FileType",
         function()
-          vim.opt_local.colorcolumn = cc
+          vim.opt_local.colorcolumn = { off }
+          vim.opt_local.textwidth = off
         end,
         pattern = ft,
       })
