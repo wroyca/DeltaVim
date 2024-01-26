@@ -29,7 +29,7 @@ M.DEFAULT = {
       diff = "╱",
       eob = " ",
     },
-    formatoptions = "jcroqlnt", -- tcqj
+    formatoptions = "jcroqlnvt", -- tcqj
     grepformat = "%f:%l:%c:%m",
     grepprg = "rg ,--vimgrep",
     ignorecase = true, -- Ignore case
