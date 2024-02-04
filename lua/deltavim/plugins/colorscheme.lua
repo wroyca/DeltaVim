@@ -49,6 +49,15 @@ return {
         treesitter_context = true,
         which_key = true,
       },
+      custom_highlights = function(c)
+        return {
+          LeapBackdrop = { fg = c.overlay0 },
+          LeapMatch = { fg = c.lavender, bold = true },
+          LeapLabelPrimary = { fg = c.red, bold = true },
+          LeapLabelSecondary = { fg = c.peach, bold = true },
+          LspInlayHint = { fg = c.surface1, italic = true },
+        }
+      end,
     },
   },
 }
