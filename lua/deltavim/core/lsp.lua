@@ -144,12 +144,12 @@ end
 
 ---Disable a lsp server before setup.
 ---@param server string
----@param cond fun(config:table,root:string): boolean
+---@param cond fun(root:string,config:table): boolean
 function M.disable(server, cond)
   local util = require("lspconfig.util")
-  local def = M.lsp_get_config(server)
+  local def = M.get_config(server) --[[@as table]]
   def.document_config.on_new_config = util.add_hook_before(def.document_config.on_new_config, function(config, root)
-    if cond(config, root) then
+    if cond(root, config) then
       config.enabled = false
     end
   end)
