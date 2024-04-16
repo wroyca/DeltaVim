@@ -94,5 +94,5 @@ return {
       },
     }
   end,
-  config = function(...) require "astronvim.plugins.configs.nvim-treesitter"(...) end,
+  config = function(...) require "pde.plugins.configs.nvim-treesitter"(...) end,
 }

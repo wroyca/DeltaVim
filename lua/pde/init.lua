@@ -2,7 +2,7 @@ local M = {}
 
 M.did_init = false
 
-M.config = require "astronvim.config"
+M.config = require "pde.config"
 
 local function lazy_notify()
   -- Based on notification lazy loading in LazyVim
@@ -48,7 +48,7 @@ function M.init()
   lazy_notify()
 
   -- force setup during initialization
-  local plugin = require("lazy.core.config").spec.plugins.AstroNvim
+  local plugin = require("lazy.core.config").spec.plugins.pde
 
   local opts = require("lazy.core.plugin").values(plugin, "opts")
   if opts.pin_plugins == nil then opts.pin_plugins = plugin.version ~= nil end

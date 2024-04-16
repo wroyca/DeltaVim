@@ -40,5 +40,5 @@ return {
       vim.wo[win].spell = false
     end
   end,
-  config = function(...) require "astronvim.plugins.configs.notify"(...) end,
+  config = function(...) require "pde.plugins.configs.notify"(...) end,
 }

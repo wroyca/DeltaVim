@@ -25,7 +25,7 @@ return {
       },
       menu = {},
     },
-    config = function(...) require "astronvim.plugins.configs.lspkind"(...) end,
+    config = function(...) require "pde.plugins.configs.lspkind"(...) end,
   },
   {
     "hrsh7th/nvim-cmp",

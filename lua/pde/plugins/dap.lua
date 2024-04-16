@@ -35,13 +35,13 @@ return {
         },
       },
       opts = { floating = { border = "rounded" } },
-      config = function(...) require "astronvim.plugins.configs.nvim-dap-ui"(...) end,
+      config = function(...) require "pde.plugins.configs.nvim-dap-ui"(...) end,
     },
     {
       "rcarriga/cmp-dap",
       lazy = true,
       dependencies = { "hrsh7th/nvim-cmp" },
-      config = function(...) require "astronvim.plugins.configs.cmp-dap"(...) end,
+      config = function(...) require "pde.plugins.configs.cmp-dap"(...) end,
     },
     {
       "AstroNvim/astrocore",

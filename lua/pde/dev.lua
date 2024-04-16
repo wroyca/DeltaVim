@@ -9,7 +9,7 @@ function M.generate_snapshot(write)
   local astronvim = assert(astrocore.get_plugin "AstroNvim")
   if write ~= false then write = astronvim.dev end
   local file
-  local prev_snapshot = require "astronvim.lazy_snapshot"
+  local prev_snapshot = require "pde.lazy_snapshot"
   for _, plugin in ipairs(prev_snapshot) do
     prev_snapshot[plugin[1]] = plugin
   end

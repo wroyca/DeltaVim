@@ -26,5 +26,5 @@ return {
     vim.list_extend(cmds, { "LspInfo", "LspLog", "LspStart" }) -- add normal `nvim-lspconfig` commands
   end,
   event = "User AstroFile",
-  config = function(...) require "astronvim.plugins.configs.lspconfig"(...) end,
+  config = function(...) require "pde.plugins.configs.lspconfig"(...) end,
 }

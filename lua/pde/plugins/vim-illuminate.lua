@@ -24,5 +24,5 @@ return {
       should_enable = function(bufnr) return require("astrocore.buffer").is_valid(bufnr) end,
     }
   end,
-  config = function(...) require "astronvim.plugins.configs.vim-illuminate"(...) end,
+  config = function(...) require "pde.plugins.configs.vim-illuminate"(...) end,
 }

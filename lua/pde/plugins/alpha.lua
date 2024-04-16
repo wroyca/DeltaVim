@@ -145,5 +145,5 @@ return {
     dashboard.config.opts.noautocmd = true
     return dashboard
   end,
-  config = function(...) require "astronvim.plugins.configs.alpha"(...) end,
+  config = function(...) require "pde.plugins.configs.alpha"(...) end,
 }

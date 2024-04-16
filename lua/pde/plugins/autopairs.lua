@@ -25,5 +25,5 @@ return {
       highlight_grey = "LineNr",
     },
   },
-  config = function(...) require "astronvim.plugins.configs.nvim-autopairs"(...) end,
+  config = function(...) require "pde.plugins.configs.nvim-autopairs"(...) end,
 }

@@ -1,10 +1,10 @@
-local astronvim = require "astronvim"
+local astronvim = require "pde"
 astronvim.init()
 
 return {
   { "folke/lazy.nvim", dir = vim.env.LAZY },
-  { "AstroNvim/AstroNvim", priority = 10000, lazy = false },
-  { import = "astronvim.lazy_snapshot", cond = astronvim.config.pin_plugins },
+  { "pde", priority = 10000, lazy = false },
+  { import = "pde.lazy_snapshot", cond = astronvim.config.pin_plugins },
   {
     "AstroNvim/astrocore",
     dependencies = { "AstroNvim/astroui" },

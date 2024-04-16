@@ -122,5 +122,5 @@ return {
       },
     }
   end,
-  config = function(...) require "astronvim.plugins.configs.heirline"(...) end,
+  config = function(...) require "pde.plugins.configs.heirline"(...) end,
 }

@@ -122,7 +122,7 @@ return {
         sources = sources,
       }
     end,
-    config = function(...) require "astronvim.plugins.configs.cmp"(...) end,
+    config = function(...) require "pde.plugins.configs.cmp"(...) end,
   },
   {
     "L3MON4D3/LuaSnip",
@@ -173,6 +173,6 @@ return {
       delete_check_events = "TextChanged",
       region_check_events = "CursorMoved",
     },
-    config = function(...) require "astronvim.plugins.configs.luasnip"(...) end,
+    config = function(...) require "pde.plugins.configs.luasnip"(...) end,
   },
 }
