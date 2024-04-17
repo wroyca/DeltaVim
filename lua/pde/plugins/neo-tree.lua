@@ -16,7 +16,9 @@ return {
             event = "BufEnter",
             desc = "Open Explorer on startup with directory",
             callback = function()
-              if package.loaded["neo-tree"] or not require("astrocore").is_available "neo-tree.nvim" then
+              if
+                package.loaded["neo-tree"] or not require("astrocore").is_available "neo-tree.nvim"
+              then
                 return true
               end
 

@@ -1,6 +1,7 @@
 local function has_words_before()
   local line, col = (unpack or table.unpack)(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+  return col ~= 0
+    and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
 end
 
 return {
@@ -11,10 +12,14 @@ return {
         "AstroNvim/astrocore",
         opts = function(_, opts)
           local maps = opts.mappings
-          maps.n["<Leader>uc"] =
-            { function() require("astrocore.toggles").buffer_cmp() end, desc = "Toggle autocompletion (buffer)" }
-          maps.n["<Leader>uC"] =
-            { function() require("astrocore.toggles").cmp() end, desc = "Toggle autocompletion (global)" }
+          maps.n["<Leader>uc"] = {
+            function() require("astrocore.toggles").buffer_cmp() end,
+            desc = "Toggle autocompletion (buffer)",
+          }
+          maps.n["<Leader>uC"] = {
+            function() require("astrocore.toggles").cmp() end,
+            desc = "Toggle autocompletion (global)",
+          }
         end,
       },
       { "hrsh7th/cmp-buffer", lazy = true },
@@ -38,7 +43,9 @@ return {
                     deprecatedSupport = true,
                     commitCharactersSupport = true,
                     tagSupport = { valueSet = { 1 } },
-                    resolveSupport = { properties = { "documentation", "detail", "additionalTextEdits" } },
+                    resolveSupport = {
+                      properties = { "documentation", "detail", "additionalTextEdits" },
+                    },
                   },
                 },
               },

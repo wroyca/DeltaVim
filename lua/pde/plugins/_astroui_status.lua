@@ -122,7 +122,9 @@ return {
         local color = assert(status_opts.fallback_colors)
         local get_hlgroup = astroui.get_hlgroup
         local lualine_mode = require("astroui.status.hl").lualine_mode
-        local function resolve_lualine(orig, ...) return (not orig or orig == "NONE") and lualine_mode(...) or orig end
+        local function resolve_lualine(orig, ...)
+          return (not orig or orig == "NONE") and lualine_mode(...) or orig
+        end
 
         local Normal = get_hlgroup("Normal", { fg = color.fg, bg = color.bg })
         local Comment = get_hlgroup("Comment", { fg = color.bright_grey, bg = color.bg })
@@ -133,28 +135,51 @@ return {
         local TabLineSel = get_hlgroup("TabLineSel", { fg = color.fg, bg = color.none })
         local WinBar = get_hlgroup("WinBar", { fg = color.bright_grey, bg = color.bg })
         local WinBarNC = get_hlgroup("WinBarNC", { fg = color.grey, bg = color.bg })
-        local Conditional = get_hlgroup("Conditional", { fg = color.bright_purple, bg = color.dark_bg })
+        local Conditional =
+          get_hlgroup("Conditional", { fg = color.bright_purple, bg = color.dark_bg })
         local String = get_hlgroup("String", { fg = color.green, bg = color.dark_bg })
         local TypeDef = get_hlgroup("TypeDef", { fg = color.yellow, bg = color.dark_bg })
-        local NvimEnvironmentName = get_hlgroup("NvimEnvironmentName", { fg = color.yellow, bg = color.dark_bg })
+        local NvimEnvironmentName =
+          get_hlgroup("NvimEnvironmentName", { fg = color.yellow, bg = color.dark_bg })
         local GitSignsAdd = get_hlgroup("GitSignsAdd", { fg = color.green, bg = color.dark_bg })
-        local GitSignsChange = get_hlgroup("GitSignsChange", { fg = color.orange, bg = color.dark_bg })
-        local GitSignsDelete = get_hlgroup("GitSignsDelete", { fg = color.bright_red, bg = color.dark_bg })
-        local DiagnosticError = get_hlgroup("DiagnosticError", { fg = color.bright_red, bg = color.dark_bg })
-        local DiagnosticWarn = get_hlgroup("DiagnosticWarn", { fg = color.orange, bg = color.dark_bg })
-        local DiagnosticInfo = get_hlgroup("DiagnosticInfo", { fg = color.white, bg = color.dark_bg })
-        local DiagnosticHint = get_hlgroup("DiagnosticHint", { fg = color.bright_yellow, bg = color.dark_bg })
-        local HeirlineInactive =
-          resolve_lualine(get_hlgroup("HeirlineInactive", { bg = nil }).bg, "inactive", color.dark_grey)
-        local HeirlineNormal = resolve_lualine(get_hlgroup("HeirlineNormal", { bg = nil }).bg, "normal", color.blue)
-        local HeirlineInsert = resolve_lualine(get_hlgroup("HeirlineInsert", { bg = nil }).bg, "insert", color.green)
-        local HeirlineVisual = resolve_lualine(get_hlgroup("HeirlineVisual", { bg = nil }).bg, "visual", color.purple)
-        local HeirlineReplace =
-          resolve_lualine(get_hlgroup("HeirlineReplace", { bg = nil }).bg, "replace", color.bright_red)
-        local HeirlineCommand =
-          resolve_lualine(get_hlgroup("HeirlineCommand", { bg = nil }).bg, "command", color.bright_yellow)
-        local HeirlineTerminal =
-          resolve_lualine(get_hlgroup("HeirlineTerminal", { bg = nil }).bg, "insert", HeirlineInsert)
+        local GitSignsChange =
+          get_hlgroup("GitSignsChange", { fg = color.orange, bg = color.dark_bg })
+        local GitSignsDelete =
+          get_hlgroup("GitSignsDelete", { fg = color.bright_red, bg = color.dark_bg })
+        local DiagnosticError =
+          get_hlgroup("DiagnosticError", { fg = color.bright_red, bg = color.dark_bg })
+        local DiagnosticWarn =
+          get_hlgroup("DiagnosticWarn", { fg = color.orange, bg = color.dark_bg })
+        local DiagnosticInfo =
+          get_hlgroup("DiagnosticInfo", { fg = color.white, bg = color.dark_bg })
+        local DiagnosticHint =
+          get_hlgroup("DiagnosticHint", { fg = color.bright_yellow, bg = color.dark_bg })
+        local HeirlineInactive = resolve_lualine(
+          get_hlgroup("HeirlineInactive", { bg = nil }).bg,
+          "inactive",
+          color.dark_grey
+        )
+        local HeirlineNormal =
+          resolve_lualine(get_hlgroup("HeirlineNormal", { bg = nil }).bg, "normal", color.blue)
+        local HeirlineInsert =
+          resolve_lualine(get_hlgroup("HeirlineInsert", { bg = nil }).bg, "insert", color.green)
+        local HeirlineVisual =
+          resolve_lualine(get_hlgroup("HeirlineVisual", { bg = nil }).bg, "visual", color.purple)
+        local HeirlineReplace = resolve_lualine(
+          get_hlgroup("HeirlineReplace", { bg = nil }).bg,
+          "replace",
+          color.bright_red
+        )
+        local HeirlineCommand = resolve_lualine(
+          get_hlgroup("HeirlineCommand", { bg = nil }).bg,
+          "command",
+          color.bright_yellow
+        )
+        local HeirlineTerminal = resolve_lualine(
+          get_hlgroup("HeirlineTerminal", { bg = nil }).bg,
+          "insert",
+          HeirlineInsert
+        )
 
         local colors = {
           close_fg = Error.fg,

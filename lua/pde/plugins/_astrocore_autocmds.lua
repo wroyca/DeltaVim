@@ -3,7 +3,10 @@ return {
   ---@type AstroCoreOpts
   opts = {
     commands = {
-      AstroReload = { function() require("astrocore").reload() end, desc = "Reload AstroNvim (Experimental)" },
+      AstroReload = {
+        function() require("astrocore").reload() end,
+        desc = "Reload AstroNvim (Experimental)",
+      },
     },
     autocmds = {
       auto_quit = {
@@ -42,7 +45,9 @@ return {
           event = { "BufWinLeave", "BufWritePost", "WinLeave" },
           desc = "Save view with mkview for real files",
           callback = function(event)
-            if vim.b[event.buf].view_activated then vim.cmd.mkview { mods = { emsg_silent = true } } end
+            if vim.b[event.buf].view_activated then
+              vim.cmd.mkview { mods = { emsg_silent = true } }
+            end
           end,
         },
         {
@@ -53,7 +58,12 @@ return {
               local filetype = vim.bo[event.buf].filetype
               local buftype = vim.bo[event.buf].buftype
               local ignore_filetypes = { "gitcommit", "gitrebase", "svg", "hgcommit" }
-              if buftype == "" and filetype and filetype ~= "" and not vim.tbl_contains(ignore_filetypes, filetype) then
+              if
+                buftype == ""
+                and filetype
+                and filetype ~= ""
+                and not vim.tbl_contains(ignore_filetypes, filetype)
+              then
                 vim.b[event.buf].view_activated = true
                 vim.cmd.loadview { mods = { emsg_silent = true } }
               end
@@ -70,7 +80,9 @@ return {
             if not vim.t.bufs then vim.t.bufs = {} end
             if not buf_utils.is_valid(args.buf) then return end
             if args.buf ~= buf_utils.current_buf then
-              buf_utils.last_buf = buf_utils.is_valid(buf_utils.current_buf) and buf_utils.current_buf or nil
+              buf_utils.last_buf = buf_utils.is_valid(buf_utils.current_buf)
+                  and buf_utils.current_buf
+                or nil
               buf_utils.current_buf = args.buf
             end
             local bufs = vim.t.bufs
@@ -119,7 +131,10 @@ return {
           desc = "Automatically create parent directories if they don't exist when saving a file",
           callback = function(args)
             if not require("astrocore.buffer").is_valid(args.buf) then return end
-            vim.fn.mkdir(vim.fn.fnamemodify(vim.loop.fs_realpath(args.match) or args.match, ":p:h"), "p")
+            vim.fn.mkdir(
+              vim.fn.fnamemodify(vim.loop.fs_realpath(args.match) or args.match, ":p:h"),
+              "p"
+            )
           end,
         },
       },
@@ -146,17 +161,24 @@ return {
               if not vim.api.nvim_buf_is_valid(args.buf) then return end
               local astro = require "astrocore"
               local current_file = vim.api.nvim_buf_get_name(args.buf)
-              if vim.g.vscode or not (current_file == "" or vim.bo[args.buf].buftype == "nofile") then
+              if
+                vim.g.vscode or not (current_file == "" or vim.bo[args.buf].buftype == "nofile")
+              then
                 astro.event "File"
                 local folder = vim.fn.fnamemodify(current_file, ":p:h")
                 if vim.fn.has "win32" == 1 then folder = ('"%s"'):format(folder) end
-                if astro.cmd({ "git", "-C", folder, "rev-parse" }, false) or astro.file_worktree() then
+                if
+                  astro.cmd({ "git", "-C", folder, "rev-parse" }, false) or astro.file_worktree()
+                then
                   astro.event "GitFile"
                   pcall(vim.api.nvim_del_augroup_by_name, "file_user_events")
                 end
                 vim.schedule(function()
                   if require("astrocore.buffer").is_valid(args.buf) then
-                    vim.api.nvim_exec_autocmds(args.event, { buffer = args.buf, data = args.data, modeline = false })
+                    vim.api.nvim_exec_autocmds(
+                      args.event,
+                      { buffer = args.buf, data = args.data, modeline = false }
+                    )
                   end
                 end)
               end
@@ -241,7 +263,8 @@ return {
       auto_hlsearch = {
         function(char)
           if vim.fn.mode() == "n" then
-            local new_hlsearch = vim.tbl_contains({ "<CR>", "n", "N", "*", "#", "?", "/" }, vim.fn.keytrans(char))
+            local new_hlsearch =
+              vim.tbl_contains({ "<CR>", "n", "N", "*", "#", "?", "/" }, vim.fn.keytrans(char))
             if vim.opt.hlsearch:get() ~= new_hlsearch then vim.opt.hlsearch = new_hlsearch end
           end
         end,

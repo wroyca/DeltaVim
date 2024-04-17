@@ -3,7 +3,8 @@ return {
   ---@param opts AstroLSPOpts
   opts = function(_, opts)
     local maps = require("astrocore").empty_map_table()
-    maps.v["<Leader>l"] = { desc = require("astroui").get_icon("ActiveLSP", 1, true) .. "Language Tools" }
+    maps.v["<Leader>l"] =
+      { desc = require("astroui").get_icon("ActiveLSP", 1, true) .. "Language Tools" }
 
     maps.n["<Leader>la"] = {
       function() vim.lsp.buf.code_action() end,
@@ -12,10 +13,16 @@ return {
     }
     maps.v["<Leader>la"] = maps.n["<Leader>la"]
 
-    maps.n["<Leader>ll"] =
-      { function() vim.lsp.codelens.refresh() end, desc = "LSP CodeLens refresh", cond = "textDocument/codeLens" }
-    maps.n["<Leader>lL"] =
-      { function() vim.lsp.codelens.run() end, desc = "LSP CodeLens run", cond = "textDocument/codeLens" }
+    maps.n["<Leader>ll"] = {
+      function() vim.lsp.codelens.refresh() end,
+      desc = "LSP CodeLens refresh",
+      cond = "textDocument/codeLens",
+    }
+    maps.n["<Leader>lL"] = {
+      function() vim.lsp.codelens.run() end,
+      desc = "LSP CodeLens run",
+      cond = "textDocument/codeLens",
+    }
     maps.n["<Leader>uL"] = {
       function() require("astrolsp.toggles").codelens() end,
       desc = "Toggle CodeLens",
@@ -56,7 +63,11 @@ return {
       cond = formatting_enabled,
     }
 
-    maps.n["K"] = { function() vim.lsp.buf.hover() end, desc = "Hover symbol details", cond = "textDocument/hover" }
+    maps.n["K"] = {
+      function() vim.lsp.buf.hover() end,
+      desc = "Hover symbol details",
+      cond = "textDocument/hover",
+    }
 
     maps.n["gI"] = {
       function() vim.lsp.buf.implementation() end,
@@ -75,14 +86,23 @@ return {
       desc = "References of current symbol",
       cond = "textDocument/references",
     }
-    maps.n["<Leader>lR"] =
-      { function() vim.lsp.buf.references() end, desc = "Search references", cond = "textDocument/references" }
+    maps.n["<Leader>lR"] = {
+      function() vim.lsp.buf.references() end,
+      desc = "Search references",
+      cond = "textDocument/references",
+    }
 
-    maps.n["<Leader>lr"] =
-      { function() vim.lsp.buf.rename() end, desc = "Rename current symbol", cond = "textDocument/rename" }
+    maps.n["<Leader>lr"] = {
+      function() vim.lsp.buf.rename() end,
+      desc = "Rename current symbol",
+      cond = "textDocument/rename",
+    }
 
-    maps.n["<Leader>lh"] =
-      { function() vim.lsp.buf.signature_help() end, desc = "Signature help", cond = "textDocument/signatureHelp" }
+    maps.n["<Leader>lh"] = {
+      function() vim.lsp.buf.signature_help() end,
+      desc = "Signature help",
+      cond = "textDocument/signatureHelp",
+    }
     maps.n["gK"] = maps.n["<Leader>lh"]
 
     maps.n["gy"] = {
@@ -91,13 +111,18 @@ return {
       cond = "textDocument/typeDefinition",
     }
 
-    maps.n["<Leader>lG"] =
-      { function() vim.lsp.buf.workspace_symbol() end, desc = "Search workspace symbols", cond = "workspace/symbol" }
+    maps.n["<Leader>lG"] = {
+      function() vim.lsp.buf.workspace_symbol() end,
+      desc = "Search workspace symbols",
+      cond = "workspace/symbol",
+    }
 
     maps.n["<Leader>uY"] = {
       function() require("astrolsp.toggles").buffer_semantic_tokens() end,
       desc = "Toggle LSP semantic highlight (buffer)",
-      cond = function(client) return client.server_capabilities.semanticTokensProvider and vim.lsp.semantic_tokens end,
+      cond = function(client)
+        return client.server_capabilities.semanticTokensProvider and vim.lsp.semantic_tokens
+      end,
     }
     opts.mappings = require("astrocore").extend_tbl(opts.mappings, maps)
   end,

@@ -10,7 +10,12 @@ return {
     },
   },
   event = "User AstroFile",
-  cmd = { "ColorizerToggle", "ColorizerAttachToBuffer", "ColorizerDetachFromBuffer", "ColorizerReloadAllBuffers" },
+  cmd = {
+    "ColorizerToggle",
+    "ColorizerAttachToBuffer",
+    "ColorizerDetachFromBuffer",
+    "ColorizerReloadAllBuffers",
+  },
   opts = { user_default_options = { names = false } },
   config = function(...) require "pde.plugins.configs.colorizer"(...) end,
 }

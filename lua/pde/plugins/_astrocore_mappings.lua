@@ -48,12 +48,15 @@ return {
     maps.n["<Leader>pi"] = { function() require("lazy").install() end, desc = "Plugins Install" }
     maps.n["<Leader>ps"] = { function() require("lazy").home() end, desc = "Plugins Status" }
     maps.n["<Leader>pS"] = { function() require("lazy").sync() end, desc = "Plugins Sync" }
-    maps.n["<Leader>pu"] = { function() require("lazy").check() end, desc = "Plugins Check Updates" }
+    maps.n["<Leader>pu"] =
+      { function() require("lazy").check() end, desc = "Plugins Check Updates" }
     maps.n["<Leader>pU"] = { function() require("lazy").update() end, desc = "Plugins Update" }
 
     -- Manage Buffers
-    maps.n["<Leader>c"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" }
-    maps.n["<Leader>C"] = { function() require("astrocore.buffer").close(0, true) end, desc = "Force close buffer" }
+    maps.n["<Leader>c"] =
+      { function() require("astrocore.buffer").close() end, desc = "Close buffer" }
+    maps.n["<Leader>C"] =
+      { function() require("astrocore.buffer").close(0, true) end, desc = "Force close buffer" }
     maps.n["]b"] = {
       function() require("astrocore.buffer").nav(vim.v.count1) end,
       desc = "Next buffer",
@@ -72,23 +75,37 @@ return {
     }
 
     maps.n["<Leader>b"] = vim.tbl_get(sections, "b")
-    maps.n["<Leader>bc"] =
-      { function() require("astrocore.buffer").close_all(true) end, desc = "Close all buffers except current" }
-    maps.n["<Leader>bC"] = { function() require("astrocore.buffer").close_all() end, desc = "Close all buffers" }
-    maps.n["<Leader>bl"] =
-      { function() require("astrocore.buffer").close_left() end, desc = "Close all buffers to the left" }
-    maps.n["<Leader>bp"] = { function() require("astrocore.buffer").prev() end, desc = "Previous buffer" }
-    maps.n["<Leader>br"] =
-      { function() require("astrocore.buffer").close_right() end, desc = "Close all buffers to the right" }
+    maps.n["<Leader>bc"] = {
+      function() require("astrocore.buffer").close_all(true) end,
+      desc = "Close all buffers except current",
+    }
+    maps.n["<Leader>bC"] =
+      { function() require("astrocore.buffer").close_all() end, desc = "Close all buffers" }
+    maps.n["<Leader>bl"] = {
+      function() require("astrocore.buffer").close_left() end,
+      desc = "Close all buffers to the left",
+    }
+    maps.n["<Leader>bp"] =
+      { function() require("astrocore.buffer").prev() end, desc = "Previous buffer" }
+    maps.n["<Leader>br"] = {
+      function() require("astrocore.buffer").close_right() end,
+      desc = "Close all buffers to the right",
+    }
     maps.n["<Leader>bs"] = vim.tbl_get(sections, "bs")
-    maps.n["<Leader>bse"] = { function() require("astrocore.buffer").sort "extension" end, desc = "By extension" }
-    maps.n["<Leader>bsr"] = { function() require("astrocore.buffer").sort "unique_path" end, desc = "By relative path" }
-    maps.n["<Leader>bsp"] = { function() require("astrocore.buffer").sort "full_path" end, desc = "By full path" }
-    maps.n["<Leader>bsi"] = { function() require("astrocore.buffer").sort "bufnr" end, desc = "By buffer number" }
-    maps.n["<Leader>bsm"] = { function() require("astrocore.buffer").sort "modified" end, desc = "By modification" }
+    maps.n["<Leader>bse"] =
+      { function() require("astrocore.buffer").sort "extension" end, desc = "By extension" }
+    maps.n["<Leader>bsr"] =
+      { function() require("astrocore.buffer").sort "unique_path" end, desc = "By relative path" }
+    maps.n["<Leader>bsp"] =
+      { function() require("astrocore.buffer").sort "full_path" end, desc = "By full path" }
+    maps.n["<Leader>bsi"] =
+      { function() require("astrocore.buffer").sort "bufnr" end, desc = "By buffer number" }
+    maps.n["<Leader>bsm"] =
+      { function() require("astrocore.buffer").sort "modified" end, desc = "By modification" }
 
     maps.n["<Leader>l"] = vim.tbl_get(sections, "l")
-    maps.n["<Leader>ld"] = { function() vim.diagnostic.open_float() end, desc = "Hover diagnostics" }
+    maps.n["<Leader>ld"] =
+      { function() vim.diagnostic.open_float() end, desc = "Hover diagnostics" }
     maps.n["[d"] = { function() vim.diagnostic.goto_prev() end, desc = "Previous diagnostic" }
     maps.n["]d"] = { function() vim.diagnostic.goto_next() end, desc = "Next diagnostic" }
     maps.n["gl"] = { function() vim.diagnostic.open_float() end, desc = "Hover diagnostics" }
@@ -119,24 +136,40 @@ return {
 
     maps.n["<Leader>u"] = vim.tbl_get(sections, "u")
     -- Custom menu for modification of the user experience
-    maps.n["<Leader>uA"] = { function() require("astrocore.toggles").autochdir() end, desc = "Toggle rooter autochdir" }
-    maps.n["<Leader>ub"] = { function() require("astrocore.toggles").background() end, desc = "Toggle background" }
-    maps.n["<Leader>ud"] = { function() require("astrocore.toggles").diagnostics() end, desc = "Toggle diagnostics" }
-    maps.n["<Leader>ug"] = { function() require("astrocore.toggles").signcolumn() end, desc = "Toggle signcolumn" }
-    maps.n["<Leader>u>"] = { function() require("astrocore.toggles").foldcolumn() end, desc = "Toggle foldcolumn" }
-    maps.n["<Leader>ui"] = { function() require("astrocore.toggles").indent() end, desc = "Change indent setting" }
-    maps.n["<Leader>ul"] = { function() require("astrocore.toggles").statusline() end, desc = "Toggle statusline" }
-    maps.n["<Leader>un"] = { function() require("astrocore.toggles").number() end, desc = "Change line numbering" }
+    maps.n["<Leader>uA"] =
+      { function() require("astrocore.toggles").autochdir() end, desc = "Toggle rooter autochdir" }
+    maps.n["<Leader>ub"] =
+      { function() require("astrocore.toggles").background() end, desc = "Toggle background" }
+    maps.n["<Leader>ud"] =
+      { function() require("astrocore.toggles").diagnostics() end, desc = "Toggle diagnostics" }
+    maps.n["<Leader>ug"] =
+      { function() require("astrocore.toggles").signcolumn() end, desc = "Toggle signcolumn" }
+    maps.n["<Leader>u>"] =
+      { function() require("astrocore.toggles").foldcolumn() end, desc = "Toggle foldcolumn" }
+    maps.n["<Leader>ui"] =
+      { function() require("astrocore.toggles").indent() end, desc = "Change indent setting" }
+    maps.n["<Leader>ul"] =
+      { function() require("astrocore.toggles").statusline() end, desc = "Toggle statusline" }
+    maps.n["<Leader>un"] =
+      { function() require("astrocore.toggles").number() end, desc = "Change line numbering" }
     maps.n["<Leader>uN"] =
       { function() require("astrocore.toggles").notifications() end, desc = "Toggle Notifications" }
-    maps.n["<Leader>up"] = { function() require("astrocore.toggles").paste() end, desc = "Toggle paste mode" }
-    maps.n["<Leader>us"] = { function() require("astrocore.toggles").spell() end, desc = "Toggle spellcheck" }
-    maps.n["<Leader>uS"] = { function() require("astrocore.toggles").conceal() end, desc = "Toggle conceal" }
-    maps.n["<Leader>ut"] = { function() require("astrocore.toggles").tabline() end, desc = "Toggle tabline" }
-    maps.n["<Leader>uu"] = { function() require("astrocore.toggles").url_match() end, desc = "Toggle URL highlight" }
-    maps.n["<Leader>uw"] = { function() require("astrocore.toggles").wrap() end, desc = "Toggle wrap" }
-    maps.n["<Leader>uy"] =
-      { function() require("astrocore.toggles").buffer_syntax() end, desc = "Toggle syntax highlight" }
+    maps.n["<Leader>up"] =
+      { function() require("astrocore.toggles").paste() end, desc = "Toggle paste mode" }
+    maps.n["<Leader>us"] =
+      { function() require("astrocore.toggles").spell() end, desc = "Toggle spellcheck" }
+    maps.n["<Leader>uS"] =
+      { function() require("astrocore.toggles").conceal() end, desc = "Toggle conceal" }
+    maps.n["<Leader>ut"] =
+      { function() require("astrocore.toggles").tabline() end, desc = "Toggle tabline" }
+    maps.n["<Leader>uu"] =
+      { function() require("astrocore.toggles").url_match() end, desc = "Toggle URL highlight" }
+    maps.n["<Leader>uw"] =
+      { function() require("astrocore.toggles").wrap() end, desc = "Toggle wrap" }
+    maps.n["<Leader>uy"] = {
+      function() require("astrocore.toggles").buffer_syntax() end,
+      desc = "Toggle syntax highlight",
+    }
 
     opts.mappings = maps
   end,

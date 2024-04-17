@@ -14,9 +14,14 @@ return {
       config = { lua_ls = { settings = { Lua = { workspace = { checkThirdParty = false } } } } },
       flags = {},
       formatting = { format_on_save = { enabled = true }, disabled = {} },
-      handlers = { function(server, server_opts) require("lspconfig")[server].setup(server_opts) end },
+      handlers = {
+        function(server, server_opts) require("lspconfig")[server].setup(server_opts) end,
+      },
       lsp_handlers = {
-        ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded", silent = true }),
+        ["textDocument/hover"] = vim.lsp.with(
+          vim.lsp.handlers.hover,
+          { border = "rounded", silent = true }
+        ),
         ["textDocument/signatureHelp"] = vim.lsp.with(
           vim.lsp.handlers.signature_help,
           { border = "rounded", silent = true }

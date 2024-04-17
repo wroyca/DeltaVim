@@ -23,7 +23,9 @@ return {
           event = { "InsertLeave", "BufEnter" },
           desc = "Refresh codelens (buffer)",
           callback = function(args)
-            if require("astrolsp").config.features.codelens then vim.lsp.codelens.refresh { bufnr = args.buf } end
+            if require("astrolsp").config.features.codelens then
+              vim.lsp.codelens.refresh { bufnr = args.buf }
+            end
           end,
         },
       },
@@ -38,7 +40,9 @@ return {
             local buffer_autoformat = vim.b[bufnr].autoformat
             if buffer_autoformat == nil then buffer_autoformat = autoformat.enabled end
             if buffer_autoformat and ((not autoformat.filter) or autoformat.filter(bufnr)) then
-              vim.lsp.buf.format(vim.tbl_deep_extend("force", astrolsp.format_opts, { bufnr = bufnr }))
+              vim.lsp.buf.format(
+                vim.tbl_deep_extend("force", astrolsp.format_opts, { bufnr = bufnr })
+              )
             end
           end,
         },

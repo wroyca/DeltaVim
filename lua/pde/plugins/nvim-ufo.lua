@@ -11,14 +11,17 @@ return {
         maps.n["zM"] = { function() require("ufo").closeAllFolds() end, desc = "Close all folds" }
         maps.n["zr"] = { function() require("ufo").openFoldsExceptKinds() end, desc = "Fold less" }
         maps.n["zm"] = { function() require("ufo").closeFoldsWith() end, desc = "Fold more" }
-        maps.n["zp"] = { function() require("ufo").peekFoldedLinesUnderCursor() end, desc = "Peek fold" }
+        maps.n["zp"] =
+          { function() require("ufo").peekFoldedLinesUnderCursor() end, desc = "Peek fold" }
       end,
     },
     {
       "AstroNvim/astrolsp",
       optional = true,
       opts = {
-        capabilities = { textDocument = { foldingRange = { dynamicRegistration = false, lineFoldingOnly = true } } },
+        capabilities = {
+          textDocument = { foldingRange = { dynamicRegistration = false, lineFoldingOnly = true } },
+        },
       },
     },
   },

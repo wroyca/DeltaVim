@@ -41,8 +41,16 @@ function M.check()
       type = "warn",
       msg = "Used for mappings to pull up disk usage analyzer (Optional)",
     },
-    { cmd = { "btm" }, type = "warn", msg = "Used for mappings to pull up system monitor (Optional)" },
-    { cmd = { "python", "python3" }, type = "warn", msg = "Used for mappings to pull up python REPL (Optional)" },
+    {
+      cmd = { "btm" },
+      type = "warn",
+      msg = "Used for mappings to pull up system monitor (Optional)",
+    },
+    {
+      cmd = { "python", "python3" },
+      type = "warn",
+      msg = "Used for mappings to pull up python REPL (Optional)",
+    },
   }
 
   for _, program in ipairs(programs) do

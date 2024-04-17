@@ -42,7 +42,11 @@ return {
           },
         },
         rooter = {
-          detector = { "lsp", { ".git", "_darcs", ".hg", ".bzr", ".svn" }, { "lua", "MakeFile", "package.json" } },
+          detector = {
+            "lsp",
+            { ".git", "_darcs", ".hg", ".bzr", ".svn" },
+            { "lua", "MakeFile", "package.json" },
+          },
           ignore = {
             servers = {},
             dirs = {},

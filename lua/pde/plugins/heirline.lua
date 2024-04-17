@@ -8,7 +8,9 @@ return {
         local maps = opts.mappings
         maps.n["<Leader>bb"] = {
           function()
-            require("astroui.status.heirline").buffer_picker(function(bufnr) vim.api.nvim_win_set_buf(0, bufnr) end)
+            require("astroui.status.heirline").buffer_picker(
+              function(bufnr) vim.api.nvim_win_set_buf(0, bufnr) end
+            )
           end,
           desc = "Select buffer from tabline",
         }
@@ -102,10 +104,15 @@ return {
           condition = function() return #vim.api.nvim_list_tabpages() >= 2 end, -- only show tabs if there are more than one
           status.heirline.make_tablist { -- component for each tab
             provider = status.provider.tabnr(),
-            hl = function(self) return status.hl.get_attributes(status.heirline.tab_type(self, "tab"), true) end,
+            hl = function(self)
+              return status.hl.get_attributes(status.heirline.tab_type(self, "tab"), true)
+            end,
           },
           { -- close button for current tab
-            provider = status.provider.close_button { kind = "TabClose", padding = { left = 1, right = 1 } },
+            provider = status.provider.close_button {
+              kind = "TabClose",
+              padding = { left = 1, right = 1 },
+            },
             hl = status.hl.get_attributes("tab_close", true),
             on_click = {
               callback = function() require("astrocore.buffer").close_tab() end,

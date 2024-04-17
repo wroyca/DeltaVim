@@ -5,8 +5,11 @@ return {
       "AstroNvim/astrolsp",
       opts = function(_, opts)
         local maps = opts.mappings
-        maps.n["<Leader>li"] =
-          { "<Cmd>LspInfo<CR>", desc = "LSP information", cond = function() return vim.fn.exists ":LspInfo" > 0 end }
+        maps.n["<Leader>li"] = {
+          "<Cmd>LspInfo<CR>",
+          desc = "LSP information",
+          cond = function() return vim.fn.exists ":LspInfo" > 0 end,
+        }
       end,
     },
     { "folke/neoconf.nvim", lazy = true, opts = {} },

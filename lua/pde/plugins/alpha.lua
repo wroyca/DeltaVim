@@ -33,9 +33,15 @@ return {
                   cmdheight = vim.opt.cmdheight:get(),
                 }
                 vim.opt.showtabline, vim.opt.laststatus, vim.opt.cmdheight = 0, 0, 0
-              elseif vim.g.before_alpha and event.event == "BufWinEnter" and vim.bo[event.buf].buftype ~= "nofile" then
+              elseif
+                vim.g.before_alpha
+                and event.event == "BufWinEnter"
+                and vim.bo[event.buf].buftype ~= "nofile"
+              then
                 vim.opt.laststatus, vim.opt.showtabline, vim.opt.cmdheight =
-                  vim.g.before_alpha.laststatus, vim.g.before_alpha.showtabline, vim.g.before_alpha.cmdheight
+                  vim.g.before_alpha.laststatus,
+                  vim.g.before_alpha.showtabline,
+                  vim.g.before_alpha.cmdheight
                 vim.g.before_alpha = nil
               end
             end,
@@ -52,7 +58,11 @@ return {
                 vim.fn.argc() > 0 -- don't start when opening a file
                 or #lines > 1 -- don't open if current buffer has more than 1 line
                 or (#lines == 1 and lines[1]:len() > 0) -- don't open the current buffer if it has anything on the first line
-                or #vim.tbl_filter(function(bufnr) return vim.bo[bufnr].buflisted end, vim.api.nvim_list_bufs()) > 1 -- don't open if any listed buffers
+                or #vim.tbl_filter(
+                    function(bufnr) return vim.bo[bufnr].buflisted end,
+                    vim.api.nvim_list_bufs()
+                  )
+                  > 1 -- don't open if any listed buffers
                 or not vim.o.modifiable -- don't open if not modifiable
               then
                 should_skip = true
@@ -93,7 +103,11 @@ return {
         type = "button",
         val = desc,
         on_press = function()
-          vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(rhs or lhs .. "<Ignore>", true, false, true), "t", false)
+          vim.api.nvim_feedkeys(
+            vim.api.nvim_replace_termcodes(rhs or lhs .. "<Ignore>", true, false, true),
+            "t",
+            false
+          )
         end,
         opts = {
           position = "center",
@@ -103,7 +117,8 @@ return {
           align_shortcut = "right",
           hl = "DashboardCenter",
           hl_shortcut = "DashboardShortcut",
-          keymap = rhs and { "n", lhs, rhs, require("astrocore").extend_tbl(default_map_opts, map_opts) },
+          keymap = rhs
+            and { "n", lhs, rhs, require("astrocore").extend_tbl(default_map_opts, map_opts) },
         },
       }
     end

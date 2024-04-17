@@ -33,7 +33,9 @@ return {
         vim.api.nvim_win_close(win, true)
         return
       end
-      if astrocore.is_available "nvim-treesitter" then require("lazy").load { plugins = { "nvim-treesitter" } } end
+      if astrocore.is_available "nvim-treesitter" then
+        require("lazy").load { plugins = { "nvim-treesitter" } }
+      end
       vim.wo[win].conceallevel = 3
       local buf = vim.api.nvim_win_get_buf(win)
       if not pcall(vim.treesitter.start, buf, "markdown") then vim.bo[buf].syntax = "markdown" end

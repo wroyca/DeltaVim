@@ -1,7 +1,11 @@
 return {
   "numToStr/Comment.nvim",
   dependencies = {
-    { "JoosepAlviste/nvim-ts-context-commentstring", lazy = true, opts = { enable_autocmd = false } },
+    {
+      "JoosepAlviste/nvim-ts-context-commentstring",
+      lazy = true,
+      opts = { enable_autocmd = false },
+    },
     {
       "AstroNvim/astrocore",
       opts = function(_, opts)
@@ -26,8 +30,16 @@ return {
         { vim.tbl_get(opts, "toggler", "block") or "gbc", desc = "Comment toggle current block" },
         { vim.tbl_get(opts, "opleader", "line") or "gc", desc = "Comment toggle linewise" },
         { vim.tbl_get(opts, "opleader", "block") or "gb", desc = "Comment toggle blockwise" },
-        { vim.tbl_get(opts, "opleader", "line") or "gc", mode = "x", desc = "Comment toggle linewise (visual)" },
-        { vim.tbl_get(opts, "opleader", "block") or "gb", mode = "x", desc = "Comment toggle blockwise (visual)" },
+        {
+          vim.tbl_get(opts, "opleader", "line") or "gc",
+          mode = "x",
+          desc = "Comment toggle linewise (visual)",
+        },
+        {
+          vim.tbl_get(opts, "opleader", "block") or "gb",
+          mode = "x",
+          desc = "Comment toggle blockwise (visual)",
+        },
       })
     end
     if vim.tbl_get(opts, "mappings", "extra") ~= false then
@@ -39,7 +51,8 @@ return {
     end
   end,
   opts = function(_, opts)
-    local commentstring_avail, commentstring = pcall(require, "ts_context_commentstring.integrations.comment_nvim")
+    local commentstring_avail, commentstring =
+      pcall(require, "ts_context_commentstring.integrations.comment_nvim")
     if commentstring_avail then opts.pre_hook = commentstring.create_pre_hook() end
   end,
 }

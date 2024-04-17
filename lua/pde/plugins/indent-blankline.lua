@@ -1,7 +1,14 @@
 return {
   "lukas-reineke/indent-blankline.nvim",
   event = "User AstroFile",
-  cmd = { "IBLEnable", "IBLDisable", "IBLToggle", "IBLEnableScope", "IBLDisableScope", "IBLToggleScope" },
+  cmd = {
+    "IBLEnable",
+    "IBLDisable",
+    "IBLToggle",
+    "IBLEnableScope",
+    "IBLDisableScope",
+    "IBLToggleScope",
+  },
   dependencies = {
     {
       "AstroNvim/astrocore",
