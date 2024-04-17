@@ -4,7 +4,6 @@ return {
   opts = {
     commands = {
       AstroReload = { function() require("astrocore").reload() end, desc = "Reload AstroNvim (Experimental)" },
-      AstroUpdate = { function() require("astrocore").update_packages() end, desc = "Update Lazy and Mason" },
     },
     autocmds = {
       auto_quit = {

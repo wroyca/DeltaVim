@@ -50,7 +50,6 @@ return {
     maps.n["<Leader>pS"] = { function() require("lazy").sync() end, desc = "Plugins Sync" }
     maps.n["<Leader>pu"] = { function() require("lazy").check() end, desc = "Plugins Check Updates" }
     maps.n["<Leader>pU"] = { function() require("lazy").update() end, desc = "Plugins Update" }
-    maps.n["<Leader>pa"] = { function() require("astrocore").update_packages() end, desc = "Update Lazy and Mason" }
 
     -- Manage Buffers
     maps.n["<Leader>c"] = { function() require("astrocore.buffer").close() end, desc = "Close buffer" }
