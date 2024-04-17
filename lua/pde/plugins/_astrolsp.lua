@@ -22,7 +22,7 @@ return {
           { border = "rounded", silent = true }
         ),
       },
-      servers = {},
+      servers = { "lua_ls" },
       on_attach = nil,
     } --[[@as AstroLSPOpts]])
   end,
