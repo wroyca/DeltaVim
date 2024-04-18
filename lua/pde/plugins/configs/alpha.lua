@@ -9,13 +9,7 @@ return function(_, opts)
       local stats = require("lazy").stats()
       local ms = math.floor(stats.startuptime * 100 + 0.5) / 100
       opts.section.footer.val = {
-        "AstroNvim loaded "
-          .. stats.loaded
-          .. "/"
-          .. stats.count
-          .. " plugins  in "
-          .. ms
-          .. "ms",
+        "NeoVim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins  in " .. ms .. "ms",
       }
       pcall(vim.cmd.AlphaRedraw)
     end,

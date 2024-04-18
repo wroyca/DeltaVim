@@ -5,79 +5,63 @@ return {
     {
       "AstroNvim/astrocore",
       opts = function(_, opts)
-        local maps = opts.mappings
-        maps.n["<Leader>h"] = {
+        local map = opts.mappings
+        map.n["<Leader>h"] = {
           function()
             local wins = vim.api.nvim_tabpage_list_wins(0)
             if #wins > 1 and vim.bo[vim.api.nvim_win_get_buf(wins[1])].filetype == "neo-tree" then
-              vim.fn.win_gotoid(wins[2]) -- go to non-neo-tree window to toggle alpha
+              vim.fn.win_gotoid(wins[2]) -- go to non-neo-tree window to toggle Alpha
             end
             require("alpha").start(false)
           end,
           desc = "Home Screen",
         }
-        opts.autocmds.alpha_settings = {
-          {
-            event = { "User", "BufWinEnter" },
-            desc = "Disable status, tablines, and cmdheight for alpha",
-            callback = function(event)
-              if
-                (
-                  (event.event == "User" and event.file == "AlphaReady")
-                  or (event.event == "BufWinEnter" and vim.bo[event.buf].filetype == "alpha")
-                ) and not vim.g.before_alpha
-              then
-                vim.g.before_alpha = {
-                  showtabline = vim.opt.showtabline:get(),
-                  laststatus = vim.opt.laststatus:get(),
-                  cmdheight = vim.opt.cmdheight:get(),
-                }
-                vim.opt.showtabline, vim.opt.laststatus, vim.opt.cmdheight = 0, 0, 0
-              elseif
-                vim.g.before_alpha
-                and event.event == "BufWinEnter"
-                and vim.bo[event.buf].buftype ~= "nofile"
-              then
-                vim.opt.laststatus, vim.opt.showtabline, vim.opt.cmdheight =
-                  vim.g.before_alpha.laststatus,
-                  vim.g.before_alpha.showtabline,
-                  vim.g.before_alpha.cmdheight
-                vim.g.before_alpha = nil
-              end
-            end,
-          },
-        }
-        opts.autocmds.alpha_autostart = {
+
+        local au = opts.autocmds
+        au.alpha_autostart = {
           {
             event = "VimEnter",
-            desc = "Start Alpha when vim is opened with no arguments",
+            desc = "Start Alpha when vim is opened without arguments",
+            once = true,
             callback = function()
-              local should_skip
-              local lines = vim.api.nvim_buf_get_lines(0, 0, 2, false)
-              if
-                vim.fn.argc() > 0 -- don't start when opening a file
-                or #lines > 1 -- don't open if current buffer has more than 1 line
-                or (#lines == 1 and lines[1]:len() > 0) -- don't open the current buffer if it has anything on the first line
-                or #vim.tbl_filter(
-                    function(bufnr) return vim.bo[bufnr].buflisted end,
-                    vim.api.nvim_list_bufs()
-                  )
-                  > 1 -- don't open if any listed buffers
-                or not vim.o.modifiable -- don't open if not modifiable
-              then
-                should_skip = true
-              else
-                for _, arg in pairs(vim.v.argv) do
-                  if arg == "-b" or arg == "-c" or vim.startswith(arg, "+") or arg == "-S" then
-                    should_skip = true
-                    break
-                  end
-                end
-              end
-              if should_skip then return end
+              if vim.fn.argc() > 0 then return end
               require("lazy").load { plugins = { "alpha-nvim" } }
               require("alpha").start(true)
               vim.schedule(function() vim.cmd.doautocmd "FileType" end)
+            end,
+          },
+        }
+        au.alpha_settings = {
+          {
+            event = { "User", "BufWinEnter" },
+            desc = "Disable status, tablines, and cmdheight for Alpha",
+            callback = function(ev)
+              local before = vim.g.before_alpha
+              local opt = vim.opt
+
+              if
+                not before
+                and (
+                  (ev.event == "User" and ev.file == "AlphaReady")
+                  or (ev.event == "BufWinEnter" and vim.bo[ev.buf].filetype == "alpha")
+                )
+              then
+                ---@diagnostic disable: undefined-field
+                vim.g.before_alpha = {
+                  showtabline = opt.showtabline:get(),
+                  laststatus = opt.laststatus:get(),
+                  cmdheight = opt.cmdheight:get(),
+                }
+                opt.showtabline, opt.laststatus, opt.cmdheight = 0, 0, 0
+              elseif
+                before
+                and ev.event == "BufWinEnter"
+                and vim.bo[ev.buf].buftype ~= "nofile"
+              then
+                opt.laststatus, opt.showtabline, opt.cmdheight =
+                  before.laststatus, before.showtabline, before.cmdheight
+                vim.g.before_alpha = nil
+              end
             end,
           },
         }
@@ -86,79 +70,84 @@ return {
   },
   opts = function()
     local dashboard = require "alpha.themes.dashboard"
+    local icon = require("astroui").get_icon
 
-    dashboard.leader = "LDR"
-
-    --- @param shortcut string Shortcut string of a button mapping
-    --- @param desc string Real text description of the mapping
-    --- @param rhs string? Righthand side of mapping if defining a new mapping (_optional_)
-    --- @param map_opts table? `keymap.set` options used during keymap creating (_optional_)
-    dashboard.button = function(shortcut, desc, rhs, map_opts)
-      -- HACK: fixes leader customization, remove after fixed upstream
-      -- https://github.com/goolord/alpha-nvim/pull/271
-      local lhs = shortcut:gsub("%s", ""):gsub(dashboard.leader, "<Leader>")
-      local default_map_opts = { noremap = true, silent = true, nowait = true, desc = desc }
+    ---@param lhs string Shortcut string of a button mapping
+    ---@param rhs function|string? Righthand side of the mapping
+    ---@param icon string Icon of the button
+    ---@param desc string Text description of the button
+    ---@param map_opts table? Additional options to create the mappings
+    ---@diagnostic disable-next-line: redefined-local
+    dashboard.button = function(lhs, rhs, icon, desc, map_opts)
+      local default_opts = {
+        noremap = true,
+        silent = true,
+        nowait = true,
+        desc = desc,
+      }
+      map_opts = (map_opts and vim.tbl_extend("force", default_opts, map_opts)) or default_opts
 
       return {
         type = "button",
-        val = desc,
+        val = icon .. "  " .. desc,
         on_press = function()
-          vim.api.nvim_feedkeys(
-            vim.api.nvim_replace_termcodes(rhs or lhs .. "<Ignore>", true, false, true),
-            "t",
-            false
-          )
+          local key = vim.api.nvim_replace_termcodes(lhs .. "<Ignore>", true, false, true)
+          vim.api.nvim_feedkeys(key, "t", false)
         end,
         opts = {
           position = "center",
-          shortcut = shortcut,
+          shortcut = lhs,
           cursor = -2,
           width = 36,
           align_shortcut = "right",
           hl = "DashboardCenter",
           hl_shortcut = "DashboardShortcut",
-          keymap = rhs
-            and { "n", lhs, rhs, require("astrocore").extend_tbl(default_map_opts, map_opts) },
+          keymap = { "n", lhs, rhs, map_opts },
         },
       }
     end
 
+    -- header
+    -- credit: https://github.com/MaximilianLloyd/ascii.nvim/blob/c1a315e/lua/ascii/text/neovim.lua#L224-L235
     dashboard.section.header.val = {
-      " █████  ███████ ████████ ██████   ██████",
-      "██   ██ ██         ██    ██   ██ ██    ██",
-      "███████ ███████    ██    ██████  ██    ██",
-      "██   ██      ██    ██    ██   ██ ██    ██",
-      "██   ██ ███████    ██    ██   ██  ██████",
-      " ",
-      "    ███    ██ ██    ██ ██ ███    ███",
-      "    ████   ██ ██    ██ ██ ████  ████",
-      "    ██ ██  ██ ██    ██ ██ ██ ████ ██",
-      "    ██  ██ ██  ██  ██  ██ ██  ██  ██",
-      "    ██   ████   ████   ██ ██      ██",
+      [[                                                                     ]],
+      [[       ████ ██████           █████      ██                     ]],
+      [[      ███████████             █████                             ]],
+      [[      █████████ ███████████████████ ███   ███████████   ]],
+      [[     █████████  ███    █████████████ █████ ██████████████   ]],
+      [[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
+      [[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
+      [[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
     }
     dashboard.section.header.opts.hl = "DashboardHeader"
-    dashboard.section.footer.opts.hl = "DashboardFooter"
 
-    local get_icon = require("astroui").get_icon
+    -- body
     dashboard.section.buttons.val = {
-      dashboard.button("LDR n  ", get_icon("FileNew", 2, true) .. "New File  "),
-      dashboard.button("LDR f f", get_icon("Search", 2, true) .. "Find File  "),
-      dashboard.button("LDR f o", get_icon("DefaultFile", 2, true) .. "Recents  "),
-      dashboard.button("LDR f w", get_icon("WordFile", 2, true) .. "Find Word  "),
-      dashboard.button("LDR f '", get_icon("Bookmarks", 2, true) .. "Bookmarks  "),
-      dashboard.button("LDR S l", get_icon("Refresh", 2, true) .. "Last Session  "),
+      dashboard.button("n", "<Cmd>enew<CR>", icon "FileNew", "New File"),
+      dashboard.button("f", "<Cmd>Telescope find_files<CR>", icon "Search", "Find File"),
+      dashboard.button("o", "<Cmd>Telescope oldfiles<CR>", icon "DefaultFile", "Recents"),
+      dashboard.button("g", "<Cmd>Telescope live_grep<CR>", icon "WordFile", "Grep"),
+      dashboard.button("b", "<Cmd>Telescope marks<CR>", icon "Bookmarks", "Bookmarks"),
+      dashboard.button("r", "", icon "Refresh", "Last Session"),
+      dashboard.button("q", "<Cmd>confirm qa<CR>", icon "Exit", "Quit"),
     }
 
+    -- footer
+    dashboard.section.footer.val = { "Hello, NeoVim!" }
+    dashboard.section.footer.opts.hl = "DashboardFooter"
+
+    -- layout
     dashboard.config.layout = {
-      { type = "padding", val = vim.fn.max { 2, vim.fn.floor(vim.fn.winheight(0) * 0.2) } },
+      { type = "padding", val = 7 },
       dashboard.section.header,
       { type = "padding", val = 5 },
       dashboard.section.buttons,
       { type = "padding", val = 3 },
       dashboard.section.footer,
     }
-    dashboard.config.opts.noautocmd = true
+
+    dashboard.config.opts.noautocmd = true -- manually fire the FileType event
     return dashboard
   end,
-  config = function(...) require "pde.plugins.configs.alpha"(...) end,
+  config = require "pde.plugins.configs.alpha",
 }
