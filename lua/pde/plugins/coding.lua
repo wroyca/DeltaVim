@@ -56,4 +56,17 @@ return {
     opts = function() return require "pde.options.autopairs" end,
     config = function(...) require "pde.setups.autopairs"(...) end,
   },
+
+  {
+    "echasnovski/mini.comment",
+    dependencies = {
+      {
+        "JoosepAlviste/nvim-ts-context-commentstring",
+        lazy = true,
+        opts = { enable_autocmd = false },
+      },
+    },
+    keys = function() return require "pde.keys.comment" end,
+    opts = function() return require "pde.options.comment" end,
+  },
 }
