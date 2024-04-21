@@ -1,37 +1,37 @@
 return {
   "AstroNvim/astrocore",
   opts = function(_, opts)
-    local astro, map = require "astrocore", opts.mappings
+    local astro, plug, map = require "astrocore", require "pde.utils.plug", opts.mappings
     local icon = require("astroui").get_icon
 
     if astro.is_available "alpha-nvim" then
-      local alpha = require "pde.mappings.alpha"
+      local alpha = plug.mappings "alpha"
       map.n["<Leader>h"] = alpha.show
     end
 
     if astro.is_available "neo-tree.nvim" then
-      local neotree = require "pde.mappings.neo-tree"
+      local neotree = plug.mappings "neo-tree"
       map.n["<Leader>e"] = neotree.toggle
     end
 
     -- UI/UX
-    map.n["<Leader>u"] = { desc = (icon "Window") .. "UI/UX" }
+    map.n["<Leader>u"] = { desc = icon("Window", 1) .. "UI/UX" }
     if astro.is_available "nvim-cmp" then
-      local cmp = require "pde.mappings.cmp"
+      local cmp = plug.mappings "cmp"
       map.n["<Leader>uc"] = cmp.toggle_buffer
       map.n["<Leader>uC"] = cmp.toggle_global
     end
 
     if astro.is_available "nvim-autopairs" then
-      local autopairs = require "pde.mappings.autopairs"
+      local autopairs = plug.mappings "autopairs"
       map.n["<Leader>ua"] = autopairs.toggle
     end
 
     -- session
-    map.n["<Leader>q"] = { desc = (icon "Session") .. "Session" }
+    map.n["<Leader>q"] = { desc = icon("Session", 1) .. "Session" }
     map.n["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" }
     if astro.is_available "resession.nvim" then
-      local resession = require "pde.mappings.resession"
+      local resession = plug.mappings "resession"
       map.n["<Leader>ql"] = resession.load_dir_cwd
       map.n["<Leader>qL"] = resession.load_last
       map.n["<Leader>qs"] = resession.save_dir

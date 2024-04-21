@@ -1,15 +1,12 @@
+local plug = require "pde.utils.plug"
+
 return {
   {
     "stevearc/resession.nvim",
     lazy = true,
     dependencies = {
-      {
-        "AstroNvim/astrocore",
-        opts = function(_, opts)
-          require("pde.utils").merge(opts.autocmds, require "pde.autocmds.resession")
-        end,
-      },
+      { "AstroNvim/astrocore", opts = plug.autocmds "resession" },
     },
-    opts = function() return require "pde.options.resession" end,
+    opts = plug.opts "resession",
   },
 }

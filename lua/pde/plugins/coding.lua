@@ -1,3 +1,5 @@
+local plug = require "pde.utils.plug"
+
 return {
   {
     "hrsh7th/nvim-cmp",
@@ -35,8 +37,8 @@ return {
         },
       },
     },
-    opts = function() return require "pde.options.cmp" end,
-    config = function(...) require "pde.setups.cmp"(...) end,
+    opts = plug.opts "cmp",
+    config = plug.config "cmp",
   },
 
   {
@@ -46,15 +48,15 @@ return {
       { "rafamadriz/friendly-snippets", lazy = true },
       { "saadparwaiz1/cmp_luasnip", lazy = true },
     },
-    opts = function() return require "pde.options.luasnip" end,
-    config = function(...) require "pde.setups.luasnip"(...) end,
+    opts = plug.opts "luasnip",
+    config = plug.config "luasnip",
   },
 
   {
     "windwp/nvim-autopairs",
     event = "User AstroFile",
-    opts = function() return require "pde.options.autopairs" end,
-    config = function(...) require "pde.setups.autopairs"(...) end,
+    opts = plug.opts "autopairs",
+    config = plug.config "autopairs",
   },
 
   {
@@ -66,7 +68,7 @@ return {
         opts = { enable_autocmd = false },
       },
     },
-    keys = function() return require "pde.keys.comment" end,
-    opts = function() return require "pde.options.comment" end,
+    keys = plug.keys "comment",
+    opts = plug.opts "comment",
   },
 }

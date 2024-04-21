@@ -1,32 +1,24 @@
+local plug = require "pde.utils.plug"
+
 return {
   {
     "goolord/alpha-nvim",
     cmd = "Alpha",
     dependencies = {
-      {
-        "AstroNvim/astrocore",
-        opts = function(_, opts)
-          require("pde.utils").merge(opts.autocmds, require "pde.autocmds.alpha")
-        end,
-      },
+      { "AstroNvim/astrocore", opts = plug.autocmds "alpha" },
     },
-    opts = function() return require "pde.options.alpha" end,
-    config = function(...) require "pde.setups.alpha"(...) end,
+    opts = plug.opts "alpha",
+    config = plug.config "alpha",
   },
 
   {
     "nvim-neo-tree/neo-tree.nvim",
     cmd = "Neotree",
     dependencies = {
-      {
-        "AstroNvim/astrocore",
-        opts = function(_, opts)
-          require("pde.utils").merge(opts.autocmds, require "pde.autocmds.neo-tree")
-        end,
-      },
+      { "AstroNvim/astrocore", opts = plug.autocmds "neo-tree" },
       { "nvim-lua/plenary.nvim", lazy = true },
       { "MunifTanjim/nui.nvim", lazy = true },
     },
-    opts = function() return require "pde.options.neo-tree" end,
+    opts = plug.opts "neo-tree",
   },
 }

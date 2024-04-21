@@ -13,4 +13,8 @@ function M.merge(dst, ...)
   return dst
 end
 
+M.deep_merge = require("lazy.core.util").merge
+
+M.list_extend = vim.list_extend
+
 return M
