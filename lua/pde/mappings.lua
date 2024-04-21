@@ -4,11 +4,19 @@ return {
     local astro, map = require "astrocore", opts.mappings
 
     if astro.is_available "alpha-nvim" then
-      map.n["<Leader>h"] = require("pde.mappings.alpha").show
+      local alpha = require "pde.mappings.alpha"
+      map.n["<Leader>h"] = alpha.show
     end
 
     if astro.is_available "neo-tree.nvim" then
-      map.n["<Leader>e"] = require("pde.mappings.neo-tree").toggle
+      local neotree = require "pde.mappings.neo-tree"
+      map.n["<Leader>e"] = neotree.toggle
+    end
+
+    if astro.is_available "nvim-cmp" then
+      local cmp = require "pde.mappings.cmp"
+      map.n["<Leader>uc"] = cmp.toggle_buffer
+      map.n["<Leader>uC"] = cmp.toggle_global
     end
   end,
 }
