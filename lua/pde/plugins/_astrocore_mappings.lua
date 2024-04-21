@@ -29,8 +29,6 @@ return {
     maps.n["k"] = { "v:count == 0 ? 'gk' : 'k'", expr = true, desc = "Move cursor up" }
     maps.x["k"] = maps.n["k"]
     maps.n["<Leader>w"] = { "<Cmd>w<CR>", desc = "Save" }
-    maps.n["<Leader>q"] = { "<Cmd>confirm q<CR>", desc = "Quit Window" }
-    maps.n["<Leader>Q"] = { "<Cmd>confirm qall<CR>", desc = "Exit AstroNvim" }
     maps.n["<Leader>n"] = { "<Cmd>enew<CR>", desc = "New File" }
     maps.n["<C-s>"] = { "<Cmd>silent! update! | redraw<CR>", desc = "Force write" }
     maps.i["<C-s>"] = { "<Esc>" .. maps.n["<C-s>"][1], desc = maps.n["<C-s>"].desc }
@@ -134,7 +132,6 @@ return {
     maps.t["<C-k>"] = { "<Cmd>wincmd k<CR>", desc = "Terminal up window navigation" }
     maps.t["<C-l>"] = { "<Cmd>wincmd l<CR>", desc = "Terminal right window navigation" }
 
-    maps.n["<Leader>u"] = vim.tbl_get(sections, "u")
     -- Custom menu for modification of the user experience
     maps.n["<Leader>uA"] =
       { function() require("astrocore.toggles").autochdir() end, desc = "Toggle rooter autochdir" }

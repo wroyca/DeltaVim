@@ -51,13 +51,14 @@ dashboard.section.header.val = {
 dashboard.section.header.opts.hl = "DashboardHeader"
 
 -- body
+local last_session = require("pde.mappings.resession").load_dir_cwd[1]
 dashboard.section.buttons.val = {
   dashboard.button("n", "<Cmd>enew<CR>", icon "FileNew", "New File"),
   dashboard.button("f", "<Cmd>Telescope find_files<CR>", icon "Search", "Find File"),
   dashboard.button("o", "<Cmd>Telescope oldfiles<CR>", icon "DefaultFile", "Recents"),
   dashboard.button("g", "<Cmd>Telescope live_grep<CR>", icon "WordFile", "Grep"),
   dashboard.button("b", "<Cmd>Telescope marks<CR>", icon "Bookmarks", "Bookmarks"),
-  dashboard.button("r", "", icon "Refresh", "Last Session"),
+  dashboard.button("r", last_session, icon "Refresh", "Last Session"),
   dashboard.button("q", "<Cmd>confirm qa<CR>", icon "Exit", "Quit"),
 }
 
