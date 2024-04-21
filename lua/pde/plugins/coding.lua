@@ -38,6 +38,7 @@ return {
     opts = function() return require "pde.options.cmp" end,
     config = function(...) require "pde.setups.cmp"(...) end,
   },
+
   {
     "L3MON4D3/LuaSnip",
     lazy = true,
@@ -47,5 +48,12 @@ return {
     },
     opts = function() return require "pde.options.luasnip" end,
     config = function(...) require "pde.setups.luasnip"(...) end,
+  },
+
+  {
+    "windwp/nvim-autopairs",
+    event = "User AstroFile",
+    opts = function() return require "pde.options.autopairs" end,
+    config = function(...) require "pde.setups.autopairs"(...) end,
   },
 }

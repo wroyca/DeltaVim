@@ -18,5 +18,10 @@ return {
       map.n["<Leader>uc"] = cmp.toggle_buffer
       map.n["<Leader>uC"] = cmp.toggle_global
     end
+
+    if astro.is_available "nvim-autopairs" then
+      local autopairs = require "pde.mappings.autopairs"
+      map.n["<Leader>ua"] = autopairs.toggle
+    end
   end,
 }

@@ -1,10 +1,9 @@
 return function(_, opts)
-  local npairs = require "nvim-autopairs"
+  local npairs, astro = require "nvim-autopairs", require "astrocore"
   npairs.setup(opts)
 
-  local astrocore = require "astrocore"
-  if not astrocore.config.features.autopairs then npairs.disable() end
-  astrocore.on_load(
+  if not astro.config.features.autopairs then npairs.disable() end
+  astro.on_load(
     "nvim-cmp",
     function()
       require("cmp").event:on(
