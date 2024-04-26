@@ -150,7 +150,6 @@ return {
     ----------
     map.n["<Leader>q"] = { desc = icon("Session", 1) .. "Session" }
 
-    map.n["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" }
     if astro.is_available "resession.nvim" then
       local resession = require "pde.mappings.resession"
       map.n["<Leader>ql"] = resession.load_dir_cwd
@@ -162,6 +161,27 @@ return {
       map.n["<Leader>qF"] = resession.load_dir
       map.n["<Leader>qd"] = resession.delete_dir
       map.n["<Leader>qD"] = resession.delete
+    end
+    map.n["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" }
+
+    ------
+    -- Git
+    ------
+    map.n["<Leader>g"] = { desc = icon("Git", 1) .. "Git" }
+
+    if astro.is_available "gitsigns.nvim" then
+      local git = require "pde.mappings.gitsigns"
+      map.n["[g"] = git.prev_hunk
+      map.n["]g"] = git.next_hunk
+      map.n["<Leader>gs"] = git.stage_hunk
+      map.n["<Leader>gS"] = git.stage_buffer
+      map.n["<Leader>gr"] = git.reset_hunk
+      map.n["<Leader>gR"] = git.reset_buffer
+      map.n["<Leader>gu"] = git.undo_stage_hunk
+      map.n["<Leader>gb"] = git.show_blame
+      map.n["<Leader>gB"] = git.show_full_blame
+      map.n["<Leader>gp"] = git.show_hunk
+      map.n["<Leader>gP"] = git.show_diff
     end
   end,
 }
