@@ -77,7 +77,7 @@ return {
   formatting = {
     fields = { "kind", "abbr" },
     format = function(_, item)
-      item.kind = icon(item.kind)
+      item.kind = " " .. icon(item.kind)
       return item
     end,
   },
