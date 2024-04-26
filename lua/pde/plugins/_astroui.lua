@@ -55,13 +55,14 @@ return {
       Refresh = "",
       Search = "",
       Selected = "❯",
-      Session = "󱂬",
+      Session = "󰓅",
+      Setting = "",
       Sort = "󰒺",
       Spellcheck = "󰓆",
       Tab = "󰓩",
       TabClose = "󰅙",
       Terminal = "",
-      Window = "",
+      Window = "󱂬",
       WordFile = "󰈭",
 
       -- lspkind

@@ -28,11 +28,4 @@ function M.autocmds(name)
   return function(_, opts) require("pde.utils").merge(opts.autocmds, require(mod)) end
 end
 
----@param name string
----@return table
-function M.mappings(name)
-  local mod = "pde.plugins." .. name .. ".mappings"
-  return require(mod)
-end
-
 return M

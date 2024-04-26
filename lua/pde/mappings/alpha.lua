@@ -7,6 +7,6 @@ return {
       end
       require("alpha").start(false)
     end,
-    desc = "Home Screen",
+    desc = "Show home screen",
   },
 }

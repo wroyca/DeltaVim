@@ -1,5 +1,5 @@
 local dashboard = require "alpha.themes.dashboard"
-local icon = require("astroui").get_icon
+local icon, plug = require("astroui").get_icon, require "pde.utils.plug"
 
 ---@param lhs string Shortcut string of a button mapping
 ---@param rhs function|string? Righthand side of the mapping
@@ -51,7 +51,8 @@ dashboard.section.header.val = {
 dashboard.section.header.opts.hl = "DashboardHeader"
 
 -- body
-local last_session = require("pde.plugins.resession.mappings").load_dir_cwd[1]
+local last_session = require("pde.mappings.resession").load_dir_cwd[1]
+local show_packages = require("pde.mappings.lazy").show_status[1]
 dashboard.section.buttons.val = {
   dashboard.button("n", "<Cmd>enew<CR>", icon "FileNew", "New File"),
   dashboard.button("f", "<Cmd>Telescope find_files<CR>", icon "Search", "Find File"),
@@ -59,6 +60,7 @@ dashboard.section.buttons.val = {
   dashboard.button("g", "<Cmd>Telescope live_grep<CR>", icon "WordFile", "Grep"),
   dashboard.button("b", "<Cmd>Telescope marks<CR>", icon "Bookmarks", "Bookmarks"),
   dashboard.button("r", last_session, icon "Refresh", "Last Session"),
+  dashboard.button("p", show_packages, icon "Package", "Packages"),
   dashboard.button("q", "<Cmd>confirm qa<CR>", icon "Exit", "Quit"),
 }
 
