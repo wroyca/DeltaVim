@@ -23,6 +23,10 @@ for _, sign in ipairs { "Error", "Hint", "Info", "Warn" } do
 end
 
 return {
+  sidebar_titles = {
+    ["neo-tree"] = "Explorer",
+    ["aerial"] = "Symbols",
+  },
   modes = {
     ["n"] = { "NORMAL", "normal" },
     ["no"] = { "OP", "normal" },
@@ -71,6 +75,7 @@ return {
     mode = { bold = true },
     buffer_active = { bold = true, italic = true },
     buffer_picker = { bold = true },
+    sidebar_title = { bold = true },
   },
   icon_highlights = {
     file_icon = {
@@ -130,21 +135,20 @@ return {
       -- bufferline
       buffer_fg = TabLine.fg,
       buffer_bg = Normal.bg,
-
-      buffer_path_fg = WinBarNC.fg,
-      buffer_close_fg = Visual.fg,
+      buffer_path_fg = TabLine.fg,
+      buffer_close_fg = TabLine.fg,
 
       buffer_active_fg = Normal.fg,
       buffer_active_bg = Normal.bg,
-      buffer_active_path_fg = WinBarNC.fg,
+      buffer_active_path_fg = TabLine.fg,
       buffer_active_close_fg = Error.fg,
 
       buffer_visible_fg = Normal.fg,
       buffer_visible_bg = Normal.bg,
-      buffer_visible_path_fg = WinBarNC.fg,
+      buffer_visible_path_fg = TabLine.fg,
       buffer_visible_close_fg = Error.fg,
 
-      buffer_overflow_fg = Visual.fg,
+      buffer_overflow_fg = Normal.fg,
       buffer_overflow_bg = TabLineFill.bg,
 
       buffer_picker_fg = Error.fg,
@@ -200,6 +204,10 @@ return {
     }
 
     -- add missing colors
+    for _, c in ipairs { "sidebar_title" } do
+      colors[c .. "_fg"] = Normal.fg
+      colors[c .. "_bg"] = TabLine.bg
+    end
     for _, c in ipairs {
       "file_info",
       "git_branch",

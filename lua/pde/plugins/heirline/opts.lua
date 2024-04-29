@@ -1,6 +1,7 @@
 -- credit: https://github.com/AstroNvim/astrocommunity/blob/41f7a6a/lua/astrocommunity/recipes/heirline-nvchad-statusline/init.lua#
 
 local status, icon = require "astroui.status", require("astroui").get_icon
+local config = require("astroui").config.status
 
 ---@param cond function
 local cond_not = function(cond)
@@ -23,14 +24,24 @@ return {
   tabline = {
     -- automatic sidebar padding
     {
-      condition = function(self)
-        self.winid = vim.api.nvim_tabpage_list_wins(0)[1]
-        self.winwidth = vim.api.nvim_win_get_width(self.winid)
-        return self.winwidth ~= vim.o.columns -- only apply to sidebars
-          and not require("astrocore.buffer").is_valid(vim.api.nvim_win_get_buf(self.winid))
-      end,
-      provider = function(self) return (" "):rep(self.winwidth + 1) end,
-      hl = { bg = "tabline_bg" },
+      {
+        condition = function(self)
+          self.winid = vim.api.nvim_tabpage_list_wins(0)[1]
+          self.winwidth = vim.api.nvim_win_get_width(self.winid)
+          self.bufnr = vim.api.nvim_win_get_buf(self.winid)
+          return self.winwidth ~= vim.o.columns -- only apply to sidebars
+            and not require("astrocore.buffer").is_valid(self.bufnr) -- if buffer is not in tabline
+        end,
+        provider = function(self)
+          local ft = vim.bo[self.bufnr].filetype
+          local title = config.sidebar_titles and config.sidebar_titles[ft] or ft
+          local padding = self.winwidth + 1 - #title
+          local left = padding / 2
+          return (" "):rep(left) .. title .. (" "):rep(padding - left)
+        end,
+        hl = status.hl.get_attributes("sidebar_title", true),
+        update = { "WinNew", "WinEnter", "WinResized" },
+      },
     },
 
     status.heirline.make_buflist(status.component.tabline_file_info()),
@@ -68,7 +79,7 @@ return {
     fallthrough = false,
     {
       condition = cond_not(status.condition.is_active),
-      status.component.separated_path(),
+      status.component.separated_path { hl = status.hl.get_attributes("winbarnc", true) },
       status.component.file_info {
         file_icon = { hl = status.hl.file_icon "winbar", padding = { left = 0 } },
         filename = {},

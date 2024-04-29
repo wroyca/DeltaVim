@@ -58,6 +58,7 @@ local icons = {
   Tab = "󰓩",
   TabClose = "󰅙",
   Terminal = "",
+  Tree = "",
   VimIcon = "",
   Window = "󱂬",
   WordFile = "󰈭",

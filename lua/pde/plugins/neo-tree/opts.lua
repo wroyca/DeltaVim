@@ -91,7 +91,7 @@ return {
   close_if_last_window = true,
   commands = commands,
   window = {
-    width = 30,
+    width = 35,
     mappings = mappings,
     mapping_options = {
       noremap = true,
