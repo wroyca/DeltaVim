@@ -1,6 +1,7 @@
 local M = {}
 
 M.did_init = false
+M.did_setup = false
 
 M.config = require "pde.config"
 
@@ -13,7 +14,7 @@ local function lazy_notify()
   vim.notify = notify_queue
 
   local uv = vim.uv or vim.loop
-  local timer, checker = uv.new_timer(), uv.new_check()
+  local timer, checker = assert(uv.new_timer()), assert(uv.new_check())
 
   local replay = function()
     timer:stop()
@@ -36,7 +37,7 @@ function M.init()
   if vim.fn.has "nvim-0.9" == 0 then
     vim.api.nvim_echo({
       { "AstroNvim requires Neovim >= 0.9.0\n", "ErrorMsg" },
-      { "Press any key to exit",                "MoreMsg" },
+      { "Press any key to exit", "MoreMsg" },
     }, true, {})
     vim.fn.getchar()
     vim.cmd.quit()
@@ -49,22 +50,20 @@ function M.init()
 
   -- force setup during initialization
   local plugin = require("lazy.core.config").spec.plugins.pde
-
-  local opts = require("lazy.core.plugin").values(plugin, "opts")
-  if opts.pin_plugins == nil then opts.pin_plugins = plugin.version ~= nil end
-
-  ---@diagnostic disable-next-line: cast-local-type
-  opts = vim.tbl_deep_extend("force", M.config, opts)
-  ---@cast opts -nil
-  M.config = opts
-
-  if not vim.g.mapleader and M.config.mapleader then vim.g.mapleader = M.config.mapleader end
-  if not vim.g.maplocalleader and M.config.maplocalleader then
-    vim.g.maplocalleader = M.config.maplocalleader
-  end
-  if M.config.icons_enabled == false then vim.g.icons_enabled = false end
+  M.setup(require("lazy.core.plugin").values(plugin, "opts"))
 end
 
-function M.setup() end
+function M.setup(opts)
+  if M.did_setup then return end
+
+  opts = vim.tbl_deep_extend("force", M.config, opts)
+  M.config = opts
+
+  if not vim.g.mapleader and opts.mapleader then vim.g.mapleader = opts.mapleader end
+  if not vim.g.maplocalleader and opts.maplocalleader then
+    vim.g.maplocalleader = opts.maplocalleader
+  end
+  if opts.icons_enabled == false then vim.g.icons_enabled = false end
+end
 
 return M
