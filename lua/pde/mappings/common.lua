@@ -10,9 +10,9 @@ return {
   up_window = { "<Cmd>wincmd k<CR>", desc = "Goto up window" },
   right_window = { "<Cmd>wincmd l<CR>", desc = "Goto right window" },
 
-  resize_left = { "<Cmd>resize -3<CR>", desc = "Resize window left" },
+  resize_left = { "<Cmd>vertical resize -3<CR>", desc = "Resize window up" },
   resize_down = { "<Cmd>resize +3<CR>", desc = "Resize window down" },
-  resize_up = { "<Cmd>vertical resize -3<CR>", desc = "Resize window up" },
+  resize_up = { "<Cmd>resize -3<CR>", desc = "Resize window left" },
   resize_right = { "<Cmd>vertical resize +3<CR>", desc = "Resize window right" },
 
   vsplit = { "<Cmd>vsplit<CR>", desc = "Vertical split" },
