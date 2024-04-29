@@ -2,6 +2,11 @@ local plug = require "pde.utils.plug"
 
 return {
   {
+    "AstroNvim/astroui",
+    opts = plug.opts "astroui",
+  },
+
+  {
     "goolord/alpha-nvim",
     cmd = "Alpha",
     dependencies = {
@@ -21,4 +26,12 @@ return {
     },
     opts = plug.opts "neo-tree",
   },
+
+  {
+    "rebelot/heirline.nvim",
+    event = "BufEnter",
+    opts = plug.opts "heirline",
+    config = plug.config "heirline",
+  },
+  { "echasnovski/mini.bufremove", lazy = true },
 }

@@ -109,6 +109,14 @@ return {
       map.n["<Leader>tl"] = buf.last_tab
     end
 
+    if astro.is_available "heirline.nvim" then
+      local buf = require "pde.mappings.heriline"
+      map.n["<Leader>bb"] = buf.pick_select
+      map.n["<Leader>bd"] = buf.pick_close
+      map.n["<Leader>b\\"] = buf.pick_hsplit
+      map.n["<Leader>b-"] = buf.pick_vsplit
+    end
+
     ------------------------
     -- toggle UI/UX features
     ------------------------
