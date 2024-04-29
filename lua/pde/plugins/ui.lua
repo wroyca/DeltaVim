@@ -7,6 +7,13 @@ return {
   },
 
   {
+    "nvim-tree/nvim-web-devicons",
+    lazy = true,
+    enabled = vim.g.icons_enabled ~= false,
+    opts = plug.opts "web-devicons",
+  },
+
+  {
     "goolord/alpha-nvim",
     cmd = "Alpha",
     dependencies = {
