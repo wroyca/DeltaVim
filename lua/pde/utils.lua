@@ -17,31 +17,39 @@ M.deep_merge = require("lazy.core.util").merge
 
 M.list_extend = vim.list_extend
 
+---@type table<string,table> # cache for plugin mapping presets
+local plugin_mappings = {}
+
 ---A handy function to bind mapping presets.
 ---@param dst table # the table to be set
----@param mappings table<string,table<string,table<string,string|table>>>
+---@param mappings table<string,table<string,string|table>>
 ---@return table # return `dst`
 function M.make_mappings(dst, mappings)
   local plugin_names, astro = require("pde").config.plugin_names, require "astrocore"
 
   local unknowns = {}
-  for module, mode_maps in pairs(mappings) do
-    local plugin = plugin_names[module]
-    -- only set mappings when a plugin is available
-    if not plugin or astro.is_available(plugin) then
-      local ok, preset = pcall(require, "pde.mappings." .. module)
-      if not ok then table.insert(unknowns, module) end
-
-      for mode, maps in pairs(mode_maps) do
-        local dst_maps = dst[mode]
-        for key, rhs in pairs(maps) do
-          if type(rhs) == "string" then -- strings are treated as preset key
-            if not preset[rhs] then table.insert(unknowns, module .. "." .. rhs) end
-            rhs = preset[rhs]
+  for mode, maps in pairs(mappings) do
+    local dst_maps = dst[mode]
+    for lhs, rhs in pairs(maps) do
+      if type(rhs) == "string" then
+        if not plugin_mappings[rhs] then -- lazy load mapping presets
+          local module = vim.split(rhs, ".", { plain = true })[1]
+          local plugin = plugin_names[module]
+          -- only load presets when the plugin is available
+          if not plugin or astro.is_available(plugin) then
+            local ok, preset = pcall(require, "pde.mappings." .. module)
+            if ok then
+              for key, preset_rhs in pairs(preset) do -- insert all presets
+                plugin_mappings[module .. "." .. key] = preset_rhs
+              end
+            end
           end
-          if rhs then dst_maps[key] = rhs end
         end
+        if not plugin_mappings[rhs] then table.insert(unknowns, rhs) end
+        rhs = plugin_mappings[rhs]
       end
+
+      if rhs then dst_maps[lhs] = rhs end
     end
   end
 

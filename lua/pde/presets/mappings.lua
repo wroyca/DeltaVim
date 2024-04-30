@@ -1,206 +1,169 @@
 return {
   "AstroNvim/astrocore",
   opts = function(_, opts)
-    local utils, icon = require "pde.utils", require("astroui").get_icon
-    local map = opts.mappings
+    local icon = require("astroui").get_icon
 
-    -- enhancement
-    map.x["<"] = { "<gv" }
-    map.x[">"] = { ">gv" }
-    map.n["<Esc>"] = { "<Cmd>noh<CR><Esc>" }
-    map.n["gw"] = { "*N", noremap = true }
+    require("pde.utils").make_mappings(opts.mappings, {
+      n = {
+        ------------------
+        -- common mappings
+        ------------------
 
-    utils.make_mappings(map, {
-      ------------------
-      -- common mappings
-      ------------------
+        ["<"] = { "<gv" },
+        [">"] = { ">gv" },
+        ["<Esc>"] = { "<Cmd>noh<CR><Esc>" },
+        ["gw"] = { "*N", noremap = true },
 
-      ["common"] = {
-        n = {
-          ["j"] = "move_down",
-          ["k"] = "move_up",
-          ["gx"] = "system_open",
+        ["j"] = "common.move_down",
+        ["k"] = "common.move_up",
+        ["gx"] = "common.system_open",
 
-          ["<C-h>"] = "left_window",
-          ["<C-j>"] = "down_window",
-          ["<C-k>"] = "up_window",
-          ["<C-l>"] = "right_window",
-          ["<C-s>"] = "save_file",
-          ["<C-S-h>"] = "resize_left",
-          ["<C-S-j>"] = "resize_down",
-          ["<C-S-k>"] = "resize_up",
-          ["<C-S-l>"] = "resize_right",
+        ["<C-h>"] = "common.left_window",
+        ["<C-j>"] = "common.down_window",
+        ["<C-k>"] = "common.up_window",
+        ["<C-l>"] = "common.right_window",
+        ["<C-s>"] = "common.save_file",
 
-          ["<Leader>n"] = "new_file",
-          ["<Leader>W"] = "close_window",
-          ["<Leader>-"] = "hsplit",
-          ["<Leader>\\"] = "vsplit",
-        },
+        ["<C-S-h>"] = "common.resize_left",
+        ["<C-S-j>"] = "common.resize_down",
+        ["<C-S-k>"] = "common.resize_up",
+        ["<C-S-l>"] = "common.resize_right",
 
-        t = {
-          ["<C-h>"] = "left_window",
-          ["<C-j>"] = "down_window",
-          ["<C-k>"] = "up_window",
-          ["<C-l>"] = "right_window",
-        },
+        ["<Leader>n"] = "common.new_file",
+        ["<Leader>-"] = "common.hsplit",
+        ["<Leader>\\"] = "common.vsplit",
 
-        x = {
-          ["j"] = "move_down",
-          ["k"] = "move_up",
-        },
+        ["<Leader>w"] = "buffer.close",
+        ["<Leader>W"] = "common.close_window",
+
+        --------------------
+        -- package management
+        --------------------
+
+        ["<Leader>p"] = { desc = icon("Package", 1) .. "Packages" },
+        ["<Leader>pc"] = "lazy.check",
+        ["<Leader>pi"] = "lazy.install",
+        ["<Leader>pp"] = "lazy.show_status",
+        ["<Leader>ps"] = "lazy.sync",
+        ["<Leader>pu"] = "lazy.update",
+
+        --------------------
+        -- editor components
+        --------------------
+
+        ["<Leader>h"] = "alpha.show",
+        ["<Leader>e"] = "neo-tree.focus",
+
+        ------------------
+        -- editor features
+        ------------------
+
+        ["<Leader>u"] = { desc = icon("Setting", 1) .. "UI/UX" },
+        ["<Leader>ub"] = "toggles.toggle_background",
+        ["<Leader>ud"] = "toggles.toggle_diagnostics",
+        ["<Leader>ug"] = "toggles.toggle_signcolumn",
+        ["<Leader>ui"] = "toggles.toggle_indent",
+        ["<Leader>ul"] = "toggles.toggle_statusline",
+        ["<Leader>un"] = "toggles.toggle_number",
+        ["<Leader>up"] = "toggles.toggle_paste",
+        ["<Leader>us"] = "toggles.toggle_spell",
+        ["<Leader>ut"] = "toggles.toggle_tabline",
+        ["<Leader>uu"] = "toggles.toggle_url_match",
+        ["<Leader>uw"] = "toggles.toggle_wrap",
+        ["<Leader>uy"] = "toggles.toggle_syntax",
+        ["<Leader>uz"] = "toggles.toggle_foldcolumn",
+        ["<Leader>uA"] = "toggles.toggle_autochdir",
+        ["<Leader>uN"] = "toggles.toggle_notifications",
+        ["<Leader>uS"] = "toggles.toggle_conceal",
+
+        ["<Leader>uc"] = "cmp.toggle_buffer",
+        ["<Leader>uC"] = "cmp.toggle_global",
+        ["<Leader>ua"] = "autopairs.toggle",
+
+        --------------------
+        -- buffer management
+        --------------------
+
+        ["[b"] = "buffer.prev",
+        ["]b"] = "buffer.next",
+        ["<C-,>"] = "buffer.prev",
+        ["<C-.>"] = "buffer.next",
+
+        ["<b"] = "buffer.move_left",
+        [">b"] = "buffer.move_right",
+
+        ["[t"] = "buffer.prev_tab",
+        ["]t"] = "buffer.next_tab",
+
+        ["<Leader>b"] = { desc = icon("Tab", 1) .. "Buffers" },
+        ["<Leader>bc"] = "buffer.close_others",
+        ["<Leader>bC"] = "buffer.close_all",
+        ["<Leader>bh"] = "buffer.close_left",
+        ["<Leader>bl"] = "buffer.close_right",
+
+        ["<Leader>bs"] = { desc = icon("Sort", 1) .. "Sort buffers" },
+        ["<Leader>bse"] = "buffer.sort_by_extension",
+        ["<Leader>bsf"] = "buffer.sort_by_filename",
+        ["<Leader>bsp"] = "buffer.sort_by_path",
+        ["<Leader>bsn"] = "buffer.sort_by_number",
+        ["<Leader>bsm"] = "buffer.sort_by_modification",
+
+        ["<Leader>t"] = { desc = icon("Window", 1) .. "Tabs" },
+        ["<Leader>tn"] = "buffer.new_tab",
+        ["<Leader>tc"] = "buffer.close_tab",
+        ["<Leader>th"] = "buffer.first_tab",
+        ["<Leader>tl"] = "buffer.last_tab",
+
+        ["<Leader>bb"] = "heirline.pick_select",
+        ["<Leader>bd"] = "heirline.pick_close",
+        ["<Leader>b\\"] = "heirline.pick_hsplit",
+        ["<Leader>b-"] = "heirline.pick_vsplit",
+
+        ---------------------
+        -- session management
+        ---------------------
+
+        ["<Leader>q"] = { desc = icon("Session", 1) .. "Session" },
+        ["<Leader>ql"] = "resession.load_dir_cwd",
+        ["<Leader>qL"] = "resession.load_last",
+        ["<Leader>qs"] = "resession.save_dir",
+        ["<Leader>qS"] = "resession.save",
+        ["<Leader>qt"] = "resession.save_tab",
+        ["<Leader>qf"] = "resession.load",
+        ["<Leader>qF"] = "resession.load_dir",
+        ["<Leader>qd"] = "resession.delete_dir",
+        ["<Leader>qD"] = "resession.delete",
+        ["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
+
+        ------------------
+        -- Git integration
+        ------------------
+
+        ["[g"] = "gitsigns.prev_hunk",
+        ["]g"] = "gitsigns.next_hunk",
+
+        ["<Leader>g"] = { desc = icon("Git", 1) .. "Git" },
+        ["<Leader>gs"] = "gitsigns.stage_hunk",
+        ["<Leader>gS"] = "gitsigns.stage_buffer",
+        ["<Leader>gr"] = "gitsigns.reset_hunk",
+        ["<Leader>gR"] = "gitsigns.reset_buffer",
+        ["<Leader>gu"] = "gitsigns.undo_stage_hunk",
+        ["<Leader>gb"] = "gitsigns.show_blame",
+        ["<Leader>gB"] = "gitsigns.show_full_blame",
+        ["<Leader>gp"] = "gitsigns.show_hunk",
+        ["<Leader>gP"] = "gitsigns.show_diff",
       },
 
-      --------------------
-      -- package management
-      --------------------
-
-      ["lazy"] = {
-        n = {
-          ["<Leader>p"] = { desc = icon("Package", 1) .. "Packages" },
-
-          ["<Leader>pc"] = "check",
-          ["<Leader>pi"] = "install",
-          ["<Leader>pp"] = "show_status",
-          ["<Leader>ps"] = "sync",
-          ["<Leader>pu"] = "update",
-        },
+      t = {
+        ["<C-h>"] = "common.left_window",
+        ["<C-j>"] = "common.down_window",
+        ["<C-k>"] = "common.up_window",
+        ["<C-l>"] = "common.right_window",
       },
 
-      --------------------
-      -- editor components
-      --------------------
-
-      ["alpha"] = { n = { ["<Leader>h"] = "show" } },
-      ["neo-tree"] = { n = { ["<Leader>e"] = "focus" } },
-
-      ------------------
-      -- editor features
-      ------------------
-
-      ["toggles"] = {
-        n = {
-          ["<Leader>u"] = { desc = icon("Setting", 1) .. "UI/UX" },
-
-          ["<Leader>ub"] = "toggle_background",
-          ["<Leader>ud"] = "toggle_diagnostics",
-          ["<Leader>ug"] = "toggle_signcolumn",
-          ["<Leader>ui"] = "toggle_indent",
-          ["<Leader>ul"] = "toggle_statusline",
-          ["<Leader>un"] = "toggle_number",
-          ["<Leader>up"] = "toggle_paste",
-          ["<Leader>us"] = "toggle_spell",
-          ["<Leader>ut"] = "toggle_tabline",
-          ["<Leader>uu"] = "toggle_url_match",
-          ["<Leader>uw"] = "toggle_wrap",
-          ["<Leader>uy"] = "toggle_syntax",
-          ["<Leader>uz"] = "toggle_foldcolumn",
-          ["<Leader>uA"] = "toggle_autochdir",
-          ["<Leader>uN"] = "toggle_notifications",
-          ["<Leader>uS"] = "toggle_conceal",
-        },
-      },
-
-      ["cmp"] = {
-        n = {
-          ["<Leader>uc"] = "toggle_buffer",
-          ["<Leader>uC"] = "toggle_global",
-        },
-      },
-
-      ["autopairs"] = {
-        n = {
-          ["<Leader>ua"] = "toggle",
-        },
-      },
-
-      --------------------
-      -- buffer management
-      --------------------
-
-      ["buffer"] = {
-        n = {
-          ["<Leader>b"] = { desc = icon("Tab", 1) .. "Buffers" },
-          ["<Leader>bs"] = { desc = icon("Sort", 1) .. "Sort buffers" },
-          ["<Leader>t"] = { desc = icon("Window", 1) .. "Tabs" },
-
-          ["[b"] = "prev",
-          ["]b"] = "next",
-          ["<C-,>"] = "prev",
-          ["<C-.>"] = "next",
-          ["<b"] = "move_left",
-          [">b"] = "move_right",
-
-          ["<Leader>w"] = "close",
-          ["<Leader>bc"] = "close_others",
-          ["<Leader>bC"] = "close_all",
-          ["<Leader>bh"] = "close_left",
-          ["<Leader>bl"] = "close_right",
-
-          ["<Leader>bse"] = "sort_by_extension",
-          ["<Leader>bsf"] = "sort_by_filename",
-          ["<Leader>bsp"] = "sort_by_path",
-          ["<Leader>bsn"] = "sort_by_number",
-          ["<Leader>bsm"] = "sort_by_modification",
-
-          ["[t"] = "prev_tab",
-          ["]t"] = "next_tab",
-          ["<Leader>tn"] = "new_tab",
-          ["<Leader>tc"] = "close_tab",
-          ["<Leader>th"] = "first_tab",
-          ["<Leader>tl"] = "last_tab",
-        },
-      },
-
-      ["heirline"] = {
-        n = {
-          ["<Leader>bb"] = "pick_select",
-          ["<Leader>bd"] = "pick_close",
-          ["<Leader>b\\"] = "pick_hsplit",
-          ["<Leader>b-"] = "pick_vsplit",
-        },
-      },
-
-      ---------------------
-      -- session management
-      ---------------------
-
-      ["resession"] = {
-        n = {
-          ["<Leader>q"] = { desc = icon("Session", 1) .. "Session" },
-
-          ["<Leader>ql"] = "load_dir_cwd",
-          ["<Leader>qL"] = "load_last",
-          ["<Leader>qs"] = "save_dir",
-          ["<Leader>qS"] = "save",
-          ["<Leader>qt"] = "save_tab",
-          ["<Leader>qf"] = "load",
-          ["<Leader>qF"] = "load_dir",
-          ["<Leader>qd"] = "delete_dir",
-          ["<Leader>qD"] = "delete",
-          ["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
-        },
-      },
-
-      ------------------
-      -- Git integration
-      ------------------
-
-      ["gitsigns"] = {
-        n = {
-          ["[g"] = "prev_hunk",
-          ["]g"] = "next_hunk",
-
-          ["<Leader>g"] = { desc = icon("Git", 1) .. "Git" },
-          ["<Leader>gs"] = "stage_hunk",
-          ["<Leader>gS"] = "stage_buffer",
-          ["<Leader>gr"] = "reset_hunk",
-          ["<Leader>gR"] = "reset_buffer",
-          ["<Leader>gu"] = "undo_stage_hunk",
-          ["<Leader>gb"] = "show_blame",
-          ["<Leader>gB"] = "show_full_blame",
-          ["<Leader>gp"] = "show_hunk",
-          ["<Leader>gP"] = "show_diff",
-        },
+      x = {
+        ["j"] = "common.move_down",
+        ["k"] = "common.move_up",
       },
     })
   end,
