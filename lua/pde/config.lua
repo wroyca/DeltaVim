@@ -35,6 +35,7 @@ local default = {
       filetypes = {
         ["help"] = true,
         ["nofile"] = true,
+        ["qf"] = true,
         ["quickfix"] = true,
       },
     },
@@ -42,6 +43,7 @@ local default = {
     unlist_buffers = {
       ---@type table<string,boolean> filetypes to be unlisted
       filetypes = {
+        ["qf"] = true,
         ["quickfix"] = true,
       },
     },

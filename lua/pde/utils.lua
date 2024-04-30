@@ -59,6 +59,16 @@ function M.make_mappings(dst, mappings)
   return dst
 end
 
+---Lists diagnostics in quickfix.
+---@param bufnr integer? # buffer to get diagnostics from, 0 for the current or nil for all buffers
+---@param opts? vim.diagnostic.GetOpts # options passed to `vim.diagnostics.get`
+function M.list_diagnostics(bufnr, opts)
+  local diags = vim.diagnostic.get(bufnr, opts)
+  local qflist = vim.diagnostic.toqflist(diags)
+  vim.fn.setqflist(qflist, " ")
+  vim.cmd "botright copen"
+end
+
 ---@param client lsp.Client
 function M.formatting_enabled(client)
   if not client.supports_method "textDocument/formatting" then return false end

@@ -2,6 +2,7 @@
 return {
   autocmds = require "pde.plugins.astrolsp.opts_autocmds",
   commands = require "pde.plugins.astrolsp.opts_commands",
+  mappings = require("astrocore").empty_map_table(),
   features = {
     codelens = true,
     inlay_hints = false,
