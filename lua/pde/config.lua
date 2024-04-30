@@ -5,7 +5,7 @@ local default = {
   mapleader = " ",
 
   ---@type string? the local leader key to map before setting up Lazy
-  maplocalleader = ",",
+  maplocalleader = "\\",
 
   ---@type boolean? whether to enable icons, default to `true`
   icons_enabled = true,
