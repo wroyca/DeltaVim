@@ -65,6 +65,8 @@ local default = {
     -- editor
     ["resession"] = "resession.nvim",
     ["gitsigns"] = "gitsigns.nvim",
+    -- lsp
+    ["astrolsp"] = "astrolsp",
     -- ui
     ["astroui"] = "astroui",
     ["web-devicons"] = "nivm-web-devicons",

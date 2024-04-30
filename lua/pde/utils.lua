@@ -59,4 +59,11 @@ function M.make_mappings(dst, mappings)
   return dst
 end
 
+---@param client lsp.Client
+function M.formatting_enabled(client)
+  if not client.supports_method "textDocument/formatting" then return false end
+  local disabled = require("astrolsp").config.formatting.disabled
+  return disabled ~= true and not vim.tbl_contains(disabled, client.name)
+end
+
 return M

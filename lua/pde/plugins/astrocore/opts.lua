@@ -29,7 +29,7 @@ return {
     float = {
       focused = false,
       style = "minimal",
-      border = "rounded",
+      border = "none",
       source = "always",
       header = "",
       prefix = "",
