@@ -2,7 +2,8 @@ local icon = require("astroui").get_icon
 
 ---@type AstroCoreOpts
 return {
-  autocmds = require "pde.plugins.astrocore.autocmds",
+  autocmds = require "pde.plugins.astrocore.opts_autocmds",
+  options = require "pde.plugins.astrocore.opts_options",
   mappings = require("astrocore").empty_map_table(),
   features = {
     large_buf = { size = 1024 * 500, lines = 10000 }, -- set global limits for large files
