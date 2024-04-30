@@ -11,6 +11,7 @@ return {
     function() require("resession").save_tab() end,
     desc = "Save this tab's session",
   },
+
   load = {
     function() require("resession").load() end,
     desc = "Load a session",
@@ -27,6 +28,7 @@ return {
     function() require("resession").load(vim.fn.getcwd(), { dir = "dirsession" }) end,
     desc = "Load current dirsession",
   },
+
   delete = {
     function() require("resession").delete() end,
     desc = "Delete a session",

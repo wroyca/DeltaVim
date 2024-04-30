@@ -1,11 +1,11 @@
 return {
   next_hunk = {
     function() require("gitsigns").next_hunk() end,
-    desc = "Goto next hunk",
+    desc = "Next hunk",
   },
   prev_hunk = {
     function() require("gitsigns").prev_hunk() end,
-    desc = "Goto previous hunk",
+    desc = "Previous hunk",
   },
 
   reset_hunk = {

@@ -1,12 +1,13 @@
 return {
   next = {
     function() require("astrocore.buffer").nav(vim.v.count1) end,
-    desc = "Goto next buffer",
+    desc = "Next buffer",
   },
   prev = {
     function() require("astrocore.buffer").nav(-vim.v.count1) end,
-    desc = "Goto previous buffer",
+    desc = "Previous buffer",
   },
+
   move_left = {
     function() require("astrocore.buffer").move(-vim.v.count1) end,
     desc = "Move buffer to left",
@@ -61,11 +62,4 @@ return {
     function() require("astrocore.buffer").sort "modified" end,
     desc = "Sort buffers by modification",
   },
-
-  new_tab = { "<Cmd>tabnew<CR>", desc = "New tab" },
-  close_tab = { "<Cmd>tabclose<CR>", desc = "Close current tab" },
-  next_tab = { "<Cmd>tabnext<CR>", desc = "Goto next tab" },
-  prev_tab = { "<Cmd>tabprevious<CR>", desc = "Goto previous tab" },
-  first_tab = { "<Cmd>tabfirst<CR>", desc = "Goto first tab" },
-  last_tab = { "<Cmd>tablast<CR>", desc = "Goto last tab" },
 }

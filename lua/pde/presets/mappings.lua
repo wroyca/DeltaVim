@@ -51,7 +51,7 @@ return {
         -- editor components
         --------------------
 
-        ["<Leader>h"] = "alpha.show",
+        ["<Leader>h"] = "alpha.toggle",
         ["<Leader>e"] = "neo-tree.focus",
 
         ------------------
@@ -78,7 +78,7 @@ return {
 
         ["<Leader>uc"] = "cmp.toggle_buffer",
         ["<Leader>uC"] = "cmp.toggle_global",
-        ["<Leader>ua"] = "autopairs.toggle",
+        ["<Leader>ua"] = "autopairs.toggle_global",
 
         --------------------
         -- buffer management
@@ -92,14 +92,10 @@ return {
         ["<b"] = "buffer.move_left",
         [">b"] = "buffer.move_right",
 
-        ["[t"] = "buffer.prev_tab",
-        ["]t"] = "buffer.next_tab",
-
         ["<Leader>b"] = { desc = icon("Tab", 1) .. "Buffers" },
-        ["<Leader>bc"] = "buffer.close_others",
-        ["<Leader>bC"] = "buffer.close_all",
-        ["<Leader>bh"] = "buffer.close_left",
-        ["<Leader>bl"] = "buffer.close_right",
+        ["<Leader>bH"] = "buffer.close_left",
+        ["<Leader>bL"] = "buffer.close_right",
+        ["<Leader>bQ"] = "buffer.close_others",
 
         ["<Leader>bs"] = { desc = icon("Sort", 1) .. "Sort buffers" },
         ["<Leader>bse"] = "buffer.sort_by_extension",
@@ -108,16 +104,19 @@ return {
         ["<Leader>bsn"] = "buffer.sort_by_number",
         ["<Leader>bsm"] = "buffer.sort_by_modification",
 
-        ["<Leader>t"] = { desc = icon("Window", 1) .. "Tabs" },
-        ["<Leader>tn"] = "buffer.new_tab",
-        ["<Leader>tc"] = "buffer.close_tab",
-        ["<Leader>th"] = "buffer.first_tab",
-        ["<Leader>tl"] = "buffer.last_tab",
-
         ["<Leader>bb"] = "heirline.pick_select",
-        ["<Leader>bd"] = "heirline.pick_close",
+        ["<Leader>bq"] = "heirline.pick_close",
         ["<Leader>b\\"] = "heirline.pick_hsplit",
         ["<Leader>b-"] = "heirline.pick_vsplit",
+
+        ["[t"] = "buffer.prev",
+        ["]t"] = "buffer.next",
+
+        ["<Leader>t"] = { desc = icon("Window", 1) .. "Tabs" },
+        ["<Leader>tn"] = "tab.new",
+        ["<Leader>tq"] = "tab.close",
+        ["<Leader>th"] = "tab.goto_first",
+        ["<Leader>tl"] = "tab.goto_last",
 
         ---------------------
         -- session management
