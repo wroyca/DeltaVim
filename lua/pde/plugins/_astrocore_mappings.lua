@@ -2,7 +2,6 @@ return {
   "AstroNvim/astrocore",
   ---@param opts AstroCoreOpts
   opts = function(_, opts)
-    local astro = require "astrocore"
     local get_icon = require("astroui").get_icon
     -- initialize internally use mapping section titles
     opts._map_sections = {
@@ -14,7 +13,7 @@ return {
     }
 
     -- initialize mappings table
-    local maps = astro.empty_map_table()
+    local maps = require("astrocore").empty_map_table()
     local sections = assert(opts._map_sections)
 
     maps.n["<Leader>l"] = vim.tbl_get(sections, "l")

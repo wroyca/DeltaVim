@@ -25,7 +25,10 @@ end
 ---@return function
 function M.autocmds(name)
   local mod = "pde.plugins." .. name .. ".autocmds"
-  return function(_, opts) require("pde.utils").merge(opts.autocmds, require(mod)) end
+  return function(_, opts)
+    opts.autocmds = require("pde.utils").merge(opts.autocmds or {}, require(mod))
+    return opts
+  end
 end
 
 return M
