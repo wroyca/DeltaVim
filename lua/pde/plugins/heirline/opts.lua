@@ -1,7 +1,8 @@
 -- credit: https://github.com/AstroNvim/astrocommunity/blob/41f7a6a/lua/astrocommunity/recipes/heirline-nvchad-statusline/init.lua#
 
 local status, icon = require "astroui.status", require("astroui").get_icon
-local config = require("astroui").config.status
+local hl, component, condition = status.hl, status.component, status.condition
+local pde_components = require "pde.plugins.heirline.components"
 
 ---@param cond function
 local cond_not = function(cond)
@@ -13,7 +14,7 @@ return {
     colors = require("astroui").config.status.setup_colors(),
     disable_winbar_cb = function(args)
       return not require("astrocore.buffer").is_valid(args.buf)
-        or status.condition.buffer_matches({ buftype = { "terminal", "nofile" } }, args.buf)
+        or condition.buffer_matches({ buftype = { "terminal", "nofile" } }, args.buf)
     end,
   },
 
@@ -23,45 +24,24 @@ return {
 
   tabline = {
     -- automatic sidebar padding
-    {
-      {
-        condition = function(self)
-          self.winid = vim.api.nvim_tabpage_list_wins(0)[1]
-          self.winwidth = vim.api.nvim_win_get_width(self.winid)
-          self.bufnr = vim.api.nvim_win_get_buf(self.winid)
-          return self.winwidth ~= vim.o.columns -- only apply to sidebars
-            and not require("astrocore.buffer").is_valid(self.bufnr) -- if buffer is not in tabline
-        end,
-        provider = function(self)
-          local ft = vim.bo[self.bufnr].filetype
-          local title = config.sidebar_titles and config.sidebar_titles[ft] or ft
-          local padding = self.winwidth + 1 - #title
-          local left = padding / 2
-          return (" "):rep(left) .. title .. (" "):rep(padding - left)
-        end,
-        hl = status.hl.get_attributes("sidebar_title", true),
-        update = { "WinNew", "WinEnter", "WinResized" },
-      },
-    },
+    { pde_components.sidebar_title() },
 
-    status.heirline.make_buflist(status.component.tabline_file_info()),
-    status.component.fill { hl = { bg = "tabline_bg" } },
+    status.heirline.make_buflist(component.tabline_file_info()),
+    component.fill { hl = { bg = "tabline_bg" } },
 
     {
       -- hide tabline until there are 1+ tabs
       condition = function() return #vim.api.nvim_list_tabpages() >= 2 end,
       status.heirline.make_tablist {
         provider = status.provider.tabnr(),
-        hl = function(self)
-          return status.hl.get_attributes(status.heirline.tab_type(self, "tab"), true)
-        end,
+        hl = function(self) return hl.get_attributes(status.heirline.tab_type(self, "tab"), true) end,
       },
       { -- close button for current tab
         provider = status.provider.close_button {
           kind = "TabClose",
           padding = { left = 1, right = 1 },
         },
-        hl = status.hl.get_attributes("tab_close", true),
+        hl = hl.get_attributes("tab_close", true),
         on_click = {
           name = "heirline_tabline_close_tab_callback",
           callback = function() require("astrocore.buffer").close_tab() end,
@@ -78,19 +58,19 @@ return {
     init = function(self) self.bufnr = vim.api.nvim_get_current_buf() end,
     fallthrough = false,
     {
-      condition = cond_not(status.condition.is_active),
-      status.component.separated_path { hl = status.hl.get_attributes("winbarnc", true) },
-      status.component.file_info {
-        file_icon = { hl = status.hl.file_icon "winbar", padding = { left = 0 } },
+      condition = cond_not(condition.is_active),
+      component.separated_path { hl = hl.get_attributes("winbarnc", true) },
+      component.file_info {
+        file_icon = { hl = hl.file_icon "winbar", padding = { left = 0 } },
         filename = {},
         filetype = false,
         file_read_only = false,
-        hl = status.hl.get_attributes("winbarnc", true),
+        hl = hl.get_attributes("winbarnc", true),
         surround = false,
         update = "BufEnter",
       },
     },
-    status.component.breadcrumbs { hl = status.hl.get_attributes("winbar", true) },
+    component.breadcrumbs { hl = hl.get_attributes("winbar", true) },
   },
 
   -------------
@@ -104,16 +84,16 @@ return {
     -- left components
     ------------------
 
-    status.component.mode {
+    component.mode {
       mode_text = { icon = { kind = "VimIcon", padding = { right = 1 } } },
       padding = { left = 1, right = 1 },
       surround = {
         separator = "left",
-        color = function() return { main = status.hl.mode_bg(), right = "section_bg" } end,
+        color = function() return { main = hl.mode_bg(), right = "section_bg" } end,
       },
     },
 
-    status.component.file_info {
+    component.file_info {
       filetype = { icon = { kind = "DefaultFile", padding = { right = 1 } } },
       filename = false,
       file_icon = false,
@@ -121,27 +101,27 @@ return {
       file_read_only = false,
       padding = { left = 1, right = 1 },
       surround = {
-        condition = cond_not(status.condition.is_git_repo),
+        condition = cond_not(condition.is_git_repo),
         separator = "left",
         color = { main = "section_bg" },
       },
     },
 
-    status.component.git_branch {
+    component.git_branch {
       git_branch = { padding = false },
       padding = { left = 1, right = 1 },
       surround = {
-        condition = status.condition.is_git_repo,
+        condition = condition.is_git_repo,
         separator = "left",
         color = { main = "section_bg" },
       },
     },
 
-    status.component.git_diff {
+    component.git_diff {
       surround = { separator = "none" },
     },
 
-    status.component.cmd_info {
+    component.cmd_info {
       macro_recording = { padding = { left = 0, right = 1 } },
       search_count = { padding = { left = 0, right = 1 } },
       showcmd = { padding = { left = 0, right = 1 } },
@@ -152,23 +132,23 @@ return {
     --------------------
     -- center components
     --------------------
-    status.component.fill(),
+    component.fill(),
 
     -------------------
     -- right components
     -------------------
 
-    status.component.lsp {
+    component.lsp {
       lsp_client_names = false,
       lsp_progress = { padding = false },
       padding = { right = 1 },
       surround = { separator = "none", color = "bg" },
     },
-    status.component.diagnostics {
+    component.diagnostics {
       padding = { right = 1 },
       surround = { separator = "none" },
     },
-    status.component.lsp {
+    component.lsp {
       lsp_client_names = { icon = { padding = { right = 1 } } },
       lsp_progress = false,
       padding = { right = 1 },
@@ -176,13 +156,13 @@ return {
     },
 
     { -- nav
-      status.component.builder {
+      component.builder {
         { provider = icon "ScrollText" },
         padding = { right = 1 },
         hl = { fg = "mode_fg" },
         surround = { separator = "right", color = "nav_icon_bg" },
       },
-      status.component.nav {
+      component.nav {
         percentage = { padding = false },
         ruler = false,
         scrollbar = false,
@@ -192,7 +172,7 @@ return {
     },
 
     { -- project
-      status.component.builder {
+      component.builder {
         { provider = icon "FolderClosed" },
         hl = { fg = "mode_fg" },
         padding = { right = 1 },
@@ -201,7 +181,7 @@ return {
           color = { main = "folder_icon_bg", left = "section_bg" },
         },
       },
-      status.component.file_info {
+      component.file_info {
         filename = {
           fname = function(buf) return vim.fn.getcwd(buf) end,
         },
@@ -215,8 +195,8 @@ return {
     },
 
     { -- virtualenv
-      condition = status.condition.has_virtual_env,
-      status.component.builder {
+      condition = condition.has_virtual_env,
+      component.builder {
         { provider = icon "Environment" },
         hl = { fg = "mode_fg" },
         padding = { right = 1 },
@@ -225,7 +205,7 @@ return {
           color = { main = "virtual_env_icon_bg", left = "section_bg" },
         },
       },
-      status.component.virtual_env {
+      component.virtual_env {
         virtual_env = { icon = { kind = "NONE" }, padding = false },
         padding = { left = 1, right = 1 },
         surround = { condition = false, separator = "none", color = "section_bg" },
@@ -235,8 +215,8 @@ return {
 
   statuscolumn = {
     init = function(self) self.bufnr = vim.api.nvim_get_current_buf() end,
-    status.component.signcolumn(),
-    status.component.numbercolumn(),
-    status.component.foldcolumn(),
+    component.signcolumn(),
+    component.numbercolumn(),
+    component.foldcolumn(),
   },
 }
