@@ -17,19 +17,38 @@ M.deep_merge = require("lazy.core.util").merge
 
 M.list_extend = vim.list_extend
 
----Get the highlight group of the lualine theme for the current colorscheme.
----@param theme string
----@return (fun(mode: string, comp: string): table?)?
-function M.make_lualine_hl(theme)
-  local ok, lualine = pcall(require, "lualine.themes." .. theme)
-  if not ok then return end
+---A handy function to bind mapping presets.
+---@param dst table # the table to be set
+---@param mappings table<string,table<string,table<string,string|table>>>
+---@return table # return `dst`
+function M.make_mappings(dst, mappings)
+  local plugin_names, astro = require("pde").config.plugin_names, require "astrocore"
 
-  return function(mode, comp)
-    local mode_hl = lualine[mode]
-    local comp_hl = mode_hl and type(mode_hl[comp]) == "table" and mode_hl[comp] or nil
-    if not comp_hl then return end
-    return { fg = comp_hl.fg, bg = comp_hl.bg }
+  local unknowns = {}
+  for module, mode_maps in pairs(mappings) do
+    local plugin = plugin_names[module]
+    -- only set mappings when a plugin is available
+    if not plugin or astro.is_available(plugin) then
+      local ok, preset = pcall(require, "pde.mappings." .. module)
+      if not ok then table.insert(unknowns, module) end
+
+      for mode, maps in pairs(mode_maps) do
+        local dst_maps = dst[mode]
+        for key, rhs in pairs(maps) do
+          if type(rhs) == "string" then -- strings are treated as preset key
+            if not preset[rhs] then table.insert(unknowns, module .. "." .. rhs) end
+            rhs = preset[rhs]
+          end
+          if rhs then dst_maps[key] = rhs end
+        end
+      end
+    end
   end
+
+  if #unknowns > 0 then -- report unknown presets
+    vim.notify("unknown mapping presets:\n" .. table.concat(unknowns, "\n"), vim.log.levels.ERROR)
+  end
+  return dst
 end
 
 return M

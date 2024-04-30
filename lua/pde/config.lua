@@ -1,5 +1,6 @@
----@class PdeOptions
-local defaults = {
+---The default configuration.
+
+local default = {
   ---@type string? the leader key to map before setting up Lazy
   mapleader = " ",
 
@@ -45,6 +46,33 @@ local defaults = {
       },
     },
   },
+
+  ---@type table<string,string> lazy plugin names corresponding to PDE module names
+  plugin_names = {
+    -- core
+    ["lazy"] = "lazy.nvim",
+    ["pde"] = "pde",
+    ["astrocore"] = "astrocore",
+    -- coding
+    ["cmp"] = "nvim-cmp",
+    ["cmp-buffer"] = "cmp-buffer",
+    ["cmp-path"] = "cmp-path",
+    ["cmp-nvim-lsp"] = "cmp-nvim-lsp",
+    ["cmp-luasnip"] = "cmp_luasnip",
+    ["luasnip"] = "LuaSnip",
+    ["autopairs"] = "nvim-autopairs",
+    ["mini-comment"] = "mini.comment",
+    -- editor
+    ["resession"] = "resession.nvim",
+    ["gitsigns"] = "gitsigns.nvim",
+    -- ui
+    ["astroui"] = "astroui",
+    ["web-devicons"] = "nivm-web-devicons",
+    ["alpha"] = "alpha-nvim",
+    ["neo-tree"] = "neo-tree.nvim",
+    ["heirline"] = "heirline.nvim",
+    ["mini-bufremove"] = "mini.bufremove",
+  },
 }
 
-return defaults
+return default

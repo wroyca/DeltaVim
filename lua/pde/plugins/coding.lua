@@ -68,7 +68,7 @@ return {
         opts = { enable_autocmd = false },
       },
     },
-    keys = plug.keys "comment",
-    opts = plug.opts "comment",
+    keys = plug.keys "mini-comment",
+    opts = plug.opts "mini-comment",
   },
 }

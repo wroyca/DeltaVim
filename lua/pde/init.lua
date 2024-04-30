@@ -2,7 +2,6 @@ local M = {}
 
 M.did_init = false
 M.did_setup = false
-
 M.config = require "pde.config"
 
 local function lazy_notify()
