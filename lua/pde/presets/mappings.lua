@@ -37,7 +37,7 @@ return {
           ["<Leader>W"] = "common.close_window",
 
           --------------
-          -- Diagnostics
+          -- diagnostics
           --------------
 
           ["gl"] = "diagnostic.show_diagnostics",
@@ -97,6 +97,8 @@ return {
           ["<Leader>uc"] = "cmp.toggle_buffer",
           ["<Leader>uC"] = "cmp.toggle_global",
           ["<Leader>ua"] = "autopairs.toggle_global",
+          ["<Leader>ur"] = "illuminate.toggle_buffer",
+          ["<Leader>uR"] = "illuminate.toggle_global",
 
           ------------
           -- telescope
@@ -178,7 +180,7 @@ return {
           ["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
 
           ------------------
-          -- Git integration
+          -- git integration
           ------------------
 
           ["[g"] = "gitsigns.prev_hunk",
@@ -198,6 +200,15 @@ return {
           ["<Leader>gs"] = "gitsigns.stage_hunk",
           ["<Leader>gS"] = "gitsigns.stage_buffer",
           ["<Leader>gu"] = "gitsigns.undo_stage_hunk",
+
+          ------------
+          -- utilities
+          ------------
+
+          ["]]"] = "illuminate.next_reference",
+          ["[["] = "illuminate.prev_reference",
+          ["]r"] = "illuminate.next_reference",
+          ["[r"] = "illuminate.prev_reference",
         },
 
         t = {
