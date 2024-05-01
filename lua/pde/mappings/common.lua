@@ -2,6 +2,14 @@ return {
   move_down = { "v:count == 0 ? 'gj' : 'j'", expr = true, desc = "Move cursor down" },
   move_up = { "v:count == 0 ? 'gk' : 'k'", expr = true, desc = "Move cursor up" },
 
+  search_current_word = {
+    function()
+      vim.fn.setreg("/", "\\<" .. vim.fn.expand "<cword>" .. "\\>")
+      vim.o.hlsearch = true
+    end,
+    desc = "Search current word",
+  },
+
   new_file = { "<Cmd>enew<CR>", desc = "New file" },
   save_file = { "<Cmd>w<CR>", desc = "Save file" },
 

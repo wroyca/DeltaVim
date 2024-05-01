@@ -12,10 +12,10 @@ return {
           ["<"] = { "<gv" },
           [">"] = { ">gv" },
           ["<Esc>"] = { "<Cmd>noh<CR><Esc>" },
-          ["gw"] = { "*N", noremap = true },
 
           ["j"] = "common.move_down",
           ["k"] = "common.move_up",
+          ["gw"] = "common.search_current_word",
           ["gx"] = "common.system_open",
 
           ["<C-h>"] = "common.left_window",
