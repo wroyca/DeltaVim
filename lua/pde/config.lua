@@ -84,6 +84,10 @@ local default = {
     ["neo-tree"] = "neo-tree.nvim",
     ["heirline"] = "heirline.nvim",
     ["mini-bufremove"] = "mini.bufremove",
+    -- utility
+    ["better-escape"] = "better-escape.nvim",
+    ["guess-ident"] = "guess-ident.nvim",
+    ["window-picker"] = "nvim-window-picker",
   },
 }
 
