@@ -2,8 +2,8 @@ return {
   {
     "AstroNvim/astrocore",
     opts = function(_, opts)
-      local icon = require("astroui").get_icon
-      require("pde.utils").make_mappings(opts.mappings, {
+      local icon, utils = require("astroui").get_icon, require "pde.utils"
+      utils.make_mappings(opts.mappings, {
         n = {
           ------------------
           -- common mappings
@@ -97,6 +97,31 @@ return {
           ["<Leader>uC"] = "cmp.toggle_global",
           ["<Leader>ua"] = "autopairs.toggle_global",
 
+          ------------
+          -- telescope
+          ------------
+          ["<Leader>f"] = { desc = icon("Search", 1) .. "Find" },
+          ["<Leader>'"] = "telescope.find_marks",
+          ['<Leader>"'] = "telescope.find_registers",
+          ["<Leader>,"] = "telescope.find_buffers",
+          ["<Leader>/"] = "telescope.find_buffer_fuzzy",
+          ["<Leader>:"] = "telescope.find_command_history",
+          ["<Leader><CR>"] = "telescope.resume",
+          ["<Leader>fa"] = "telescope.find_config_files",
+          ["<Leader>fc"] = "telescope.find_commands",
+          ["<Leader>fC"] = "telescope.find_autocmds",
+          ["<Leader>ff"] = "telescope.find_files",
+          ["<Leader>fF"] = "telescope.find_all_files",
+          ["<Leader>fg"] = "telescope.find_words",
+          ["<Leader>fG"] = "telescope.find_words_from_all",
+          ["<Leader>fh"] = "telescope.find_help_tags",
+          ["<Leader>fH"] = "telescope.find_man_pages",
+          ["<Leader>fk"] = "telescope.find_keymaps",
+          ["<Leader>fo"] = "telescope.find_recent_files",
+          ["<Leader>fu"] = "telescope.find_colorschemes",
+          ["<Leader>fU"] = "telescope.find_highlights",
+          ["<Leader>fw"] = "telescope.find_current_word",
+
           --------------------
           -- buffer management
           --------------------
@@ -159,15 +184,19 @@ return {
           ["]g"] = "gitsigns.next_hunk",
 
           ["<Leader>g"] = { desc = icon("Git", 1) .. "Git" },
-          ["<Leader>gs"] = "gitsigns.stage_hunk",
-          ["<Leader>gS"] = "gitsigns.stage_buffer",
+          ["<Leader>ga"] = "telescope.git_status",
+          ["<Leader>gb"] = "telescope.git_branches",
+          ["<Leader>gc"] = "telescope.git_buffer_commits",
+          ["<Leader>gC"] = "telescope.git_global_commits",
+          ["<Leader>gk"] = "gitsigns.show_blame",
+          ["<Leader>gK"] = "gitsigns.show_full_blame",
+          ["<Leader>gP"] = "gitsigns.show_diff",
+          ["<Leader>gp"] = "gitsigns.show_hunk",
           ["<Leader>gr"] = "gitsigns.reset_hunk",
           ["<Leader>gR"] = "gitsigns.reset_buffer",
+          ["<Leader>gs"] = "gitsigns.stage_hunk",
+          ["<Leader>gS"] = "gitsigns.stage_buffer",
           ["<Leader>gu"] = "gitsigns.undo_stage_hunk",
-          ["<Leader>gb"] = "gitsigns.show_blame",
-          ["<Leader>gB"] = "gitsigns.show_full_blame",
-          ["<Leader>gp"] = "gitsigns.show_hunk",
-          ["<Leader>gP"] = "gitsigns.show_diff",
         },
 
         t = {
@@ -182,15 +211,28 @@ return {
           ["k"] = "common.move_up",
         },
       })
+      -- override mappings by other available plugins
+      utils.make_mappings(opts.mappings, {
+        n = {
+          ["<Leader>ld"] = "telescope.find_document_diagnostics",
+          ["<Leader>lD"] = "telescope.find_workspace_diagnostics",
+          ["<Leader>le"] = "telescope.find_document_errors",
+          ["<Leader>lE"] = "telescope.find_workspace_errors",
+        },
+      })
     end,
   },
 
   {
     "AstroNvim/astrolsp",
     opts = function(_, opts)
-      local icon = require("astroui").get_icon
-      require("pde.utils").make_mappings(opts.mappings, {
+      local icon, utils = require("astroui").get_icon, require "pde.utils"
+      utils.make_mappings(opts.mappings, {
         n = {
+          ------
+          -- LSP
+          ------
+
           ["K"] = "lsp.show_hover",
           ["gD"] = "lsp.goto_declaration",
           ["gd"] = "lsp.goto_definition",
@@ -219,6 +261,18 @@ return {
           ["<Leader>l"] = { desc = icon("ActiveLSP", 1) .. "LSP" },
           ["<Leader>la"] = "lsp.code_action",
           ["<Leader>lf"] = "lsp.format",
+        },
+      })
+      -- override mappings by other available plugins
+      utils.make_mappings(opts.mappings, {
+        n = {
+          ["gd"] = "telescope.goto_definition",
+          ["gI"] = "telescope.find_implementations",
+          ["gr"] = "telescope.find_references",
+          ["gy"] = "telescope.goto_type_definition",
+
+          ["<Leader>lg"] = "telescope.find_document_symbols",
+          ["<Leader>lG"] = "telescope.find_workspace_symbols",
         },
       })
     end,
