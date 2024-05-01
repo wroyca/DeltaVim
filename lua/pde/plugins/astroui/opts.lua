@@ -111,4 +111,5 @@ return {
     TabClose = "X",
   },
   status = require "pde.plugins.astroui.opts_status",
+  highlights = require "pde.plugins.astroui.opts_highlights",
 }
