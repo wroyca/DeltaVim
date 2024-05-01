@@ -92,10 +92,10 @@ return {
     local _hlgroup = astroui.get_hlgroup
     local function hlgroup(name) return _hlgroup(name, error_hl) end
 
-    local _lualine_hl = status.hl.lualine_mode
     local function lualine_hl(name, mode, fallback)
       local hl = hlgroup(name)
-      return hl == error_hl and { bg = _lualine_hl(mode, fallback.fg) } or hl
+      if hl.bg == "NONE" then hl.bg = status.hl.lualine_mode(mode, fallback.fg) end
+      return hl
     end
 
     local Comment = hlgroup "Comment"
