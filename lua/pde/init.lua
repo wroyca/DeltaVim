@@ -54,9 +54,7 @@ end
 
 function M.setup(opts)
   if M.did_setup then return end
-
-  opts = vim.tbl_deep_extend("force", M.config, opts)
-  M.config = opts
+  opts = require("pde.utils").deep_merge(M.config, opts)
 
   if not vim.g.mapleader and opts.mapleader then vim.g.mapleader = opts.mapleader end
   if not vim.g.maplocalleader and opts.maplocalleader then

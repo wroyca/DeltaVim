@@ -1,5 +1,7 @@
+local utils = require "pde.utils"
+
 local opt = {
-  backspace = vim.list_extend(vim.opt.backspace:get(), { "nostop" }), -- don't stop backspace at insert
+  backspace = utils.list_extend(vim.opt.backspace:get(), { "nostop" }), -- don't stop backspace at insert
   breakindent = true, -- wrap indent to match  line start
   clipboard = "unnamedplus", -- connection to the system clipboard
   cmdheight = 0, -- hide command line unless needed
@@ -7,7 +9,7 @@ local opt = {
   confirm = true, -- raise a dialog asking if you wish to save the current file(s)
   copyindent = true, -- copy the previous indentation on autoindenting
   cursorline = true, -- highlight the text line of the cursor
-  diffopt = vim.list_extend(vim.opt.diffopt:get(), { "algorithm:histogram", "linematch:60" }), -- enable linematch diff algorithm
+  diffopt = utils.list_extend(vim.opt.diffopt:get(), { "algorithm:histogram", "linematch:60" }), -- enable linematch diff algorithm
   expandtab = true, -- enable the use of space in tab
   fileencoding = "utf-8", -- file content encoding for the buffer
   fillchars = { eob = " " }, -- disable `~` on nonexistent lines
@@ -26,7 +28,7 @@ local opt = {
   pumheight = 10, -- height of the pop up menu
   relativenumber = true, -- show relative numberline
   shiftwidth = 2, -- number of space inserted for indentation
-  shortmess = vim.tbl_deep_extend("force", vim.opt.shortmess:get(), { s = true, I = true }), -- disable search count wrap and startup messages
+  shortmess = utils.merge(vim.opt.shortmess:get(), { s = true, I = true }), -- disable search count wrap and startup messages
   showmode = false, -- disable showing modes in command line
   showtabline = 2, -- always display tabline
   signcolumn = "yes", -- always show the sign column
