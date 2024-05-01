@@ -29,14 +29,14 @@ return {
     function(server, opts) require("lspconfig")[server].setup(opts) end,
   },
   lsp_handlers = {
-    ["textDocument/hover"] = vim.lsp.with(
-      vim.lsp.handlers.hover,
-      { border = "none", silent = true }
-    ),
-    ["textDocument/signatureHelp"] = vim.lsp.with(
-      vim.lsp.handlers.signature_help,
-      { border = "none", silent = true }
-    ),
+    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+      border = require("pde").config.popup_border,
+      silent = true,
+    }),
+    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+      border = require("pde").config.popup_border,
+      silent = true,
+    }),
   },
   servers = { "lua_ls" },
   on_attach = nil,

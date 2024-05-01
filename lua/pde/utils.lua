@@ -17,11 +17,11 @@ M.deep_merge = require("lazy.core.util").merge
 
 M.list_extend = vim.list_extend
 
----@type table<string,table> # cache for plugin mapping presets
+---@type table<string,table> cache for plugin mapping presets
 local plugin_mappings = {}
 
 ---A handy function to bind mapping presets.
----@param dst table # the table to be set
+---@param dst table the table to be set
 ---@param mappings table<string,table<string,string|table>>
 ---@return table # return `dst`
 function M.make_mappings(dst, mappings)
@@ -60,8 +60,8 @@ function M.make_mappings(dst, mappings)
 end
 
 ---Lists diagnostics in quickfix.
----@param bufnr integer? # buffer to get diagnostics from, 0 for the current or nil for all buffers
----@param opts? vim.diagnostic.GetOpts # options passed to `vim.diagnostics.get`
+---@param bufnr integer? buffer to get diagnostics from, 0 for the current or nil for all buffers
+---@param opts? vim.diagnostic.GetOpts options passed to `vim.diagnostics.get`
 function M.list_diagnostics(bufnr, opts)
   local diags = vim.diagnostic.get(bufnr, opts)
   local qflist = vim.diagnostic.toqflist(diags)

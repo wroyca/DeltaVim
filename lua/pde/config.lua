@@ -10,6 +10,12 @@ local default = {
   ---@type boolean? whether to enable icons, default to `true`
   icons_enabled = true,
 
+  ---@type string|table border for popups (hover, signature, etc)
+  popup_border = { "", "", "", " ", "", "", "", " " },
+
+  ---@type string|table border for float windows (LspInfo, Lazy, etc)
+  float_border = "rounded",
+
   ---@class PdeOptions.Autocmds
   autocmds = {
     auto_quit = {
