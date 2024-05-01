@@ -76,6 +76,7 @@ local default = {
     ["telescope"] = "telescope.nvim",
     -- lsp
     ["astrolsp"] = "astrolsp",
+    ["aerial"] = "aerial.nvim",
     -- ui
     ["astroui"] = "astroui",
     ["web-devicons"] = "nivm-web-devicons",

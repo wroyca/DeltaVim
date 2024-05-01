@@ -6,4 +6,10 @@ return {
     lazy = true,
     opts = plug.opts "astrolsp",
   },
+
+  {
+    "stevearc/aerial.nvim",
+    event = "User AstroFile",
+    opts = plug.opts "aerial",
+  },
 }

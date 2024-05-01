@@ -52,6 +52,7 @@ return {
           ["<Leader>lD"] = "diagnostic.list_workspace_diagnostics",
           ["<Leader>le"] = "diagnostic.list_document_errors",
           ["<Leader>lE"] = "diagnostic.list_workspace_errors",
+          ["<Leader>ls"] = "aerial.toggle",
 
           --------------------
           -- package management
