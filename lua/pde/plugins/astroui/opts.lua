@@ -66,7 +66,7 @@ local icons = {
 
 return {
   colorscheme = "astrodark",
-  icons = require("pde.utils").merge(icons, require "pde.plugins.astroui.opts_lspkind"),
+  icons = require("pde.utils").merge(icons, require "pde.lspkind"),
   text_icons = {
     ActiveLSP = "LSP:",
     ArrowLeft = "<",

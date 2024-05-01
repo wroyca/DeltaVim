@@ -34,7 +34,7 @@ return {
         ["[["] = false,
         ["]]"] = false,
       },
-      icons = require "pde.plugins.astroui.opts_lspkind",
+      icons = require "pde.lspkind",
     }
 
     local large_buf = vim.tbl_get(require("astrocore").config, "features", "large_buf")
