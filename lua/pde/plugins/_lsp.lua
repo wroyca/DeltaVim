@@ -12,4 +12,12 @@ return {
     event = "User AstroFile",
     opts = plug.opts "aerial",
   },
+
+  {
+    "neovim/nvim-lspconfig",
+    event = "User AstroFile",
+    cmd = { "LspInfo", "LspLog", "LspStart" },
+    config = plug.setup "lspconfig",
+  },
+  { "folke/neodev.nvim", lazy = true, opts = {} },
 }

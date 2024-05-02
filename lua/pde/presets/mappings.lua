@@ -271,6 +271,7 @@ return {
           ["<Leader>lg"] = "lsp.list_document_symbols",
           ["<Leader>lG"] = "lsp.list_workspace_symbols",
           ["<Leader>lh"] = "lsp.hover_signature_help",
+          ["<Leader>li"] = "lspconfig.show_info",
           ["<Leader>ll"] = "lsp.refresh_codelens",
           ["<Leader>lL"] = "lsp.run_codelens",
           ["<Leader>lr"] = "lsp.rename",

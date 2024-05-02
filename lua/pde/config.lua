@@ -77,6 +77,7 @@ local default = {
     -- lsp
     ["astrolsp"] = "astrolsp",
     ["aerial"] = "aerial.nvim",
+    ["lspconfig"] = "nvim-lspconfig",
     -- ui
     ["astroui"] = "astroui",
     ["web-devicons"] = "nivm-web-devicons",
