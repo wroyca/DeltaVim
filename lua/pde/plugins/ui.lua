@@ -20,7 +20,7 @@ return {
       { "AstroNvim/astrocore", opts = plug.autocmds "alpha" },
     },
     opts = plug.opts "alpha",
-    config = plug.config "alpha",
+    config = plug.setup "alpha",
   },
 
   {
@@ -38,7 +38,7 @@ return {
     "rebelot/heirline.nvim",
     event = "BufEnter",
     opts = plug.opts "heirline",
-    config = plug.config "heirline",
+    config = plug.setup "heirline",
   },
   { "echasnovski/mini.bufremove", lazy = true },
 
@@ -52,13 +52,13 @@ return {
       "ColorizerReloadAllBuffers",
     },
     opts = { user_default_options = { names = false } },
-    config = plug.config "colorizer",
+    config = plug.setup "colorizer",
   },
 
   {
     "stevearc/dressing.nvim",
     lazy = true,
-    init = plug.init "dressing",
+    init = plug.initialize "dressing",
     opts = plug.opts "dressing",
   },
 

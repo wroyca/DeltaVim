@@ -30,6 +30,6 @@ return {
       },
     },
     opts = plug.opts "telescope",
-    config = plug.config "telescope",
+    config = plug.setup "telescope",
   },
 }

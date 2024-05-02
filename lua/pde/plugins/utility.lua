@@ -26,7 +26,7 @@ return {
     "RRethy/vim-illuminate",
     event = "User AstroFile",
     opts = plug.opts "illuminate",
-    config = plug.config "illuminate",
+    config = plug.setup "illuminate",
   },
 
   {

@@ -16,14 +16,14 @@ end
 
 ---@param name string
 ---@return function
-function M.config(name)
-  local mod = "pde.plugins." .. name .. ".config"
+function M.setup(name)
+  local mod = "pde.plugins." .. name .. ".setup"
   return function(...) return require(mod)(...) end
 end
 
 ---@param name string
 ---@return function
-function M.init(name)
+function M.initialize(name)
   local mod = "pde.plugins." .. name .. ".initialize"
   return function(...) return require(mod)(...) end
 end

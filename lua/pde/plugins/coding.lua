@@ -38,7 +38,7 @@ return {
       },
     },
     opts = plug.opts "cmp",
-    config = plug.config "cmp",
+    config = plug.setup "cmp",
   },
 
   {
@@ -49,14 +49,14 @@ return {
       { "saadparwaiz1/cmp_luasnip", lazy = true },
     },
     opts = plug.opts "luasnip",
-    config = plug.config "luasnip",
+    config = plug.setup "luasnip",
   },
 
   {
     "windwp/nvim-autopairs",
     event = "User AstroFile",
     opts = plug.opts "autopairs",
-    config = plug.config "autopairs",
+    config = plug.setup "autopairs",
   },
 
   {
