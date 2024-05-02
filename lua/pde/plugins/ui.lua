@@ -61,4 +61,19 @@ return {
     init = plug.init "dressing",
     opts = plug.opts "dressing",
   },
+
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    event = "User AstroFile",
+    cmd = {
+      "IBLEnable",
+      "IBLDisable",
+      "IBLToggle",
+      "IBLEnableScope",
+      "IBLDisableScope",
+      "IBLToggleScope",
+    },
+    opts = plug.opts "indent-blankline",
+  },
 }

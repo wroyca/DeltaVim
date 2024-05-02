@@ -101,6 +101,7 @@ return {
           ["<Leader>ur"] = "illuminate.toggle_buffer",
           ["<Leader>uR"] = "illuminate.toggle_global",
           ["<Leader>uU"] = "colorizer.toggle_buffer",
+          ["<Leader>u|"] = "indent-blankline.toggle_global",
 
           ------------
           -- telescope

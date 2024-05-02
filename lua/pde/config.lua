@@ -86,6 +86,7 @@ local default = {
     ["mini-bufremove"] = "mini.bufremove",
     ["colorizer"] = "nvim-colorizer.lua",
     ["dressing"] = "dressing.nvim",
+    ["indent-blankline"] = "indent-blankline.nvim",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",
