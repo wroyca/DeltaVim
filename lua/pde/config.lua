@@ -89,6 +89,7 @@ local default = {
     ["guess-ident"] = "guess-ident.nvim",
     ["window-picker"] = "nvim-window-picker",
     ["illuminate"] = "vim-illuminate",
+    ["smart-splits"] = "smart-splits.nvim",
   },
 }
 

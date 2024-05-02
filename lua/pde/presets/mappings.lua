@@ -13,8 +13,8 @@ return {
           [">"] = { ">gv" },
           ["<Esc>"] = { "<Cmd>noh<CR><Esc>" },
 
-          ["j"] = "common.move_down",
-          ["k"] = "common.move_up",
+          ["j"] = "common.j",
+          ["k"] = "common.k",
           ["gw"] = "common.search_current_word",
           ["gx"] = "common.system_open",
 
@@ -22,16 +22,17 @@ return {
           ["<C-j>"] = "common.down_window",
           ["<C-k>"] = "common.up_window",
           ["<C-l>"] = "common.right_window",
-          ["<C-s>"] = "common.save_file",
 
           ["<C-S-h>"] = "common.resize_left",
           ["<C-S-j>"] = "common.resize_down",
           ["<C-S-k>"] = "common.resize_up",
           ["<C-S-l>"] = "common.resize_right",
 
-          ["<Leader>n"] = "common.new_file",
           ["<Leader>-"] = "common.hsplit",
           ["<Leader>\\"] = "common.vsplit",
+
+          ["<Leader>n"] = "common.new_file",
+          ["<C-s>"] = "common.save_file",
 
           ["<Leader>w"] = "buffer.close",
           ["<Leader>W"] = "common.close_window",
@@ -219,13 +220,23 @@ return {
         },
 
         x = {
-          ["j"] = "common.move_down",
-          ["k"] = "common.move_up",
+          ["j"] = "common.j",
+          ["k"] = "common.k",
         },
       })
       -- override mappings by other available plugins
       utils.make_mappings(opts.mappings, {
         n = {
+          ["<C-h>"] = "smart-splits.left_window",
+          ["<C-j>"] = "smart-splits.down_window",
+          ["<C-k>"] = "smart-splits.up_window",
+          ["<C-l>"] = "smart-splits.right_window",
+
+          ["<C-S-h>"] = "smart-splits.resize_left",
+          ["<C-S-j>"] = "smart-splits.resize_down",
+          ["<C-S-k>"] = "smart-splits.resize_up",
+          ["<C-S-l>"] = "smart-splits.resize_right",
+
           ["<Leader>ld"] = "telescope.find_document_diagnostics",
           ["<Leader>lD"] = "telescope.find_workspace_diagnostics",
           ["<Leader>le"] = "telescope.find_document_errors",
