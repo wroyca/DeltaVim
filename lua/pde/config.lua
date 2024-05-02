@@ -85,6 +85,7 @@ local default = {
     ["heirline"] = "heirline.nvim",
     ["mini-bufremove"] = "mini.bufremove",
     ["colorizer"] = "nvim-colorizer.lua",
+    ["dressing"] = "dressing.nvim",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",

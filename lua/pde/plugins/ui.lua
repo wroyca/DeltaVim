@@ -54,4 +54,11 @@ return {
     opts = { user_default_options = { names = false } },
     config = plug.config "colorizer",
   },
+
+  {
+    "stevearc/dressing.nvim",
+    lazy = true,
+    init = plug.init "dressing",
+    opts = plug.opts "dressing",
+  },
 }

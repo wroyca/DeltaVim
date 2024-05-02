@@ -23,6 +23,13 @@ end
 
 ---@param name string
 ---@return function
+function M.init(name)
+  local mod = "pde.plugins." .. name .. ".initialize"
+  return function(...) return require(mod)(...) end
+end
+
+---@param name string
+---@return function
 function M.autocmds(name)
   local mod = "pde.plugins." .. name .. ".autocmds"
   return function(_, opts)
