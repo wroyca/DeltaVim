@@ -25,7 +25,9 @@ return {
 
   vsplit = { "<Cmd>vsplit<CR>", desc = "Vertical split" },
   hsplit = { "<Cmd>split<CR>", desc = "Horizontal split" },
+
   close_window = { "<Cmd>wincmd q<CR>", desc = "Close current window" },
+  quit = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
 
   system_open = {
     -- TODO: remove astro.system_open after NeoVim v0.9

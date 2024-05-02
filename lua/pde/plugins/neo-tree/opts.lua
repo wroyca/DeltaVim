@@ -4,7 +4,7 @@ local icon = require("astroui").get_icon
 -- mappings
 local commands = {
   system_open = function(state)
-    -- TODO: remove deprecated method check after NeoVim v0.9
+    -- TODO: remove astro.system_open after NeoVim v0.9
     (vim.ui.open or astro.system_open)(state.tree:get_node():get_id())
   end,
 

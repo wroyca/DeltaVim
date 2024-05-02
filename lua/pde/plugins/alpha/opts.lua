@@ -51,17 +51,19 @@ dashboard.section.header.val = {
 dashboard.section.header.opts.hl = "DashboardHeader"
 
 -- body
-local last_session = require("pde.mappings.resession").load_dir_cwd[1]
-local show_packages = require("pde.mappings.lazy").show_status[1]
+local common = require "pde.mappings.common"
+local telescope = require "pde.mappings.telescope"
+local resession = require "pde.mappings.resession"
+local lazy = require "pde.mappings.lazy"
 dashboard.section.buttons.val = {
-  dashboard.button("n", "<Cmd>enew<CR>", icon "FileNew", "New File"),
-  dashboard.button("f", "<Cmd>Telescope find_files<CR>", icon "Search", "Find File"),
-  dashboard.button("o", "<Cmd>Telescope oldfiles<CR>", icon "DefaultFile", "Recents"),
-  dashboard.button("g", "<Cmd>Telescope live_grep<CR>", icon "WordFile", "Grep"),
-  dashboard.button("b", "<Cmd>Telescope marks<CR>", icon "Bookmarks", "Bookmarks"),
-  dashboard.button("r", last_session, icon "Refresh", "Last Session"),
-  dashboard.button("p", show_packages, icon "Package", "Packages"),
-  dashboard.button("q", "<Cmd>confirm qa<CR>", icon "Exit", "Quit"),
+  dashboard.button("n", common.new_file[1], icon "FileNew", "New File"),
+  dashboard.button("o", telescope.find_recent_files[1], icon "DefaultFile", "Recents"),
+  dashboard.button("r", resession.load_dir_cwd[1], icon "Refresh", "Last Session"),
+  dashboard.button("f", telescope.find_files[1], icon "Search", "Files"),
+  dashboard.button("g", telescope.find_words[1], icon "WordFile", "Words"),
+  dashboard.button("b", telescope.find_marks[1], icon "Bookmarks", "Bookmarks"),
+  dashboard.button("p", lazy.show_status[1], icon "Package", "Packages"),
+  dashboard.button("q", common.quit[1], icon "Exit", "Quit"),
 }
 
 -- footer

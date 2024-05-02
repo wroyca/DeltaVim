@@ -180,7 +180,7 @@ return {
           ["<Leader>qF"] = "resession.load_dir",
           ["<Leader>qd"] = "resession.delete_dir",
           ["<Leader>qD"] = "resession.delete",
-          ["<Leader>qq"] = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
+          ["<Leader>qq"] = "common.quit",
 
           ------------------
           -- git integration
