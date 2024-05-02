@@ -84,6 +84,7 @@ local default = {
     ["neo-tree"] = "neo-tree.nvim",
     ["heirline"] = "heirline.nvim",
     ["mini-bufremove"] = "mini.bufremove",
+    ["colorizer"] = "nvim-colorizer.lua",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",

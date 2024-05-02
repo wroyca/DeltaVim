@@ -41,4 +41,17 @@ return {
     config = plug.config "heirline",
   },
   { "echasnovski/mini.bufremove", lazy = true },
+
+  {
+    "NvChad/nvim-colorizer.lua",
+    event = "User AstroFile",
+    cmd = {
+      "ColorizerToggle",
+      "ColorizerAttachToBuffer",
+      "ColorizerDetachFromBuffer",
+      "ColorizerReloadAllBuffers",
+    },
+    opts = { user_default_options = { names = false } },
+    config = plug.config "colorizer",
+  },
 }

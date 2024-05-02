@@ -100,6 +100,7 @@ return {
           ["<Leader>ua"] = "autopairs.toggle_global",
           ["<Leader>ur"] = "illuminate.toggle_buffer",
           ["<Leader>uR"] = "illuminate.toggle_global",
+          ["<Leader>uU"] = "colorizer.toggle_buffer",
 
           ------------
           -- telescope
