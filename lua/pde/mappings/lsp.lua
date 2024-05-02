@@ -31,13 +31,13 @@ return {
     cond = "textDocument/codeLens",
   },
 
-  show_hover = {
+  hover = {
     function() vim.lsp.buf.hover() end,
     desc = "Show symbol details",
     cond = "textDocument/hover",
   },
 
-  show_signature_help = {
+  hover_signature_help = {
     function() vim.lsp.buf.signature_help() end,
     desc = "Show symbol signature help",
     cond = "textDocument/signatureHelp",

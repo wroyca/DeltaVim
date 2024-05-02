@@ -29,19 +29,19 @@ return {
     desc = "Undo stage hunk",
   },
 
-  show_blame = {
+  hover_blame = {
     function() require("gitsigns").blame_line() end,
     desc = "Show current blame",
   },
-  show_full_blame = {
+  hover_full_blame = {
     function() require("gitsigns").blame_line { full = true } end,
     desc = "Show current full blame",
   },
-  show_hunk = {
+  hover_hunk = {
     function() require("gitsigns").preview_hunk_inline() end,
     desc = "Show current hunk",
   },
-  show_diff = {
+  hover_diff = {
     function() require("gitsigns").diffthis() end,
     desc = "Show Git diff",
   },

@@ -1,5 +1,5 @@
 return {
-  show_diagnostics = {
+  hover_diagnostics = {
     function() vim.diagnostic.open_float() end,
     desc = "Show symbol diagnostics",
   },

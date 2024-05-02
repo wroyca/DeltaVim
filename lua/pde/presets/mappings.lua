@@ -41,7 +41,7 @@ return {
           -- diagnostics
           --------------
 
-          ["gl"] = "diagnostic.show_diagnostics",
+          ["gl"] = "diagnostic.hover_diagnostics",
 
           ["]d"] = "diagnostic.next_diagnostic",
           ["[d"] = "diagnostic.prev_diagnostic",
@@ -194,10 +194,10 @@ return {
           ["<Leader>gb"] = "telescope.git_branches",
           ["<Leader>gc"] = "telescope.git_buffer_commits",
           ["<Leader>gC"] = "telescope.git_global_commits",
-          ["<Leader>gk"] = "gitsigns.show_blame",
-          ["<Leader>gK"] = "gitsigns.show_full_blame",
-          ["<Leader>gP"] = "gitsigns.show_diff",
-          ["<Leader>gp"] = "gitsigns.show_hunk",
+          ["<Leader>gk"] = "gitsigns.hover_blame",
+          ["<Leader>gK"] = "gitsigns.hover_full_blame",
+          ["<Leader>gP"] = "gitsigns.hover_diff",
+          ["<Leader>gp"] = "gitsigns.hover_hunk",
           ["<Leader>gr"] = "gitsigns.reset_hunk",
           ["<Leader>gR"] = "gitsigns.reset_buffer",
           ["<Leader>gs"] = "gitsigns.stage_hunk",
@@ -258,11 +258,11 @@ return {
           -- LSP
           ------
 
-          ["K"] = "lsp.show_hover",
+          ["K"] = "lsp.hover",
           ["gD"] = "lsp.goto_declaration",
           ["gd"] = "lsp.goto_definition",
           ["gI"] = "lsp.list_implementations",
-          ["gK"] = "lsp.show_signature_help",
+          ["gK"] = "lsp.hover_signature_help",
           ["gr"] = "lsp.list_references",
           ["gy"] = "lsp.goto_type_definition",
 
@@ -270,7 +270,7 @@ return {
           ["<Leader>lf"] = "lsp.format",
           ["<Leader>lg"] = "lsp.list_document_symbols",
           ["<Leader>lG"] = "lsp.list_workspace_symbols",
-          ["<Leader>lh"] = "lsp.show_signature_help",
+          ["<Leader>lh"] = "lsp.hover_signature_help",
           ["<Leader>ll"] = "lsp.refresh_codelens",
           ["<Leader>lL"] = "lsp.run_codelens",
           ["<Leader>lr"] = "lsp.rename",
