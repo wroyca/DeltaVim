@@ -91,6 +91,7 @@ local default = {
     ["dressing"] = "dressing.nvim",
     ["indent-blankline"] = "indent-blankline.nvim",
     ["which-key"] = "which-key.nvim",
+    ["ufo"] = "nvim-ufo",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",

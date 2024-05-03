@@ -77,4 +77,25 @@ return {
     event = "VeryLazy",
     opts = plug.opts "which-key",
   },
+
+  {
+    "kevinhwang91/nvim-ufo",
+    event = { "User AstroFile", "InsertEnter" },
+    dependencies = {
+      { "kevinhwang91/promise-async", lazy = true },
+      {
+        "AstroNvim/astrolsp",
+        optional = true,
+        opts = {
+          capabilities = {
+            textDocument = {
+              foldingRange = { dynamicRegistration = false, lineFoldingOnly = true },
+            },
+          },
+        },
+      },
+    },
+    opts = plug.opts "ufo",
+    config = plug.setup "ufo",
+  },
 }
