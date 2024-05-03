@@ -9,5 +9,6 @@ return {
     changedelete = { text = icon "GitSign" },
     untracked = { text = icon "GitSign" },
   },
+  preview_config = { border = require("pde").config.popup_border },
   worktrees = require("astrocore").config.git_worktrees,
 }

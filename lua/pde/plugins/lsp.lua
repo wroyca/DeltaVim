@@ -28,6 +28,6 @@ return {
     dependencies = {
       { "nvim-lua/plenary.nvim", lazy = true },
     },
-    opts = function() return { on_attach = require("astrolsp").on_attach } end,
+    opts = plug.opts "null-ls",
   },
 }

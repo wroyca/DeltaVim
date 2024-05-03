@@ -11,10 +11,28 @@ local default = {
   icons_enabled = true,
 
   ---@type string|table border for popups (hover, signature, etc)
-  popup_border = { "", "", "", " ", "", "", "", " " },
+  popup_border = {
+    { "", "NormalFloat" },
+    { "", "NormalFloat" },
+    { "", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { "", "NormalFloat" },
+    { "", "NormalFloat" },
+    { "", "NormalFloat" },
+    { " ", "NormalFloat" },
+  },
 
   ---@type string|table border for float windows (LspInfo, Lazy, etc)
-  float_border = "rounded",
+  float_border = {
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+    { " ", "NormalFloat" },
+  },
 
   ---@class PdeOptions.Autocmds
   autocmds = {
