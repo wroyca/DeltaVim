@@ -98,4 +98,25 @@ return {
     opts = plug.opts "ufo",
     config = plug.setup "ufo",
   },
+
+  {
+    "rcarriga/nvim-notify",
+    lazy = true,
+    dependencies = {
+      { "nvim-lua/plenary.nvim", lazy = true },
+      {
+        "AstroNvim/astrocore",
+        opts = function(_, opts)
+          local maps = opts.mappings
+          maps.n["<Leader>uD"] = {
+            function() require("notify").dismiss { pending = true, silent = true } end,
+            desc = "Dismiss notifications",
+          }
+        end,
+      },
+    },
+    init = plug.initialize "notify",
+    opts = plug.opts "notify",
+    config = plug.setup "notify",
+  },
 }

@@ -197,11 +197,4 @@ return {
     desc = "Find workspace symbols",
     cond = "workspace/symbol",
   },
-
-  -- if is_available "nvim-notify" then
-  --   ["<Leader>fn"] = {
-  --     function() require("telescope").extensions.notify.notify() end,
-  --     desc = "Find notifications",
-  --   },
-  -- end
 }

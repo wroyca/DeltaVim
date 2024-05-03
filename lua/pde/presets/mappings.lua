@@ -80,8 +80,8 @@ return {
           ["<Leader>ud"] = "toggles.toggle_diagnostics",
           ["<Leader>ug"] = "toggles.toggle_signcolumn",
           ["<Leader>ui"] = "toggles.toggle_indent",
+          ["<Leader>uI"] = "toggles.toggle_number",
           ["<Leader>ul"] = "toggles.toggle_statusline",
-          ["<Leader>un"] = "toggles.toggle_number",
           ["<Leader>up"] = "toggles.toggle_paste",
           ["<Leader>us"] = "toggles.toggle_spell",
           ["<Leader>ut"] = "toggles.toggle_tabline",
@@ -93,9 +93,10 @@ return {
           ["<Leader>uN"] = "toggles.toggle_notifications",
           ["<Leader>uS"] = "toggles.toggle_conceal",
 
+          ["<Leader>ua"] = "autopairs.toggle_global",
           ["<Leader>uc"] = "cmp.toggle_buffer",
           ["<Leader>uC"] = "cmp.toggle_global",
-          ["<Leader>ua"] = "autopairs.toggle_global",
+          ["<Leader>un"] = "notify.dismiss",
           ["<Leader>ur"] = "illuminate.toggle_buffer",
           ["<Leader>uR"] = "illuminate.toggle_global",
           ["<Leader>uU"] = "colorizer.toggle_buffer",
@@ -136,6 +137,8 @@ return {
 
           ["[T"] = "todo-comments.prev",
           ["]T"] = "todo-comments.next",
+
+          ["<Leader>fn"] = "notify.find",
           ["<Leader>ft"] = "todo-comments.find",
           ["<Leader>fT"] = "todo-comments.find_all_kinds",
 
