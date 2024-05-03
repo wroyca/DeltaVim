@@ -71,4 +71,10 @@ return {
     },
     opts = plug.opts "indent-blankline",
   },
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = plug.opts "which-key",
+  },
 }

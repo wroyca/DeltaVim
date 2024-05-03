@@ -107,6 +107,7 @@ local default = {
     ["colorizer"] = "nvim-colorizer.lua",
     ["dressing"] = "dressing.nvim",
     ["indent-blankline"] = "indent-blankline.nvim",
+    ["which-key"] = "which-key.nvim",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",
