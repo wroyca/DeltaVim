@@ -32,6 +32,15 @@ local function lazy_notify()
   timer:start(500, 0, replay)
 end
 
+---Returns certain border configuration with specified highlight.
+---@param border string the config key, can be `popup_border` or `float_border`
+---@param hl string? the highlight to be used
+---@return table
+function M.get_border(border, hl)
+  hl = hl or "NormalFloat"
+  return vim.tbl_map(function(v) return { v, hl } end, M.config[border] --[[@as table]])
+end
+
 function M.init()
   if vim.fn.has "nvim-0.9" == 0 then
     vim.api.nvim_echo({

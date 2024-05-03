@@ -10,29 +10,11 @@ local default = {
   ---@type boolean? whether to enable icons, default to `true`
   icons_enabled = true,
 
-  ---@type string|table border for popups (hover, signature, etc)
-  popup_border = {
-    { "", "NormalFloat" },
-    { "", "NormalFloat" },
-    { "", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { "", "NormalFloat" },
-    { "", "NormalFloat" },
-    { "", "NormalFloat" },
-    { " ", "NormalFloat" },
-  },
+  ---@type table border for popups (hover, signature, etc)
+  popup_border = { "", "", "", " ", "", "", "", " " },
 
-  ---@type string|table border for float windows (LspInfo, Lazy, etc)
-  float_border = {
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-    { " ", "NormalFloat" },
-  },
+  ---@type table border for float windows (LspInfo, Lazy, etc)
+  float_border = { " ", " ", " ", " ", " ", " ", " ", " " },
 
   ---@class PdeOptions.Autocmds
   autocmds = {

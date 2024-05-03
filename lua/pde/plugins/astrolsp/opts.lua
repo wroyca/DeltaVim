@@ -30,11 +30,11 @@ return {
   },
   lsp_handlers = {
     ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-      border = require("pde").config.popup_border,
+      border = require("pde").get_border "popup_border",
       silent = true,
     }),
     ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-      border = require("pde").config.popup_border,
+      border = require("pde").get_border "popup_border",
       silent = true,
     }),
   },

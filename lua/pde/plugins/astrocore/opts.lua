@@ -29,7 +29,7 @@ return {
     float = {
       focused = false,
       style = "minimal",
-      border = require("pde").config.popup_border,
+      border = require("pde").get_border "popup_border",
       source = "always",
       header = "",
       prefix = "",

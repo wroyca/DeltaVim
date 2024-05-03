@@ -4,5 +4,5 @@ return {
     separator = "-",
   },
   disable = { filetypes = { "TelescopePrompt" } },
-  window = { border = require("pde").config.popup_border },
+  window = { border = require("pde").get_border "popup_border" },
 }
