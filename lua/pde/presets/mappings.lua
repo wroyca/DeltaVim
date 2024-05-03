@@ -9,8 +9,6 @@ return {
           -- common mappings
           ------------------
 
-          ["<"] = { "<gv" },
-          [">"] = { ">gv" },
           ["<Esc>"] = { "<Cmd>noh<CR><Esc>" },
 
           ["j"] = "common.j",
@@ -235,6 +233,8 @@ return {
         },
 
         x = {
+          ["<"] = { "<gv", noremap = true },
+          [">"] = { ">gv", noremap = true },
           ["j"] = "common.j",
           ["k"] = "common.k",
         },
