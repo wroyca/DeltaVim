@@ -113,6 +113,7 @@ return {
           ["<Leader>/"] = "telescope.find_buffer_fuzzy",
           ["<Leader>:"] = "telescope.find_command_history",
           ["<Leader><CR>"] = "telescope.resume",
+          ["<Leader><Leader>"] = "telescope.find_files",
           ["<Leader>fa"] = "telescope.find_config_files",
           ["<Leader>fc"] = "telescope.find_commands",
           ["<Leader>fC"] = "telescope.find_autocmds",
@@ -127,6 +128,12 @@ return {
           ["<Leader>fu"] = "telescope.find_colorschemes",
           ["<Leader>fU"] = "telescope.find_highlights",
           ["<Leader>fw"] = "telescope.find_current_word",
+          ["<Leader>f'"] = "telescope.find_marks",
+          ['<Leader>f"'] = "telescope.find_registers",
+          ["<Leader>f,"] = "telescope.find_buffers",
+          ["<Leader>f/"] = "telescope.find_buffer_fuzzy",
+          ["<Leader>f:"] = "telescope.find_command_history",
+          ["<Leader>f<CR>"] = "telescope.resume",
 
           --------------------
           -- buffer management
