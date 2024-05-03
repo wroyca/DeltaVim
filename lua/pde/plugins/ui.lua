@@ -2,11 +2,6 @@ local plug = require "pde.utils.plug"
 
 return {
   {
-    "AstroNvim/astroui",
-    opts = plug.opts "astroui",
-  },
-
-  {
     "nvim-tree/nvim-web-devicons",
     lazy = true,
     enabled = vim.g.icons_enabled ~= false,

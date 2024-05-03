@@ -12,4 +12,16 @@ return {
     dependencies = { "AstroNvim/astroui" },
     opts = plug.opts "astrocore",
   },
+
+  {
+    "AstroNvim/astrolsp",
+    lazy = true,
+    opts = plug.opts "astrolsp",
+  },
+
+  {
+    "AstroNvim/astroui",
+    lazy = true,
+    opts = plug.opts "astroui",
+  },
 }
