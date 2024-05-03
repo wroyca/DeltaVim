@@ -32,4 +32,14 @@ return {
     opts = plug.opts "telescope",
     config = plug.setup "telescope",
   },
+
+  {
+    "folke/todo-comments.nvim",
+    event = "User AstroFile",
+    cmd = { "TodoTrouble", "TodoTelescope", "TodoLocList", "TodoQuickFix" },
+    dependencies = {
+      { "nvim-lua/plenary.nvim", lazy = true },
+    },
+    opts = {},
+  },
 }

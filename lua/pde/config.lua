@@ -92,6 +92,7 @@ local default = {
     ["resession"] = "resession.nvim",
     ["gitsigns"] = "gitsigns.nvim",
     ["telescope"] = "telescope.nvim",
+    ["todo-comments"] = "todo-comments.nvim",
     -- lsp
     ["astrolsp"] = "astrolsp",
     ["aerial"] = "aerial.nvim",

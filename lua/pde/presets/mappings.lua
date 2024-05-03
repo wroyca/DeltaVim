@@ -106,6 +106,7 @@ return {
           ------------
           -- telescope
           ------------
+
           ["<Leader>f"] = { desc = icon("Search", 1) .. "Find" },
           ["<Leader>'"] = "telescope.find_marks",
           ['<Leader>"'] = "telescope.find_registers",
@@ -134,6 +135,11 @@ return {
           ["<Leader>f/"] = "telescope.find_buffer_fuzzy",
           ["<Leader>f:"] = "telescope.find_command_history",
           ["<Leader>f<CR>"] = "telescope.resume",
+
+          ["[T"] = "todo-comments.prev",
+          ["]T"] = "todo-comments.next",
+          ["<Leader>ft"] = "todo-comments.find",
+          ["<Leader>fT"] = "todo-comments.find_all_kinds",
 
           --------------------
           -- buffer management
@@ -164,8 +170,8 @@ return {
           ["<Leader>b\\"] = "heirline.pick_hsplit",
           ["<Leader>b-"] = "heirline.pick_vsplit",
 
-          ["[t"] = "buffer.prev",
-          ["]t"] = "buffer.next",
+          ["[t"] = "tab.prev",
+          ["]t"] = "tab.next",
 
           ["<Leader>t"] = { desc = icon("Window", 1) .. "Tabs" },
           ["<Leader>tn"] = "tab.new",
