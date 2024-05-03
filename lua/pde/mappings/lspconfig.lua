@@ -1,3 +1,3 @@
 return {
-  show_info = { "<Cmd>LspInfo<CR>", desc = "LSP information" },
+  show_info = { "<Cmd>LspInfo<CR>", desc = "Show LSP information" },
 }

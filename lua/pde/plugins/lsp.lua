@@ -20,4 +20,14 @@ return {
     config = plug.setup "lspconfig",
   },
   { "folke/neodev.nvim", lazy = true, opts = {} },
+
+  {
+    "nvimtools/none-ls.nvim",
+    main = "null-ls",
+    event = "User AstroFile",
+    dependencies = {
+      { "nvim-lua/plenary.nvim", lazy = true },
+    },
+    opts = function() return { on_attach = require("astrolsp").on_attach } end,
+  },
 }
