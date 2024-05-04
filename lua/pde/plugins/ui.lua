@@ -2,13 +2,6 @@ local plug = require "pde.utils.plug"
 
 return {
   {
-    "nvim-tree/nvim-web-devicons",
-    lazy = true,
-    enabled = vim.g.icons_enabled ~= false,
-    opts = plug.opts "web-devicons",
-  },
-
-  {
     "goolord/alpha-nvim",
     cmd = "Alpha",
     dependencies = {
@@ -17,25 +10,6 @@ return {
     opts = plug.opts "alpha",
     config = plug.setup "alpha",
   },
-
-  {
-    "nvim-neo-tree/neo-tree.nvim",
-    cmd = "Neotree",
-    dependencies = {
-      { "AstroNvim/astrocore", opts = plug.autocmds "neo-tree" },
-      { "nvim-lua/plenary.nvim", lazy = true },
-      { "MunifTanjim/nui.nvim", lazy = true },
-    },
-    opts = plug.opts "neo-tree",
-  },
-
-  {
-    "rebelot/heirline.nvim",
-    event = "BufEnter",
-    opts = plug.opts "heirline",
-    config = plug.setup "heirline",
-  },
-  { "echasnovski/mini.bufremove", lazy = true },
 
   {
     "NvChad/nvim-colorizer.lua",
@@ -58,6 +32,14 @@ return {
   },
 
   {
+    "rebelot/heirline.nvim",
+    event = "BufEnter",
+    opts = plug.opts "heirline",
+    config = plug.setup "heirline",
+  },
+  { "echasnovski/mini.bufremove", lazy = true },
+
+  {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     event = "User AstroFile",
@@ -73,9 +55,35 @@ return {
   },
 
   {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    opts = plug.opts "which-key",
+    "nvim-neo-tree/neo-tree.nvim",
+    cmd = "Neotree",
+    dependencies = {
+      { "AstroNvim/astrocore", opts = plug.autocmds "neo-tree" },
+      { "nvim-lua/plenary.nvim", lazy = true },
+      { "MunifTanjim/nui.nvim", lazy = true },
+    },
+    opts = plug.opts "neo-tree",
+  },
+
+  {
+    "rcarriga/nvim-notify",
+    lazy = true,
+    dependencies = {
+      { "nvim-lua/plenary.nvim", lazy = true },
+      {
+        "AstroNvim/astrocore",
+        opts = function(_, opts)
+          local maps = opts.mappings
+          maps.n["<Leader>uD"] = {
+            function() require("notify").dismiss { pending = true, silent = true } end,
+            desc = "Dismiss notifications",
+          }
+        end,
+      },
+    },
+    init = plug.initialize "notify",
+    opts = plug.opts "notify",
+    config = plug.setup "notify",
   },
 
   {
@@ -100,23 +108,15 @@ return {
   },
 
   {
-    "rcarriga/nvim-notify",
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = plug.opts "which-key",
+  },
+
+  {
+    "nvim-tree/nvim-web-devicons",
     lazy = true,
-    dependencies = {
-      { "nvim-lua/plenary.nvim", lazy = true },
-      {
-        "AstroNvim/astrocore",
-        opts = function(_, opts)
-          local maps = opts.mappings
-          maps.n["<Leader>uD"] = {
-            function() require("notify").dismiss { pending = true, silent = true } end,
-            desc = "Dismiss notifications",
-          }
-        end,
-      },
-    },
-    init = plug.initialize "notify",
-    opts = plug.opts "notify",
-    config = plug.setup "notify",
+    enabled = vim.g.icons_enabled ~= false,
+    opts = plug.opts "web-devicons",
   },
 }

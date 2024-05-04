@@ -1,5 +1,4 @@
 return function(_, opts)
-  vim.print "HHH"
   local ufo = require "ufo"
   ufo.setup(opts)
   local map = vim.keymap.set

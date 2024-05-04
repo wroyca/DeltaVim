@@ -56,53 +56,60 @@ local default = {
   },
 
   ---@type table<string,string> lazy plugin names corresponding to PDE module names
-  plugin_names = {
+  plugin_names = { -- all 48 plugins
     -- core
     ["lazy"] = "lazy.nvim",
     ["pde"] = "pde",
     ["astrocore"] = "astrocore",
+    ["astrolsp"] = "astrolsp",
+    ["astroui"] = "astroui",
     -- coding
     ["cmp"] = "nvim-cmp",
     ["cmp-buffer"] = "cmp-buffer",
-    ["cmp-path"] = "cmp-path",
     ["cmp-nvim-lsp"] = "cmp-nvim-lsp",
+    ["cmp-path"] = "cmp-path",
     ["cmp-luasnip"] = "cmp_luasnip",
     ["luasnip"] = "LuaSnip",
     ["autopairs"] = "nvim-autopairs",
     ["mini-comment"] = "mini.comment",
+    -- colorscheme
+    ["astrotheme"] = "astrotheme",
     -- editor
-    ["resession"] = "resession.nvim",
     ["gitsigns"] = "gitsigns.nvim",
+    ["resession"] = "resession.nvim",
     ["telescope"] = "telescope.nvim",
+    ["telescope-fzf-native"] = "telescope-fzf-native",
     ["todo-comments"] = "todo-comments.nvim",
     -- lsp
-    ["astrolsp"] = "astrolsp",
     ["aerial"] = "aerial.nvim",
     ["lspconfig"] = "nvim-lspconfig",
+    ["neodev"] = "neodev.nvim",
     ["null-ls"] = "none-ls.nvim",
     -- treesitter
     ["treesitter"] = "nvim-treesitter",
     ["treesitter-textobjects"] = "nvim-treesitter-textobjects",
     ["ts-autotag"] = "nvim-ts-autotag",
     -- ui
-    ["astroui"] = "astroui",
-    ["web-devicons"] = "nivm-web-devicons",
     ["alpha"] = "alpha-nvim",
-    ["neo-tree"] = "neo-tree.nvim",
-    ["heirline"] = "heirline.nvim",
-    ["mini-bufremove"] = "mini.bufremove",
     ["colorizer"] = "nvim-colorizer.lua",
     ["dressing"] = "dressing.nvim",
+    ["heirline"] = "heirline.nvim",
+    ["mini-bufremove"] = "mini.bufremove",
     ["indent-blankline"] = "indent-blankline.nvim",
-    ["which-key"] = "which-key.nvim",
-    ["ufo"] = "nvim-ufo",
+    ["neo-tree"] = "neo-tree.nvim",
     ["notify"] = "nvim-notify",
+    ["ufo"] = "nvim-ufo",
+    ["which-key"] = "which-key.nvim",
+    ["nui"] = "nui.nvim",
+    ["web-devicons"] = "nivm-web-devicons",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",
-    ["window-picker"] = "nvim-window-picker",
     ["illuminate"] = "vim-illuminate",
     ["smart-splits"] = "smart-splits.nvim",
+    ["window-picker"] = "nvim-window-picker",
+    ["plenary"] = "plenary.nvim",
+    ["promise-async"] = "promise-async",
   },
 }
 
