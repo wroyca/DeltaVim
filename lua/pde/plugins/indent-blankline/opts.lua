@@ -1,6 +1,10 @@
 return {
   indent = { char = "▏" },
-  scope = { show_start = false, show_end = false },
+  scope = {
+    enabled = true,
+    show_start = false,
+    show_end = false,
+  },
   exclude = {
     buftypes = {
       "nofile",

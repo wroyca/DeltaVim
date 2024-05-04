@@ -1,5 +1,6 @@
 local plug = require "pde.utils.plug"
 
+---@type LazySpec
 return {
   {
     "lewis6991/gitsigns.nvim",
@@ -40,6 +41,8 @@ return {
     dependencies = {
       { "nvim-lua/plenary.nvim", lazy = true },
     },
-    opts = {},
+    opts = {
+      highlight = { multiline = true },
+    },
   },
 }

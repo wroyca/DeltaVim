@@ -1,6 +1,7 @@
 local plug = require "pde.utils.plug"
 require("pde").init()
 
+---@type LazySpec
 return {
   { "folke/lazy.nvim", dir = vim.env.LAZY },
   { "loichyan/pde", lazy = false, priority = 10000 },

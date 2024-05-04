@@ -11,7 +11,7 @@ return {
   },
 
   new_file = { "<Cmd>enew<CR>", desc = "New file" },
-  save_file = { "<Cmd>w<CR>", desc = "Save file" },
+  save_file = { "<Cmd>silent! w<CR>", desc = "Save file" },
 
   left_window = { "<Cmd>wincmd h<CR>", desc = "Goto left window" },
   down_window = { "<Cmd>wincmd j<CR>", desc = "Goto down window" },

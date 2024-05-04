@@ -1,5 +1,6 @@
 local plug = require "pde.utils.plug"
 
+---@type LazySpec
 return {
   {
     "hrsh7th/nvim-cmp",

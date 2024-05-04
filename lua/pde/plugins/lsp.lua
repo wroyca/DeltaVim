@@ -1,5 +1,6 @@
 local plug = require "pde.utils.plug"
 
+---@type LazySpec
 return {
   {
     "stevearc/aerial.nvim",

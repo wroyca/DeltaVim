@@ -1,15 +1,14 @@
 local plug = require "pde.utils.plug"
 
+---@type LazySpec
 return {
   {
     "nvim-treesitter/nvim-treesitter",
     event = "User AstroFile",
     cmd = {
-      "TSBufDisable",
       "TSBufEnable",
       "TSBufToggle",
 
-      "TSDisable",
       "TSEnable",
       "TSToggle",
 
@@ -34,6 +33,22 @@ return {
   {
     "windwp/nvim-ts-autotag",
     event = "User AstroFile",
+    dependencies = {
+      {
+        "AstroNvim/astrolsp",
+        optional = true,
+        opts = {
+          lsp_handlers = {
+            -- enable update in insert
+            -- credit: https://github.com/windwp/nvim-ts-autotag/blob/531f483/README.md?plain=1#L57-L69
+            ["textDocument/publishDiagnostics"] = vim.lsp.with(
+              vim.lsp.diagnostic.on_publish_diagnostics,
+              { update_in_insert = true }
+            ),
+          },
+        },
+      },
+    },
     opts = {},
     config = plug.setup "ts-autotag",
   },

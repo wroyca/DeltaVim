@@ -1,5 +1,6 @@
 local plug = require "pde.utils.plug"
 
+---@type LazySpec
 return {
   {
     "max397574/better-escape.nvim",
