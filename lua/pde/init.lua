@@ -44,7 +44,7 @@ end
 function M.init()
   if vim.fn.has "nvim-0.9" == 0 then
     vim.api.nvim_echo({
-      { "AstroNvim requires Neovim >= 0.9.0\n", "ErrorMsg" },
+      { "PDE requires Neovim >= 0.9.0\n", "ErrorMsg" },
       { "Press any key to exit", "MoreMsg" },
     }, true, {})
     vim.fn.getchar()

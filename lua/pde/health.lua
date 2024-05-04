@@ -1,18 +1,10 @@
--- ### AstroNvim Health Checks
---
--- use with `:checkhealth astronvim`
---
--- copyright 2023
--- license GNU General Public License v3.0
-
 local M = {}
 
 local health = vim.health
 
 function M.check()
-  health.start "AstroNvim"
+  health.start "PDE"
 
-  -- health.info("AstroNvim Version: " .. require("astrocore.updater").version(true))
   health.info("Neovim Version: v" .. vim.fn.matchstr(vim.fn.execute "version", "NVIM v\\zs[^\n]*"))
 
   if vim.version().prerelease then
