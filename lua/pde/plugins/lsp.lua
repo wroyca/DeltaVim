@@ -24,8 +24,10 @@ return {
     main = "null-ls",
     event = "User AstroFile",
     dependencies = {
+      { "AstroNvim/astrolsp", optional = true },
       { "nvim-lua/plenary.nvim", lazy = true },
     },
     opts = plug.opts "null-ls",
+    config = plug.setup "null-ls",
   },
 }

@@ -39,5 +39,11 @@ return {
     }),
   },
   servers = { "lua_ls" },
+  ---@type table<string,boolean|table> setup null-ls formatters
+  formatters = {
+    stylua = true,
+  },
+  ---@type table<string,boolean|table> setup null-ls linters
+  linters = {},
   on_attach = nil,
 }
