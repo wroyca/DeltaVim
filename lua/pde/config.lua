@@ -80,6 +80,10 @@ local default = {
     ["aerial"] = "aerial.nvim",
     ["lspconfig"] = "nvim-lspconfig",
     ["null-ls"] = "none-ls.nvim",
+    -- treesitter
+    ["treesitter"] = "nvim-treesitter",
+    ["treesitter-textobjects"] = "nvim-treesitter-textobjects",
+    ["ts-autotag"] = "nvim-ts-autotag",
     -- ui
     ["astroui"] = "astroui",
     ["web-devicons"] = "nivm-web-devicons",
