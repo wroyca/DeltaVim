@@ -1,6 +1,6 @@
-# Personal Development Environment
+# 🌱 DeltaVim
 
-loichyan's NeoVim PDE, a personalized fork of [AstroNvim](https://github.com/AstroNvim/AstroNvim).
+DeltaVim is a personalized fork of [AstroNvim](https://github.com/AstroNvim/AstroNvim).
 
 ## ⭐ Credits
 
