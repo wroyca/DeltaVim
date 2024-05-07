@@ -72,44 +72,44 @@ local default = {
     ["luasnip"] = "LuaSnip",
     ["autopairs"] = "nvim-autopairs",
     ["mini-comment"] = "mini.comment",
-    -- colorscheme
-    ["astrotheme"] = "astrotheme",
-    -- editor
-    ["gitsigns"] = "gitsigns.nvim",
-    ["resession"] = "resession.nvim",
-    ["telescope"] = "telescope.nvim",
-    ["telescope-fzf-native"] = "telescope-fzf-native",
-    ["todo-comments"] = "todo-comments.nvim",
     -- lsp
     ["aerial"] = "aerial.nvim",
     ["lspconfig"] = "nvim-lspconfig",
+    ["neoconf"] = "neoconf.nvim",
     ["neodev"] = "neodev.nvim",
     ["null-ls"] = "none-ls.nvim",
     -- treesitter
     ["treesitter"] = "nvim-treesitter",
     ["treesitter-textobjects"] = "nvim-treesitter-textobjects",
     ["ts-autotag"] = "nvim-ts-autotag",
-    -- ui
+    -- editor
     ["alpha"] = "alpha-nvim",
     ["colorizer"] = "nvim-colorizer.lua",
     ["dressing"] = "dressing.nvim",
+    ["gitsigns"] = "gitsigns.nvim",
     ["heirline"] = "heirline.nvim",
-    ["mini-bufremove"] = "mini.bufremove",
     ["indent-blankline"] = "indent-blankline.nvim",
+    ["mini-bufremove"] = "mini.bufremove",
     ["neo-tree"] = "neo-tree.nvim",
+    ["nui"] = "nui.nvim",
     ["notify"] = "nvim-notify",
+    ["telescope"] = "telescope.nvim",
+    ["telescope-fzf-native"] = "telescope-fzf-native",
+    ["todo-comments"] = "todo-comments.nvim",
     ["ufo"] = "nvim-ufo",
     ["which-key"] = "which-key.nvim",
-    ["nui"] = "nui.nvim",
-    ["web-devicons"] = "nivm-web-devicons",
+    -- colorscheme
+    ["astrotheme"] = "astrotheme",
     -- utility
     ["better-escape"] = "better-escape.nvim",
     ["guess-ident"] = "guess-ident.nvim",
     ["illuminate"] = "vim-illuminate",
+    ["resession"] = "resession.nvim",
     ["smart-splits"] = "smart-splits.nvim",
     ["window-picker"] = "nvim-window-picker",
     ["plenary"] = "plenary.nvim",
     ["promise-async"] = "promise-async",
+    ["web-devicons"] = "nivm-web-devicons",
   },
 }
 

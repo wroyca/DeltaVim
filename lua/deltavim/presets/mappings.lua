@@ -64,13 +64,6 @@ return {
           ["<Leader>ps"] = "lazy.sync",
           ["<Leader>pu"] = "lazy.update",
 
-          --------------------
-          -- editor components
-          --------------------
-
-          ["<Leader>h"] = "alpha.toggle",
-          ["<Leader>e"] = "neo-tree.focus",
-
           ------------------
           -- editor features
           ------------------
@@ -102,45 +95,12 @@ return {
           ["<Leader>uU"] = "colorizer.toggle_buffer",
           ["<Leader>u|"] = "indent-blankline.toggle_global",
 
-          ------------
-          -- telescope
-          ------------
+          --------------------
+          -- editor components
+          --------------------
 
-          ["<Leader>f"] = { desc = icon("Search", 1) .. "Find" },
-          ["<Leader>'"] = "telescope.find_marks",
-          ['<Leader>"'] = "telescope.find_registers",
-          ["<Leader>,"] = "telescope.find_buffers",
-          ["<Leader>/"] = "telescope.find_buffer_fuzzy",
-          ["<Leader>:"] = "telescope.find_command_history",
-          ["<Leader><CR>"] = "telescope.resume",
-          ["<Leader><Leader>"] = "telescope.find_files",
-          ["<Leader>fa"] = "telescope.find_config_files",
-          ["<Leader>fc"] = "telescope.find_commands",
-          ["<Leader>fC"] = "telescope.find_autocmds",
-          ["<Leader>ff"] = "telescope.find_files",
-          ["<Leader>fF"] = "telescope.find_all_files",
-          ["<Leader>fg"] = "telescope.find_words",
-          ["<Leader>fG"] = "telescope.find_words_from_all",
-          ["<Leader>fh"] = "telescope.find_help_tags",
-          ["<Leader>fH"] = "telescope.find_man_pages",
-          ["<Leader>fk"] = "telescope.find_keymaps",
-          ["<Leader>fo"] = "telescope.find_recent_files",
-          ["<Leader>fu"] = "telescope.find_colorschemes",
-          ["<Leader>fU"] = "telescope.find_highlights",
-          ["<Leader>fw"] = "telescope.find_current_word",
-          ["<Leader>f'"] = "telescope.find_marks",
-          ['<Leader>f"'] = "telescope.find_registers",
-          ["<Leader>f,"] = "telescope.find_buffers",
-          ["<Leader>f/"] = "telescope.find_buffer_fuzzy",
-          ["<Leader>f:"] = "telescope.find_command_history",
-          ["<Leader>f<CR>"] = "telescope.resume",
-
-          ["[T"] = "todo-comments.prev",
-          ["]T"] = "todo-comments.next",
-
-          ["<Leader>fn"] = "notify.find",
-          ["<Leader>ft"] = "todo-comments.find",
-          ["<Leader>fT"] = "todo-comments.find_all_kinds",
+          ["<Leader>h"] = "alpha.toggle",
+          ["<Leader>e"] = "neo-tree.focus",
 
           --------------------
           -- buffer management
@@ -179,6 +139,43 @@ return {
           ["<Leader>tq"] = "tab.close",
           ["<Leader>th"] = "tab.goto_first",
           ["<Leader>tl"] = "tab.goto_last",
+
+          ------------
+          -- telescope
+          ------------
+
+          ["<Leader>f"] = { desc = icon("Search", 1) .. "Find" },
+          ["<Leader>'"] = "telescope.find_marks",
+          ['<Leader>"'] = "telescope.find_registers",
+          ["<Leader>,"] = "telescope.find_buffers",
+          ["<Leader>/"] = "telescope.find_buffer_fuzzy",
+          ["<Leader>:"] = "telescope.find_command_history",
+          ["<Leader><CR>"] = "telescope.resume",
+          ["<Leader><Leader>"] = "telescope.find_files",
+          ["<Leader>fa"] = "telescope.find_config_files",
+          ["<Leader>fc"] = "telescope.find_commands",
+          ["<Leader>fC"] = "telescope.find_autocmds",
+          ["<Leader>ff"] = "telescope.find_files",
+          ["<Leader>fF"] = "telescope.find_all_files",
+          ["<Leader>fg"] = "telescope.find_words",
+          ["<Leader>fG"] = "telescope.find_words_from_all",
+          ["<Leader>fh"] = "telescope.find_help_tags",
+          ["<Leader>fH"] = "telescope.find_man_pages",
+          ["<Leader>fk"] = "telescope.find_keymaps",
+          ["<Leader>fo"] = "telescope.find_recent_files",
+          ["<Leader>fu"] = "telescope.find_colorschemes",
+          ["<Leader>fU"] = "telescope.find_highlights",
+          ["<Leader>fw"] = "telescope.find_current_word",
+          ["<Leader>f'"] = "telescope.find_marks",
+          ['<Leader>f"'] = "telescope.find_registers",
+          ["<Leader>f,"] = "telescope.find_buffers",
+          ["<Leader>f/"] = "telescope.find_buffer_fuzzy",
+          ["<Leader>f:"] = "telescope.find_command_history",
+          ["<Leader>f<CR>"] = "telescope.resume",
+
+          ["<Leader>fn"] = "notify.find",
+          ["<Leader>ft"] = "todo-comments.find",
+          ["<Leader>fT"] = "todo-comments.find_all_kinds",
 
           ---------------------
           -- session management
@@ -222,8 +219,12 @@ return {
           -- utilities
           ------------
 
+          ["[T"] = "todo-comments.prev",
+          ["]T"] = "todo-comments.next",
+
           ["]]"] = "illuminate.next_reference",
           ["[["] = "illuminate.prev_reference",
+
           ["]r"] = "illuminate.next_reference",
           ["[r"] = "illuminate.prev_reference",
         },

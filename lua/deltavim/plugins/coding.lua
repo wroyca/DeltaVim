@@ -13,6 +13,7 @@ return {
     opts = plug.opts "cmp",
     config = plug.setup "cmp",
   },
+
   {
     "hrsh7th/cmp-nvim-lsp",
     lazy = true,

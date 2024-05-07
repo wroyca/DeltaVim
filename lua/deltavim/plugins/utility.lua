@@ -31,11 +31,29 @@ return {
   },
 
   {
+    "stevearc/resession.nvim",
+    lazy = true,
+    dependencies = {
+      { "AstroNvim/astrocore", opts = plug.autocmds "resession" },
+    },
+    opts = plug.opts "resession",
+  },
+
+  {
     "mrjones2014/smart-splits.nvim",
     lazy = true,
     opts = {
       ignored_filetypes = { "nofile", "quickfix", "qf", "prompt" },
       ignored_buftypes = { "nofile" },
     },
+  },
+
+  { "nvim-lua/plenary.nvim", lazy = true },
+
+  {
+    "nvim-tree/nvim-web-devicons",
+    lazy = true,
+    enabled = vim.g.icons_enabled ~= false,
+    opts = plug.opts "web-devicons",
   },
 }
