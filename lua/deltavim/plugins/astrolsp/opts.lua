@@ -23,7 +23,7 @@ return {
   flags = {},
   formatting = {
     format_on_save = { enabled = true },
-    disabled = {},
+    disabled = { "lua_ls" },
   },
   handlers = {
     function(server, opts) require("lspconfig")[server].setup(opts) end,
