@@ -99,10 +99,6 @@ return {
       silent = true,
     },
   },
-  filtered_items = {
-    hide_dotfiles = false,
-    never_show = { ".git" },
-  },
   -- events
   event_handlers = {
     {
@@ -124,5 +120,9 @@ return {
     follow_current_file = { enabled = true },
     hijack_netrw_behavior = "open_current",
     use_libuv_file_watcher = vim.fn.has "win32" ~= 1,
+    filtered_items = {
+      hide_dotfiles = false,
+      never_show = { ".git" },
+    },
   },
 }
