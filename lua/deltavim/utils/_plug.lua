@@ -11,7 +11,7 @@ end
 ---@return function
 function M.keys(name)
   local mod = "deltavim.plugins." .. name .. ".keys"
-  return function(_, keys) return require("deltavim.utils").list_extend(keys, require(mod)) end
+  return function(_, keys) return require("deltavim.utils").concat(keys, require(mod)) end
 end
 
 ---@param name string

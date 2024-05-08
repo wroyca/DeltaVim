@@ -15,7 +15,19 @@ end
 
 M.deep_merge = require("lazy.core.util").merge
 
-M.list_extend = vim.list_extend
+---Concats one or more arrays into `dst`.
+---@generic T
+---@param dst T[]
+---@param ... T[]
+---@return T[]
+function M.concat(dst, ...)
+  for _, list in ipairs { ... } do
+    for _, elem in ipairs(list) do
+      dst[#dst + 1] = elem
+    end
+  end
+  return dst
+end
 
 ---@type table<string,table> cache for plugin mapping presets
 local plugin_mappings = {}

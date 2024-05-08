@@ -1,7 +1,7 @@
 local utils = require "deltavim.utils"
 
 local opt = {
-  backspace = utils.list_extend(vim.opt.backspace:get(), { "nostop" }), -- don't stop backspace at insert
+  backspace = utils.concat(vim.opt.backspace:get(), { "nostop" }), -- don't stop backspace at insert
   breakindent = true, -- wrap indent to match  line start
   clipboard = "unnamed", -- connection to the system clipboard
   cmdheight = 0, -- hide command line unless needed
@@ -9,7 +9,7 @@ local opt = {
   confirm = true, -- raise a dialog asking if you wish to save the current file(s)
   copyindent = true, -- copy the previous indentation on autoindenting
   cursorline = true, -- highlight the text line of the cursor
-  diffopt = utils.list_extend(vim.opt.diffopt:get(), { "algorithm:histogram", "linematch:60" }), -- enable linematch diff algorithm
+  diffopt = utils.concat(vim.opt.diffopt:get(), { "algorithm:histogram", "linematch:60" }), -- enable linematch diff algorithm
   expandtab = true, -- enable the use of space in tab
   fileencoding = "utf-8", -- file content encoding for the buffer
   fillchars = { eob = " " }, -- disable `~` on nonexistent lines
