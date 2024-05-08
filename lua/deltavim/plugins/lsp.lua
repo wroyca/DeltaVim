@@ -12,10 +12,11 @@ return {
     "neovim/nvim-lspconfig",
     event = "User AstroFile",
     cmd = { "LspInfo", "LspLog", "LspStart" },
+    dependencies = {
+      { "folke/neoconf.nvim", lazy = true, opts = {} },
+    },
     config = plug.setup "lspconfig",
   },
-
-  { "folke/neoconf.nvim", lazy = true, opts = {} },
 
   { "folke/neodev.nvim", lazy = true, opts = {} },
 
