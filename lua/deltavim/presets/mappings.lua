@@ -3,7 +3,9 @@ return {
     "AstroNvim/astrocore",
     opts = function(_, opts)
       local icon, utils = require("astroui").get_icon, require "deltavim.utils"
-      utils.make_mappings(opts.mappings, {
+
+      local map = opts.mappings
+      utils.make_mappings(map, {
         n = {
           ------------------
           -- common mappings
@@ -244,7 +246,7 @@ return {
         },
       })
       -- override mappings by other available plugins
-      utils.make_mappings(opts.mappings, {
+      utils.make_mappings(map, {
         n = {
           ["<C-h>"] = "smart-splits.left_window",
           ["<C-j>"] = "smart-splits.down_window",
@@ -262,6 +264,13 @@ return {
           ["<Leader>lE"] = "telescope.find_workspace_errors",
         },
       })
+
+      -- copy/paste using system clipboard
+      for _, k in ipairs { "y", "Y", "d", "D", "p", "P" } do
+        local lhs, rhs = "<LocalLeader>" .. k, '"+' .. k
+        map.n[lhs] = { rhs }
+        map.x[lhs] = { rhs }
+      end
     end,
   },
 
