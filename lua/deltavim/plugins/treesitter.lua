@@ -22,12 +22,13 @@ return {
       "TSModuleInfo",
     },
     build = ":TSUpdate",
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter-textobjects", lazy = true },
+    },
     init = plug.initialize "treesitter",
     opts = plug.opts "treesitter",
     config = plug.setup "treesitter",
   },
-
-  { "nvim-treesitter/nvim-treesitter-textobjects", lazy = true },
 
   {
     "windwp/nvim-ts-autotag",
