@@ -1,4 +1,6 @@
 return {
+  { cond = "heirline.nvim" },
+
   pick_select = {
     function()
       require("astroui.status.heirline").buffer_picker(

@@ -1,4 +1,6 @@
 return {
+  { cond = "alpha-nvim" },
+
   toggle = {
     function()
       local wins = vim.api.nvim_tabpage_list_wins(0)

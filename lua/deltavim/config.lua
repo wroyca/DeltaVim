@@ -55,63 +55,6 @@ local default = {
       },
     },
   },
-
-  ---@type table<string,string> lazy plugin names corresponding to DeltaVim module names
-  plugin_names = { -- all 48 plugins
-    -- core
-    ["lazy"] = "lazy.nvim",
-    ["deltavim"] = "deltavim",
-    ["astrocore"] = "astrocore",
-    ["astrolsp"] = "astrolsp",
-    ["astroui"] = "astroui",
-    -- coding
-    ["cmp"] = "nvim-cmp",
-    ["cmp-buffer"] = "cmp-buffer",
-    ["cmp-nvim-lsp"] = "cmp-nvim-lsp",
-    ["cmp-path"] = "cmp-path",
-    ["cmp-luasnip"] = "cmp_luasnip",
-    ["luasnip"] = "LuaSnip",
-    ["autopairs"] = "nvim-autopairs",
-    ["mini-comment"] = "mini.comment",
-    -- lsp
-    ["aerial"] = "aerial.nvim",
-    ["lspconfig"] = "nvim-lspconfig",
-    ["neoconf"] = "neoconf.nvim",
-    ["neodev"] = "neodev.nvim",
-    ["null-ls"] = "none-ls.nvim",
-    -- treesitter
-    ["treesitter"] = "nvim-treesitter",
-    ["treesitter-textobjects"] = "nvim-treesitter-textobjects",
-    ["ts-autotag"] = "nvim-ts-autotag",
-    -- editor
-    ["alpha"] = "alpha-nvim",
-    ["colorizer"] = "nvim-colorizer.lua",
-    ["dressing"] = "dressing.nvim",
-    ["gitsigns"] = "gitsigns.nvim",
-    ["heirline"] = "heirline.nvim",
-    ["indent-blankline"] = "indent-blankline.nvim",
-    ["mini-bufremove"] = "mini.bufremove",
-    ["neo-tree"] = "neo-tree.nvim",
-    ["nui"] = "nui.nvim",
-    ["notify"] = "nvim-notify",
-    ["telescope"] = "telescope.nvim",
-    ["telescope-fzf-native"] = "telescope-fzf-native",
-    ["todo-comments"] = "todo-comments.nvim",
-    ["ufo"] = "nvim-ufo",
-    ["which-key"] = "which-key.nvim",
-    -- colorscheme
-    ["astrotheme"] = "astrotheme",
-    -- utility
-    ["better-escape"] = "better-escape.nvim",
-    ["guess-ident"] = "guess-ident.nvim",
-    ["illuminate"] = "vim-illuminate",
-    ["resession"] = "resession.nvim",
-    ["smart-splits"] = "smart-splits.nvim",
-    ["window-picker"] = "nvim-window-picker",
-    ["plenary"] = "plenary.nvim",
-    ["promise-async"] = "promise-async",
-    ["web-devicons"] = "nivm-web-devicons",
-  },
 }
 
 return default

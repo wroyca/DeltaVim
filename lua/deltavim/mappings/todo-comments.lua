@@ -1,4 +1,6 @@
 return {
+  { cond = "todo-comments.nvim" },
+
   next = {
     function() require("todo-comments").jump_next() end,
     desc = "Next TODO comment",

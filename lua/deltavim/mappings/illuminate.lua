@@ -1,4 +1,6 @@
 return {
+  { cond = "vim-illuminate" },
+
   next_reference = {
     function() require("illuminate").goto_next_reference(true) end,
     desc = "Next reference",

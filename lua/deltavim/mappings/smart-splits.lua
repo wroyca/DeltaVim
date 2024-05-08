@@ -1,4 +1,6 @@
 return {
+  { cond = "smart-splits.nvim" },
+
   left_window = {
     function() require("smart-splits").move_cursor_left() end,
     desc = "Goto left window",

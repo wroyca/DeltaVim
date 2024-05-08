@@ -29,36 +29,42 @@ function M.concat(dst, ...)
   return dst
 end
 
----@type table<string,table> cache for plugin mapping presets
-local plugin_mappings = {}
+---@type table<string,table|false> cache for loaded mapping presets
+local loaded_mappings = {}
 
 ---A handy function to bind mapping presets.
 ---@param dst table the table to be set
 ---@param mappings table<string,table<string,string|table>>
 ---@return table # return `dst`
 function M.make_mappings(dst, mappings)
-  local plugin_names, astro = require("deltavim").config.plugin_names, require "astrocore"
-
-  local unknowns = {}
+  local astro, unknowns = require "astrocore", {}
   for mode, maps in pairs(mappings) do
     local dst_maps = dst[mode]
     for lhs, rhs in pairs(maps) do
       if type(rhs) == "string" then
-        if not plugin_mappings[rhs] then -- lazy load mapping presets
+        if loaded_mappings[rhs] == nil then -- lazy load mapping presets
           local module = vim.split(rhs, ".", { plain = true })[1]
-          local plugin = plugin_names[module]
-          -- only load presets when the plugin is available
-          if not plugin or astro.is_available(plugin) then
-            local ok, preset = pcall(require, "deltavim.mappings." .. module)
-            if ok then
+          local existed, preset = pcall(require, "deltavim.mappings." .. module)
+          if existed then
+            local cond = preset[1] and preset[1].cond
+            if
+              cond == nil
+              or type(cond) == "string" and astro.is_available(cond) -- if plugin is available
+              or type(cond) == "function" and cond() -- if it returns true
+              or cond -- not false
+            then
               for key, preset_rhs in pairs(preset) do -- insert all presets
-                plugin_mappings[module .. "." .. key] = preset_rhs
+                loaded_mappings[module .. "." .. key] = preset_rhs
+              end
+            else
+              for key, _ in pairs(preset) do -- disable all presets
+                loaded_mappings[module .. "." .. key] = false
               end
             end
           end
         end
-        if not plugin_mappings[rhs] then table.insert(unknowns, rhs) end
-        rhs = plugin_mappings[rhs]
+        rhs = loaded_mappings[rhs]
+        if rhs == nil then table.insert(unknowns, rhs) end
       end
 
       if rhs then dst_maps[lhs] = rhs end

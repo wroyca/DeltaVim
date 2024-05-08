@@ -1,4 +1,6 @@
 return {
+  { cond = "nvim-notify" },
+
   find = {
     function() require("telescope").extensions.notify.notify() end,
     desc = "Find notifications",

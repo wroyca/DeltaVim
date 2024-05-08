@@ -1,4 +1,6 @@
 return {
+  { cond = "telescope.nvim" },
+
   resume = {
     function() require("telescope.builtin").resume() end,
     desc = "Resume previous search",

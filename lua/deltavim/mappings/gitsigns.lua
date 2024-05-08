@@ -1,4 +1,6 @@
 return {
+  { cond = "gitsigns.nvim" },
+
   next_hunk = {
     function() require("gitsigns").next_hunk() end,
     desc = "Next hunk",

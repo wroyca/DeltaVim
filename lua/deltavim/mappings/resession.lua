@@ -1,4 +1,6 @@
 return {
+  { cond = "resession.nvim" },
+
   save = {
     function() require("resession").save() end,
     desc = "Save this session",
