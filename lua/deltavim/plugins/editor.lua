@@ -1,4 +1,4 @@
-local plug = require "deltavim.utils.plug"
+local plug = require "deltavim.utils._plug"
 
 ---@type LazySpec
 return {

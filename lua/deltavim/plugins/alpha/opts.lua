@@ -1,5 +1,5 @@
 local dashboard = require "alpha.themes.dashboard"
-local icon, plug = require("astroui").get_icon, require "deltavim.utils.plug"
+local icon, plug = require("astroui").get_icon, require "deltavim.utils._plug"
 
 ---@param lhs string Shortcut string of a button mapping
 ---@param rhs function|string? Righthand side of the mapping
