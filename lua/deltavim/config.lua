@@ -1,5 +1,6 @@
 ---The default configuration.
 
+---@class DeltaOptions
 local default = {
   ---@type string? the leader key to map before setting up Lazy
   mapleader = " ",
