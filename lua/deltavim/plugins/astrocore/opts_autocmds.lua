@@ -238,7 +238,7 @@ return {
 
   q_close_windows = {
     {
-      event = "BufWinEnter",
+      event = "FileType",
       desc = "Make q close certain windows",
       callback = function(args)
         if not config.q_close_windows.filetypes[vim.bo[args.buf].filetype] then return end

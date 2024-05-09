@@ -40,10 +40,26 @@ local default = {
     q_close_windows = {
       ---@type table<string,boolean> filetypes to set the mapping
       filetypes = {
+        ["checkhealth"] = true,
+        ["git"] = true,
         ["help"] = true,
+        ["lspinfo"] = true,
+        ["man"] = true,
+        ["neotest-output"] = true,
+        ["neotest-output-panel"] = true,
+        ["neotest-summary"] = true,
         ["nofile"] = true,
+        ["notify"] = true,
+        ["null-ls-info"] = true,
+        ["PlenaryTestPopup"] = true,
         ["qf"] = true,
+        ["query"] = true,
         ["quickfix"] = true,
+        ["spectre_panel"] = true,
+        ["startuptime"] = true,
+        ["tsplayground"] = true,
+        ["TelescopePrompt"] = true,
+        ["vim"] = true,
       },
     },
 
