@@ -86,15 +86,14 @@ return {
   sign_handlers = sign_handlers,
   setup_colors = function()
     local astroui, utils = require "astroui", require "deltavim.utils"
-    local status, config = require "astroui.status", astroui.config.status
+    local status, config = require "astroui.status", assert(astroui.config.status)
     local error_hl = { fg = "red", bg = "red" }
 
-    local _hlgroup = astroui.get_hlgroup
-    local function hlgroup(name) return _hlgroup(name, error_hl) end
+    local function hlgroup(name, fallback) return astroui.get_hlgroup(name, fallback or error_hl) end
 
     local function lualine_hl(name, mode, fallback)
-      local hl = hlgroup(name)
-      if hl.bg == "NONE" then hl.bg = status.hl.lualine_mode(mode, fallback.fg) end
+      local hl = hlgroup(name, {})
+      if not hl.bg then hl.bg = status.hl.lualine_mode(mode, fallback.fg) end
       return hl
     end
 
@@ -128,8 +127,10 @@ return {
     local HeirlineReplace = lualine_hl("HeirlineReplace", "replace", Number)
     local HeirlineVisual = lualine_hl("HeirlineVisual", "visual", Keyword)
     local HeirlineCommand = lualine_hl("HeirlineCommand", "command", TypeDef)
-    local HeirlineTerminal = _hlgroup("HeirlineTerminal", HeirlineCommand)
-    local HeirlineInactive = _hlgroup("HeirlineInactive", HeirlineNormal)
+    local HeirlineTerminal = lualine_hl("HeirlineTerminal", "terminal", Function)
+    local HeirlineInactive = lualine_hl("HeirlineInactive", "inactive", String)
+    local HeirlineButton = hlgroup("HeirlineButton", Visual)
+    local HeirlineText = hlgroup("HeirlineText", Comment)
 
     local colors = {
       -- bufferline
@@ -152,6 +153,9 @@ return {
       buffer_overflow_bg = TabLineFill.bg,
 
       buffer_picker_fg = Error.fg,
+
+      sidebar_title_fg = Normal.fg,
+      sidebar_title_bg = TabLine.bg,
 
       -- tabline
       tabline_fg = TabLineFill.fg,
@@ -177,8 +181,8 @@ return {
       bg = StatusLine.bg,
 
       mode_fg = StatusLine.bg,
-      section_fg = Visual.fg,
-      section_bg = Visual.bg,
+      button_fg = HeirlineButton.fg,
+      button_bg = HeirlineButton.bg,
 
       normal = HeirlineNormal.bg,
       insert = HeirlineInsert.bg,
@@ -203,19 +207,16 @@ return {
       virtual_env_icon_bg = Function.fg,
     }
 
-    -- add missing colors
-    for _, c in ipairs { "sidebar_title" } do
-      colors[c .. "_fg"] = Normal.fg
-      colors[c .. "_bg"] = TabLine.bg
-    end
+    -- statusline button componments
     for _, c in ipairs {
       "file_info",
       "git_branch",
       "nav",
       "virtual_env",
     } do
-      colors[c .. "_fg"] = colors.section_fg
+      colors[c .. "_fg"] = colors.button_fg
     end
+    -- statusline text componments
     for _, c in ipairs {
       "git_diff",
       "cmd_info",
@@ -223,7 +224,7 @@ return {
       "diagnostics",
       "treesitter",
     } do
-      colors[c .. "_fg"] = Comment.fg
+      colors[c .. "_fg"] = HeirlineText.fg
       colors[c .. "_bg"] = colors.bg
     end
 

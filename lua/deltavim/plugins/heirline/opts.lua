@@ -89,7 +89,7 @@ return {
       padding = { left = 1, right = 1 },
       surround = {
         separator = "left",
-        color = function() return { main = hl.mode_bg(), right = "section_bg" } end,
+        color = function() return { main = hl.mode_bg(), right = "button_bg" } end,
       },
     },
 
@@ -103,7 +103,7 @@ return {
       surround = {
         condition = cond_not(condition.is_git_repo),
         separator = "left",
-        color = { main = "section_bg" },
+        color = { main = "button_bg" },
       },
     },
 
@@ -113,7 +113,7 @@ return {
       surround = {
         condition = condition.is_git_repo,
         separator = "left",
-        color = { main = "section_bg" },
+        color = { main = "button_bg" },
       },
     },
 
@@ -167,7 +167,7 @@ return {
         ruler = false,
         scrollbar = false,
         padding = { left = 1, right = 1 },
-        surround = { separator = "none", color = "section_bg" },
+        surround = { separator = "none", color = "button_bg" },
       },
     },
 
@@ -178,7 +178,7 @@ return {
         padding = { right = 1 },
         surround = {
           separator = "right",
-          color = { main = "folder_icon_bg", left = "section_bg" },
+          color = { main = "folder_icon_bg", left = "button_bg" },
         },
       },
       component.file_info {
@@ -190,7 +190,7 @@ return {
         file_modified = false,
         file_read_only = false,
         padding = { left = 1, right = 1 },
-        surround = { condition = false, separator = "none", color = "section_bg" },
+        surround = { condition = false, separator = "none", color = "button_bg" },
       },
     },
 
@@ -202,13 +202,13 @@ return {
         padding = { right = 1 },
         surround = {
           separator = "right",
-          color = { main = "virtual_env_icon_bg", left = "section_bg" },
+          color = { main = "virtual_env_icon_bg", left = "button_bg" },
         },
       },
       component.virtual_env {
         virtual_env = { icon = { kind = "NONE" }, padding = false },
         padding = { left = 1, right = 1 },
-        surround = { condition = false, separator = "none", color = "section_bg" },
+        surround = { condition = false, separator = "none", color = "button_bg" },
       },
     },
   },
