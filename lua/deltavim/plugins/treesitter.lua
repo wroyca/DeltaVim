@@ -1,102 +1,55 @@
-local Keymap = require("deltavim.core.keymap")
+local plug = require "deltavim.utils._plug"
 
+---@type LazySpec
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    version = false, -- Last release is way too old and doesn't work on Windows
+    event = "User AstroFile",
+    cmd = {
+      "TSBufEnable",
+      "TSBufToggle",
+
+      "TSEnable",
+      "TSToggle",
+
+      "TSInstall",
+      "TSInstallInfo",
+      "TSInstallSync",
+      "TSUninstall",
+      "TSUpdate",
+      "TSUpdateSync",
+
+      "TSModuleInfo",
+    },
     build = ":TSUpdate",
-    cmd = { "TSUpdate", "TSUpdateSync", "TSInstall" },
-    event = { "VeryLazy", "BufReadPost", "BufNewFile" },
-    dependencies = { "nvim-treesitter-textobjects" },
-    keys = function()
-      return Keymap.Collector()
-        :map({
-          { "@treesitter.icrement_selection", desc = "Icrement selection", mode = { "n", "x" } },
-          { "@treesitter.decrement_selection", desc = "Decrement selection", mode = "x" },
-        })
-        :collect_lazy()
-    end,
-    opts = function()
-      local mappings = Keymap.Collector()
-        :map_unique({
-          { "@treesitter.icrement_selection", "init_selection" },
-          { "@treesitter.icrement_selection", "node_incremental" },
-          { "@treesitter.decrement_selection", "node_decremental" },
-        })
-        :collect_rhs_table()
-      return {
-        ensure_installed = {
-          "bash",
-          "c",
-          "diff",
-          "html",
-          "javascript",
-          "jsdoc",
-          "json",
-          "jsonc",
-          "lua",
-          "luadoc",
-          "luap",
-          "markdown",
-          "markdown_inline",
-          "python",
-          "query",
-          "regex",
-          "toml",
-          "tsx",
-          "typescript",
-          "vim",
-          "vimdoc",
-          "yaml",
-        },
-        highlight = { enable = true },
-        indent = { enable = true },
-        incremental_selection = { enable = true, keymaps = mappings },
-      }
-    end,
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
-    end,
+    dependencies = {
+      { "nvim-treesitter/nvim-treesitter-textobjects", lazy = true },
+    },
+    init = plug.initialize "treesitter",
+    opts = plug.opts "treesitter",
+    config = plug.setup "treesitter",
   },
 
-  {
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    config = function()
-      -- When in diff mode, we want to use the default vim text objects c & C
-      -- instead of the treesitter ones.
-      local move = require("nvim-treesitter.textobjects.move") ---@type table<string,fun(...)>
-      local configs = require("nvim-treesitter.configs")
-      for name, fn in pairs(move) do
-        if name:find("goto") == 1 then
-          move[name] = function(q, ...)
-            if vim.wo.diff then
-              local config = configs.get_module("textobjects.move")[name] ---@type table<string,string>
-              for key, query in pairs(config or {}) do
-                if q == query and key:find("[%]%[][cC]") then
-                  vim.cmd("normal! " .. key)
-                  return
-                end
-              end
-            end
-            return fn(q, ...)
-          end
-        end
-      end
-    end,
-  },
-
-  -- Show context of the current function
-  -- {
-  --   "nvim-treesitter/nvim-treesitter-context",
-  --   event = { "BufReadPost", "BufNewFile" },
-  --   enabled = true,
-  --   opts = { mode = "cursor", max_lines = 3 },
-  -- },
-
-  -- Automatically add closing tags for HTML and JSX
   {
     "windwp/nvim-ts-autotag",
-    event = { "BufReadPost", "BufNewFile" },
+    event = "User AstroFile",
+    dependencies = {
+      {
+        "AstroNvim/astrolsp",
+        optional = true,
+        opts = {
+          lsp_handlers = {
+            -- enable update in insert
+            -- credit: https://github.com/windwp/nvim-ts-autotag/blob/531f483/README.md?plain=1#L57-L69
+            ["textDocument/publishDiagnostics"] = vim.lsp.with(
+              vim.lsp.diagnostic.on_publish_diagnostics,
+              { update_in_insert = true }
+            ),
+          },
+        },
+      },
+    },
     opts = {},
+    config = plug.setup "ts-autotag",
   },
 }

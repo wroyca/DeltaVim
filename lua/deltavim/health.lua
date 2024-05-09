@@ -1,42 +1,67 @@
 local M = {}
 
-local start = vim.health.start or vim.health.report_start
-local ok = vim.health.ok or vim.health.report_ok
-local warn = vim.health.warn or vim.health.report_warn
-local error = vim.health.error or vim.health.report_error
+local health = vim.health
 
----Modified: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/util/init.lua
 function M.check()
-  start("DeltaVim")
+  health.start "DeltaVim"
 
-  if vim.fn.has("nvim-0.9.0") == 1 then
-    ok("Using Neovim >= 0.9.0")
+  health.info("Neovim Version: v" .. vim.fn.matchstr(vim.fn.execute "version", "NVIM v\\zs[^\n]*"))
+
+  if vim.version().prerelease then
+    health.warn "Neovim nightly is not officially supported and may have breaking changes"
+  elseif vim.fn.has "nvim-0.9" == 1 then
+    health.ok "Using stable Neovim >= 0.9.0"
   else
-    error("Neovim >= 0.9.0 is required")
+    health.error "Neovim >= 0.9.0 is required"
   end
 
-  for _, cmd in ipairs({ "git", "rg", { "fd", "fdfind" }, "lazygit" }) do
-    local name = type(cmd) == "string" and cmd or vim.inspect(cmd)
-    local commands = type(cmd) == "string" and { cmd } or cmd
-    ---@cast commands string[]
-    local found = false
+  local programs = {
+    {
+      cmd = { "git" },
+      type = "error",
+      msg = "Used for core functionality such as updater and plugin management",
+    },
+    {
+      cmd = { "xdg-open", "rundll32", "explorer.exe", "open" },
+      type = "warn",
+      msg = "Used for `gx` mapping for opening files with system opener (Optional)",
+    },
+    { cmd = { "lazygit" }, type = "warn", msg = "Used for mappings to pull up git TUI (Optional)" },
+    { cmd = { "node" }, type = "warn", msg = "Used for mappings to pull up node REPL (Optional)" },
+    {
+      cmd = { vim.fn.has "mac" == 1 and "gdu-go" or "gdu" },
+      type = "warn",
+      msg = "Used for mappings to pull up disk usage analyzer (Optional)",
+    },
+    {
+      cmd = { "btm" },
+      type = "warn",
+      msg = "Used for mappings to pull up system monitor (Optional)",
+    },
+    {
+      cmd = { "python", "python3" },
+      type = "warn",
+      msg = "Used for mappings to pull up python REPL (Optional)",
+    },
+  }
 
-    for _, c in ipairs(commands) do
-      if vim.fn.executable(c) == 1 then
-        name = c
-        found = true
+  for _, program in ipairs(programs) do
+    local name = table.concat(program.cmd, "/")
+    local found = false
+    for _, cmd in ipairs(program.cmd) do
+      if vim.fn.executable(cmd) == 1 then
+        name = cmd
+        if not program.extra_check or program.extra_check(program) then found = true end
+        break
       end
     end
 
     if found then
-      ok(("`%s` is installed"):format(name))
+      health.ok(("`%s` is installed: %s"):format(name, program.msg))
     else
-      warn(("`%s` is not installed"):format(name))
+      health[program.type](("`%s` is not installed: %s"):format(name, program.msg))
     end
   end
-
-  require("deltavim.core.keymap").check()
-  require("deltavim.core.autocmd").check()
 end
 
 return M

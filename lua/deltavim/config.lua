@@ -1,81 +1,76 @@
-local Util = require("deltavim.util")
+---The default configuration.
 
----@class DeltaVim.Config
-local M = {}
+---@class DeltaOptions
+local default = {
+  ---@type string? the leader key to map before setting up Lazy
+  mapleader = " ",
 
----@class DeltaVim.Config
-local CONFIG = {
-  ---@type string?
-  -- TODO: set border for more plugins
-  border = "rounded",
-  ---@type string|fun()
-  colorscheme = function()
-    require("tokyonight").load()
-  end,
-  icons = {
-    dap = {
-      Stopped = { "󰁕 ", "DiagnosticWarn", "DapStoppedLine" },
-      Breakpoint = " ",
-      BreakpointCondition = " ",
-      BreakpointRejected = { " ", "DiagnosticError" },
-      LogPoint = ".>",
+  ---@type string? the local leader key to map before setting up Lazy
+  maplocalleader = "\\",
+
+  ---@type boolean? whether to enable icons, default to `true`
+  icons_enabled = true,
+
+  ---@type table border for popups (hover, signature, etc)
+  popup_border = { "", "", "", " ", "", "", "", " " },
+
+  ---@type table border for float windows (LspInfo, Lazy, etc)
+  float_border = { " ", " ", " ", " ", " ", " ", " ", " " },
+
+  ---@class DeltaOptions.Autocmds
+  autocmds = {
+    auto_quit = {
+      ---@type table<string,boolean> filetypes considered as sidebars
+      sidebar_filetypes = {
+        ["aerial"] = true,
+        ["neo-tree"] = true,
+      },
     },
-    diagnostics = {
-      Error = " ",
-      Warn = " ",
-      Hint = "󰌶 ",
-      Info = " ",
+
+    auto_view = {
+      ---@type table<string,boolean> filetypes not to be saved
+      ignored_filetypes = {
+        ["gitcommit"] = true,
+        ["gitrebase"] = true,
+        ["hgcommit"] = true,
+        ["svg"] = true,
+      },
     },
-    git = {
-      added = " ",
-      modified = " ",
-      removed = " ",
+
+    q_close_windows = {
+      ---@type table<string,boolean> filetypes to set the mapping
+      filetypes = {
+        ["checkhealth"] = true,
+        ["git"] = true,
+        ["help"] = true,
+        ["lspinfo"] = true,
+        ["man"] = true,
+        ["neotest-output"] = true,
+        ["neotest-output-panel"] = true,
+        ["neotest-summary"] = true,
+        ["nofile"] = true,
+        ["notify"] = true,
+        ["null-ls-info"] = true,
+        ["PlenaryTestPopup"] = true,
+        ["qf"] = true,
+        ["query"] = true,
+        ["quickfix"] = true,
+        ["spectre_panel"] = true,
+        ["startuptime"] = true,
+        ["tsplayground"] = true,
+        ["TelescopePrompt"] = true,
+        ["vim"] = true,
+      },
     },
-    kinds = {
-      Array = " ",
-      Boolean = " ",
-      Class = " ",
-      Color = " ",
-      Constant = " ",
-      Constructor = " ",
-      Enum = " ",
-      EnumMember = " ",
-      Event = " ",
-      Field = " ",
-      File = " ",
-      Folder = "󰉋 ",
-      Function = " ",
-      Interface = " ",
-      Key = " ",
-      Keyword = " ",
-      Method = " ",
-      Module = " ",
-      Namespace = " ",
-      Null = " ",
-      Number = " ",
-      Object = " ",
-      Operator = " ",
-      Package = " ",
-      Property = " ",
-      Reference = " ",
-      Snippet = " ",
-      String = " ",
-      Struct = " ",
-      Text = " ",
-      TypeParameter = " ",
-      Unit = " ",
-      Value = " ",
-      Variable = " ",
+
+    unlist_buffers = {
+      ---@type table<string,boolean> filetypes to be unlisted
+      filetypes = {
+        ["qf"] = true,
+        ["quickfix"] = true,
+      },
     },
   },
 }
 
----@cast M +DeltaVim.Config
-setmetatable(M, { __index = CONFIG })
-
----@param cfg DeltaVim.Config
-function M.update(cfg)
-  Util.deep_merge(CONFIG, cfg)
-end
-
-return M
+return default
