@@ -26,7 +26,9 @@ function M.init()
   if M.did_init then return end
   M.did_init = true
 
-  require("deltavim.lazy_notify").setup()
+  local notify = require "deltavim.notify"
+  notify.setup()
+  notify.defer_startup()
 
   -- force setup during initialization
   local plugin = require("lazy.core.config").spec.plugins["DeltaVim"]
