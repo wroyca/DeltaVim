@@ -82,7 +82,7 @@ return {
   },
 
   find_files = {
-    function() require("telescope.builtin").find_files() end,
+    function() require("deltavim.utils").telescope_find_files() end,
     desc = "Find files",
   },
 

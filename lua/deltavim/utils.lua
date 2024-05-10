@@ -87,6 +87,22 @@ function M.list_diagnostics(bufnr, opts)
   vim.cmd "botright copen"
 end
 
+---Opens Telescope to search for files in the given directory, using `git_files`
+---if available, or falling back to `find_files`.
+---@param cwd? string the directory to search
+function M.telescope_find_files(cwd)
+  cwd = cwd or vim.fn.getcwd()
+  if
+    vim.fn.executable "git" == 1
+    -- TODO: remove vim.loop after NeoVim v0.9
+    and (vim.uv or vim.loop).fs_stat(cwd .. "/.git")
+  then
+    require("telescope.builtin").git_files { cwd = cwd, show_untracked = true }
+  else
+    require("telescope.builtin").find_files { cwd = cwd }
+  end
+end
+
 ---@param client lsp.Client
 function M.formatting_enabled(client)
   if not client.supports_method "textDocument/formatting" then return false end
