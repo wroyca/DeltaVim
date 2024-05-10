@@ -171,19 +171,18 @@ return {
           astro.event "File"
 
           -- check git repo and fire AstroGitFile
-          local folder = vim.fn.fnamemodify(current_file, ":p:h")
-          if vim.fn.has "win32" == 1 then folder = ('"%s"'):format(folder) end
-          if astro.cmd({ "git", "-C", folder, "rev-parse" }, false) or astro.file_worktree() then
-            astro.event "GitFile"
+          if vim.fn.executable "git" == 1 then
+            local folder = vim.fn.fnamemodify(current_file, ":p:h")
+            if vim.fn.has "win32" == 1 then folder = ('"%s"'):format(folder) end
+            if astro.cmd({ "git", "-C", folder, "rev-parse" }, false) or astro.file_worktree() then
+              astro.event "GitFile"
+            end
           end
 
           -- trigger original events
           vim.schedule(function()
             if buf_utils.is_valid(bufnr) then
-              vim.api.nvim_exec_autocmds(
-                args.event,
-                { buffer = bufnr, data = args.data, modeline = false }
-              )
+              vim.api.nvim_exec_autocmds(args.event, { buffer = bufnr, data = args.data })
             end
           end)
         end)

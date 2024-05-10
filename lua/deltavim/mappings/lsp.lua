@@ -103,6 +103,12 @@ return {
     cond = vim.lsp.inlay_hint and "textDocument/inlayHint" or false,
   },
 
+  toggle_global_inlay_hints = {
+    function() require("astrolsp.toggles").inlay_hints() end,
+    desc = "Toggle inlay hints (global)",
+    cond = vim.lsp.inlay_hint and "textDocument/inlayHint" or false,
+  },
+
   toggle_buffer_semantic_tokens = {
     function() require("astrolsp.toggles").buffer_semantic_tokens() end,
     desc = "Toggle semantic highlight (buffer)",

@@ -319,6 +319,7 @@ return {
           ["<Leader>uf"] = "lsp.toggle_buffer_autoformat",
           ["<Leader>uF"] = "lsp.toggle_global_autoformat",
           ["<Leader>uh"] = "lsp.toggle_buffer_inlay_hints",
+          ["<Leader>uH"] = "lsp.toggle_global_inlay_hints",
           ["<Leader>uL"] = "lsp.toggle_global_codelens",
           ["<Leader>uY"] = "lsp.toggle_buffer_semantic_tokens",
         },
