@@ -38,6 +38,19 @@ return {
           ["<Leader>W"] = "common.close_window",
 
           --------------
+          -- quickfix
+          --------------
+
+          ["<C-n>"] = "common.next_quickfix",
+          ["<C-p>"] = "common.prev_quickfix",
+          ["]x"] = "common.next_quickfix",
+          ["[x"] = "common.prev_quickfix",
+
+          ["<C-x>"] = "common.open_quickfix",
+          ["<Leader>x"] = "common.open_quickfix",
+          ["<Leader>X"] = "common.clear_quickfix",
+
+          --------------
           -- diagnostics
           --------------
 

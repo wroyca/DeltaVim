@@ -26,6 +26,12 @@ return {
   vsplit = { "<Cmd>vsplit<CR>", desc = "Vertical split" },
   hsplit = { "<Cmd>split<CR>", desc = "Horizontal split" },
 
+  open_quickfix = { "<Cmd>copen<CR>", desc = "Open quickfix panel" },
+  clear_quickfix = { function() vim.fn.setqflist {} end, desc = "Clear quickfix items" },
+
+  next_quickfix = { "<Cmd>cnext<CR>", desc = "Next quickfix item" },
+  prev_quickfix = { "<Cmd>cprevious<CR>", desc = "Previous quickfix item" },
+
   close_window = { "<Cmd>wincmd q<CR>", desc = "Close current window" },
   quit = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
 
