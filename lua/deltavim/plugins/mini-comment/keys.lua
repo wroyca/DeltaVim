@@ -1,9 +1,7 @@
 local plugin = require("lazy.core.config").spec.plugins["mini.comment"]
 local opts = require("lazy.core.plugin").values(plugin, "opts", false)
 
-local mappings = opts.mappings
-if not mappings then return {} end
-
+local mappings = opts.mappings or {}
 return {
   { mappings.comment or "gc", desc = "Comment toggle" },
   { mappings.comment_visual or "gc", mode = "x", desc = "Comment toggle (visual)" },
