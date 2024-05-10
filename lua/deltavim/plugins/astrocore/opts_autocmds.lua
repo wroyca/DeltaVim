@@ -182,10 +182,7 @@ return {
           -- trigger original events
           vim.schedule(function()
             if buf_utils.is_valid(bufnr) then
-              vim.api.nvim_exec_autocmds(
-                args.event,
-                { buffer = bufnr, data = args.data, modeline = false }
-              )
+              vim.api.nvim_exec_autocmds(args.event, { buffer = bufnr, data = args.data })
             end
           end)
         end)
