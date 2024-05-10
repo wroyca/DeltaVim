@@ -26,22 +26,10 @@ function M.check()
       type = "warn",
       msg = "Used for `gx` mapping for opening files with system opener (Optional)",
     },
-    { cmd = { "lazygit" }, type = "warn", msg = "Used for mappings to pull up git TUI (Optional)" },
-    { cmd = { "node" }, type = "warn", msg = "Used for mappings to pull up node REPL (Optional)" },
     {
-      cmd = { vim.fn.has "mac" == 1 and "gdu-go" or "gdu" },
+      cmd = { "rg" },
       type = "warn",
-      msg = "Used for mappings to pull up disk usage analyzer (Optional)",
-    },
-    {
-      cmd = { "btm" },
-      type = "warn",
-      msg = "Used for mappings to pull up system monitor (Optional)",
-    },
-    {
-      cmd = { "python", "python3" },
-      type = "warn",
-      msg = "Used for mappings to pull up python REPL (Optional)",
+      msg = "Used for `Telescope live_grep` (Optional)",
     },
   }
 
