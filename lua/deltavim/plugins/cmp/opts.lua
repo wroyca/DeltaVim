@@ -12,7 +12,7 @@ end
 
 -- snippet integration
 local snip_expand, snip_next, snip_prev
-if astro.is_available "LuaSnip" then
+if astro.is_available "LuaSnip" then -- use LuaSnip as the backend
   snip_expand = function(args) return require("luasnip").lsp_expand(args.body) end
   snip_next = function(fallback)
     local luasnip = require "luasnip"
@@ -30,17 +30,17 @@ if astro.is_available "LuaSnip" then
       fallback()
     end
   end
-else
+else -- or fallback to the NeoVim builtin one
   snip_expand = function(args) return vim.snippet and vim.snippet.expand(args.body) end
   snip_next = function(fallback)
-    if vim.snippet and vim.snippet.jumpable(1) then
+    if vim.snippet and vim.snippet.active { direction = 1 } then
       vim.schedule(function() vim.snippet.jump(1) end)
     else
       fallback()
     end
   end
   snip_prev = function(fallback)
-    if vim.snippet and vim.snippet.jumpable(-1) then
+    if vim.snippet and vim.snippet.active { direction = -1 } then
       vim.schedule(function() vim.snippet.jump(-1) end)
     else
       fallback()
