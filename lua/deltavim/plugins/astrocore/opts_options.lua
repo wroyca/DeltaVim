@@ -40,7 +40,7 @@ local opt = {
   relativenumber = true, -- show relative numberline
   scrolloff = 4, -- Lines of context
   shiftround = true, -- Round indent
-  shiftwidth = 2, -- number of space inserted for indentation
+  shiftwidth = 0, -- number of space inserted for indentation
   shortmess = utils.merge(vim.opt.shortmess:get(), { s = true, I = true }), -- disable search count wrap and startup messages
   showmode = false, -- disable showing modes in command line
   showtabline = 2, -- always display tabline
