@@ -29,6 +29,22 @@ function M.concat(dst, ...)
   return dst
 end
 
+---Checks if a plugin is defined and not disabled (both `enabled` and `cond` is true).
+---@param plugin string the plugin name
+function M.is_available(plugin)
+  local lazy_ok, lazy = pcall(require, "lazy.core.config")
+  local plug = lazy_ok and lazy.spec.plugins[plugin] or nil
+  if not plug then return false end
+
+  local enabled, cond = plug.enabled, plug.cond
+  return not (
+    cond == false
+    or enabled == false
+    or type(cond) == "function" and cond() == false
+    or type(enabled) == "function" and enabled() == false
+  )
+end
+
 ---@type table<string,table|false> cache for loaded mapping presets
 local loaded_mappings = {}
 
@@ -37,7 +53,7 @@ local loaded_mappings = {}
 ---@param mappings table<string,table<string,string|table>>
 ---@return table # return `dst`
 function M.make_mappings(dst, mappings)
-  local astro, unknowns = require "astrocore", {}
+  local unknowns = {}
   for mode, maps in pairs(mappings) do
     local dst_maps = dst[mode]
     for lhs, rhs in pairs(maps) do
@@ -48,17 +64,16 @@ function M.make_mappings(dst, mappings)
           if existed then
             local cond = preset[1] and preset[1].cond
             if
-              cond == nil
-              or type(cond) == "string" and astro.is_available(cond) -- if plugin is available
-              or type(cond) == "function" and cond() -- if it returns true
-              or cond -- not false
+              cond == false
+              or type(cond) == "string" and not M.is_available(cond) -- if plugin is available
+              or type(cond) == "function" and not cond() -- if it returns true
             then
-              for key, preset_rhs in pairs(preset) do -- insert all presets
-                loaded_mappings[module .. "." .. key] = preset_rhs
-              end
-            else
               for key, _ in pairs(preset) do -- disable all presets
                 loaded_mappings[module .. "." .. key] = false
+              end
+            else
+              for key, preset_rhs in pairs(preset) do -- insert all presets
+                loaded_mappings[module .. "." .. key] = preset_rhs
               end
             end
           end
