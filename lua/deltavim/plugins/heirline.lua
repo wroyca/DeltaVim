@@ -1,7 +1,6 @@
 ---@type LazyPluginSpec
 return {
   "rebelot/heirline.nvim",
-
   event = "BufEnter",
 
   opts = function()

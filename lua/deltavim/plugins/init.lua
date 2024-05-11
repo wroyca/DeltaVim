@@ -11,10 +11,12 @@ return {
   -- add an empty autocmds and mappings tables to prevent nil indexing errors
   {
     "AstroNvim/astrocore",
+    optional = true,
     opts = function() return { autocmds = {}, mappings = require("astrocore").empty_map_table() } end,
   },
   {
     "AstroNvim/astrolsp",
+    optional = true,
     opts = function() return { autocmds = {}, mappings = require("astrocore").empty_map_table() } end,
   },
 }

@@ -2,14 +2,7 @@
 return {
   "nvim-telescope/telescope.nvim",
   cmd = "Telescope",
-  dependencies = {
-    {
-      "nvim-telescope/telescope-fzf-native.nvim",
-      lazy = true,
-      enabled = vim.fn.executable "make" == 1,
-      build = "make",
-    },
-  },
+  dependencies = { { "nvim-telescope/telescope-fzf-native.nvim", optional = true } },
 
   opts = function()
     local actions = require "telescope.actions"

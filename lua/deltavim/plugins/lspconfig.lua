@@ -3,9 +3,7 @@ return {
   "neovim/nvim-lspconfig",
   event = "User AstroFile",
   cmd = { "LspInfo", "LspLog", "LspStart" },
-  dependencies = {
-    { "folke/neoconf.nvim", lazy = true, opts = {} },
-  },
+  dependencies = { { "folke/neoconf.nvim", optional = true } },
   config = function(_, _)
     -- set border
     require("lspconfig.ui.windows").default_options.border =

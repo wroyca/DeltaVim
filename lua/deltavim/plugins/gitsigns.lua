@@ -5,7 +5,6 @@ return {
   event = "User AstroGitFile",
   opts = function()
     local icon = require("astroui").get_icon
-
     ---@type Gitsigns.Config
     ---@diagnostic disable: missing-fields
     return {

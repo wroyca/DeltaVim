@@ -3,8 +3,7 @@ return {
   "AstroNvim/astrocore",
   lazy = false,
   priority = 10000,
-  dependencies = { "AstroNvim/astroui" },
-
+  dependencies = { { "AstroNvim/astroui", lazy = true } },
   ---@param opts AstroCoreOpts
   opts = function(_, opts)
     local icon = require("astroui").get_icon

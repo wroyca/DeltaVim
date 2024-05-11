@@ -5,7 +5,6 @@ return {
   dependencies = {
     {
       "AstroNvim/astrocore",
-      optional = true,
       opts = function(_, opts)
         require("deltavim.utils").merge(opts.autocmds, {
           resession_auto_save = {

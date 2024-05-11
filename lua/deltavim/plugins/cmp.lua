@@ -6,35 +6,7 @@ return {
   dependencies = {
     { "hrsh7th/cmp-buffer", lazy = true },
     { "hrsh7th/cmp-path", lazy = true },
-    {
-      "hrsh7th/cmp-nvim-lsp",
-      lazy = true,
-      dependencies = {
-        "AstroNvim/astrolsp",
-        optional = true,
-        opts = {
-          capabilities = {
-            textDocument = {
-              completion = {
-                completionItem = {
-                  documentationFormat = { "markdown", "plaintext" },
-                  snippetSupport = true,
-                  preselectSupport = true,
-                  insertReplaceSupport = true,
-                  labelDetailsSupport = true,
-                  deprecatedSupport = true,
-                  commitCharactersSupport = true,
-                  tagSupport = { valueSet = { 1 } },
-                  resolveSupport = {
-                    properties = { "documentation", "detail", "additionalTextEdits" },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    { "hrsh7th/cmp-nvim-lsp", lazy = true },
   },
 
   opts = function()

@@ -3,10 +3,7 @@ return {
   "nvimtools/none-ls.nvim",
   main = "null-ls",
   event = "User AstroFile",
-  dependencies = {
-    { "AstroNvim/astrolsp", optional = true },
-    { "nvim-lua/plenary.nvim", lazy = true },
-  },
+  dependencies = { { "AstroNvim/astrolsp", optional = true } },
   opts = function()
     return {
       on_attach = require("astrolsp").on_attach,
