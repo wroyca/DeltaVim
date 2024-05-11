@@ -29,22 +29,25 @@ return {
     require("lazy.core.loader").add_to_rtp(plugin)
     require "nvim-treesitter.query_predicates"
   end,
-  opts = {
-    auto_install = vim.fn.executable "tree-sitter" == 1, -- only enable auto install if `tree-sitter` cli is installed
-    ensure_installed = {
-      "bash",
-      "c",
-      "lua",
-      "markdown",
-      "markdown_inline",
-      "python",
-      "query",
-      "vim",
-      "vimdoc",
-    },
+  opts = function()
+    return {
+      auto_install = vim.fn.executable "tree-sitter" == 1, -- only enable auto install if `tree-sitter` cli is installed
+      ensure_installed = {
+        "bash",
+        "c",
+        "lua",
+        "markdown",
+        "markdown_inline",
+        "python",
+        "query",
+        "vim",
+        "vimdoc",
+      },
 
-    highlight = { enable = true },
-    incremental_selection = { enable = true },
-    indent = { enable = true },
-  },
+      highlight = { enable = true },
+      incremental_selection = { enable = true },
+      indent = { enable = true },
+    }
+  end,
+  config = function(_, opts) require("nvim-treesitter.configs").setup(opts) end,
 }
