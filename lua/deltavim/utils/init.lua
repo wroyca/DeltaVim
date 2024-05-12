@@ -65,8 +65,8 @@ function M.make_mappings(dst, mappings)
             local cond = preset[1] and preset[1].cond
             if
               cond == false
-              or type(cond) == "string" and not M.is_available(cond) -- if plugin is available
-              or type(cond) == "function" and not cond() -- if it returns true
+              or type(cond) == "string" and not M.is_available(cond) -- if plugin not is disabled
+              or type(cond) == "function" and cond() == false -- if it returns false
             then
               for key, _ in pairs(preset) do -- disable all presets
                 loaded_mappings[module .. "." .. key] = false
