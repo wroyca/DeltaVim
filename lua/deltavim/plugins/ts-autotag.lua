@@ -3,12 +3,7 @@ return {
   "windwp/nvim-ts-autotag",
   event = "User AstroFile",
   dependencies = {
-    {
-      "nvim-treesitter/nvim-treesitter",
-      opts = {
-        autotag = { enable = true },
-      },
-    },
+    { "nvim-treesitter", opts = { autotag = { enable = true } } },
   },
   config = function(_, opts)
     require("nvim-ts-autotag").setup(opts)

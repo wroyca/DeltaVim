@@ -5,7 +5,7 @@ return {
   dependencies = {
     { "kevinhwang91/promise-async", lazy = true },
     {
-      "AstroNvim/astrolsp",
+      "astrolsp",
       optional = true,
       opts = {
         capabilities = {

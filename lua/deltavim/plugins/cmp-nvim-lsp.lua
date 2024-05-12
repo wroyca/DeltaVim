@@ -1,11 +1,10 @@
 ---@type LazyPluginSpec
 return {
   "hrsh7th/cmp-nvim-lsp",
-  optional = true,
   lazy = true,
   dependencies = {
     {
-      "AstroNvim/astrolsp",
+      "astrolsp",
       optional = true,
       opts = {
         capabilities = {

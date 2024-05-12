@@ -1,6 +1,6 @@
 ---@type LazyPluginSpec
 return {
-  "AstroNvim/astrotheme",
+  "astrotheme",
   lazy = true,
   ---@type AstroThemeOpts
   opts = { plugins = { ["dashboard-nvim"] = true } },

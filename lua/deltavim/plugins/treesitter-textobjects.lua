@@ -4,7 +4,7 @@ return {
   event = "User AstroFile",
   dependencies = {
     {
-      "nvim-treesitter/nvim-treesitter",
+      "nvim-treesitter",
       opts = {
         textobjects = {
           select = {

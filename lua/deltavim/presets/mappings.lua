@@ -1,6 +1,6 @@
 return {
   {
-    "AstroNvim/astrocore",
+    "astrocore",
     opts = function(_, opts)
       local icon, utils = require("astroui").get_icon, require "deltavim.utils"
 
@@ -288,7 +288,7 @@ return {
   },
 
   {
-    "AstroNvim/astrolsp",
+    "astrolsp",
     opts = function(_, opts)
       local icon, utils = require("astroui").get_icon, require "deltavim.utils"
       utils.make_mappings(opts.mappings, {

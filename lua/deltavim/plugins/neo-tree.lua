@@ -6,7 +6,7 @@ return {
   dependencies = {
     { "MunifTanjim/nui.nvim", lazy = true },
     {
-      "AstroNvim/astrocore",
+      "astrocore",
       ---@param opts AstroCoreOpts
       opts = function(_, opts)
         require("deltavim.utils").merge(opts.autocmds, {

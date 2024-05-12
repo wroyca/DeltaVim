@@ -5,7 +5,7 @@ return {
 
   dependencies = {
     {
-      "AstroNvim/astrocore",
+      "astrocore",
       ---@param opts AstroCoreOpts
       opts = function(_, opts)
         require("deltavim.utils").merge(opts.autocmds, {
