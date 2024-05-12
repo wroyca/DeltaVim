@@ -162,7 +162,7 @@ return {
           buffer_picker_fg = Error.fg,
 
           sidebar_title_fg = Normal.fg,
-          sidebar_title_bg = TabLine.bg,
+          sidebar_title_bg = TabLineFill.bg,
 
           -- tabline
           tabline_fg = TabLineFill.fg,
