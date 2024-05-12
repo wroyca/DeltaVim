@@ -7,24 +7,6 @@ return {
       "nvim-treesitter",
       opts = {
         textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ["ak"] = { query = "@block.outer", desc = "around block" },
-              ["ik"] = { query = "@block.inner", desc = "inside block" },
-              ["ac"] = { query = "@class.outer", desc = "around class" },
-              ["ic"] = { query = "@class.inner", desc = "inside class" },
-              ["a?"] = { query = "@conditional.outer", desc = "around conditional" },
-              ["i?"] = { query = "@conditional.inner", desc = "inside conditional" },
-              ["af"] = { query = "@function.outer", desc = "around function" },
-              ["if"] = { query = "@function.inner", desc = "inside function" },
-              ["ao"] = { query = "@loop.outer", desc = "around loop" },
-              ["io"] = { query = "@loop.inner", desc = "inside loop" },
-              ["aa"] = { query = "@parameter.outer", desc = "around argument" },
-              ["ia"] = { query = "@parameter.inner", desc = "inside argument" },
-            },
-          },
           move = {
             enable = true,
             set_jumps = true,
