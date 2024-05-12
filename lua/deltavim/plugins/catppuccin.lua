@@ -7,6 +7,7 @@ return {
   opts = {
     flavour = "mocha",
     integrations = {
+      aerial = true,
       cmp = true,
       dashboard = true,
       gitsigns = true,
@@ -31,9 +32,11 @@ return {
       neotree = true,
       notify = true,
       semantic_tokens = true,
-      telescope = true,
+      telescope = { enabled = true },
       treesitter = true,
+      ufo = true,
       which_key = true,
+      window_picker = true,
     },
     custom_highlights = function(c)
       return {
