@@ -61,19 +61,19 @@ return {
     end
 
     local mapping = {
-      ["<C-y>"] = cmp.config.disable,
+      ["<C-Y>"] = cmp.config.disable,
 
       ["<Up>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
       ["<Down>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
-      ["<C-p>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
-      ["<C-n>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+      ["<C-P>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+      ["<C-N>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
 
-      ["<C-u>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-      ["<C-d>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+      ["<C-U>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+      ["<C-D>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
 
       ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
       ["<CR>"] = cmp.mapping.confirm { select = false },
-      ["<C-e>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+      ["<C-E>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
 
       ["<Tab>"] = cmp.mapping(snip_next, { "i", "s" }),
       ["<S-Tab>"] = cmp.mapping(snip_prev, { "i", "s" }),

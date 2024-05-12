@@ -5,7 +5,7 @@ return {
   opts = {
     check_ts = true,
     ts_config = { java = false },
-    fast_wrap = { map = "<C-y>" },
+    fast_wrap = { map = "<C-Y>" },
   },
   config = function(_, opts)
     local npairs, astro = require "nvim-autopairs", require "astrocore"

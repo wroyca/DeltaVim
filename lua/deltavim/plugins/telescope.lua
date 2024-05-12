@@ -27,9 +27,9 @@ return {
         },
         mappings = {
           i = {
-            ["<C-j>"] = actions.cycle_history_next,
-            ["<C-k>"] = actions.cycle_history_prev,
-            ["<C-x>"] = actions.send_to_qflist + actions.open_qflist,
+            ["<C-J>"] = actions.cycle_history_next,
+            ["<C-K>"] = actions.cycle_history_prev,
+            ["<C-X>"] = actions.send_to_qflist + actions.open_qflist,
           },
           n = {
             q = actions.close,

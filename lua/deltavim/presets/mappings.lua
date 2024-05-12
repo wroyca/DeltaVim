@@ -18,10 +18,10 @@ return {
           ["gw"] = "common.search_current_word",
           ["gx"] = "common.system_open",
 
-          ["<C-h>"] = "common.left_window",
-          ["<C-j>"] = "common.down_window",
-          ["<C-k>"] = "common.up_window",
-          ["<C-l>"] = "common.right_window",
+          ["<C-H>"] = "common.left_window",
+          ["<C-J>"] = "common.down_window",
+          ["<C-K>"] = "common.up_window",
+          ["<C-L>"] = "common.right_window",
 
           ["<C-S-h>"] = "common.resize_left",
           ["<C-S-j>"] = "common.resize_down",
@@ -32,7 +32,7 @@ return {
           ["<Leader>\\"] = "common.vsplit",
 
           ["<Leader>n"] = "common.new_file",
-          ["<C-s>"] = "common.save_file",
+          ["<C-S>"] = "common.save_file",
 
           ["<Leader>w"] = "buffer.close",
           ["<Leader>W"] = "common.close_window",
@@ -41,12 +41,12 @@ return {
           -- quickfix
           --------------
 
-          ["<C-n>"] = "common.next_quickfix",
-          ["<C-p>"] = "common.prev_quickfix",
+          ["<C-N>"] = "common.next_quickfix",
+          ["<C-P>"] = "common.prev_quickfix",
           ["]x"] = "common.next_quickfix",
           ["[x"] = "common.prev_quickfix",
 
-          ["<C-x>"] = "common.open_quickfix",
+          ["<C-X>"] = "common.open_quickfix",
           ["<Leader>x"] = "common.open_quickfix",
           ["<Leader>X"] = "common.clear_quickfix",
 
@@ -245,10 +245,10 @@ return {
         },
 
         t = {
-          ["<C-h>"] = "common.left_window",
-          ["<C-j>"] = "common.down_window",
-          ["<C-k>"] = "common.up_window",
-          ["<C-l>"] = "common.right_window",
+          ["<C-H>"] = "common.left_window",
+          ["<C-J>"] = "common.down_window",
+          ["<C-K>"] = "common.up_window",
+          ["<C-L>"] = "common.right_window",
         },
 
         x = {
@@ -261,10 +261,10 @@ return {
       -- override mappings by other available plugins
       utils.make_mappings(map, {
         n = {
-          ["<C-h>"] = "smart-splits.left_window",
-          ["<C-j>"] = "smart-splits.down_window",
-          ["<C-k>"] = "smart-splits.up_window",
-          ["<C-l>"] = "smart-splits.right_window",
+          ["<C-H>"] = "smart-splits.left_window",
+          ["<C-J>"] = "smart-splits.down_window",
+          ["<C-K>"] = "smart-splits.up_window",
+          ["<C-L>"] = "smart-splits.right_window",
 
           ["<C-S-h>"] = "smart-splits.resize_left",
           ["<C-S-j>"] = "smart-splits.resize_down",
