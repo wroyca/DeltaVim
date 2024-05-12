@@ -8,11 +8,10 @@ return {
         local hlgroup, lspkind = require("astroui").get_hlgroup, require "deltavim.lspkind"
 
         local Error = hlgroup("Error").fg
-        local Normal = hlgroup "Normal"
         local NormalFloat = hlgroup "NormalFloat"
         local String = hlgroup("String").fg
 
-        local fg, bg = Normal.fg, Normal.bg
+        local fg, bg = NormalFloat.fg, NormalFloat.bg
         local bg_alt = hlgroup("Visual").bg
 
         local highlights = {
