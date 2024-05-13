@@ -160,7 +160,7 @@ return {
 
       file_user_events = {
         {
-          event = { "BufReadPost", "BufNewFile", "BufWritePost" },
+          event = { "BufNew", "BufReadPost", "BufWritePost" },
           desc = "NeoVim user events for file detection (AstroFile)",
           callback = function(args)
             local bufnr = args.buf
@@ -168,9 +168,11 @@ return {
             vim.b[bufnr].astrofile_checked = true
 
             vim.schedule(function()
-              if not vim.api.nvim_buf_is_valid(bufnr) then return end
-              local current_file = vim.api.nvim_buf_get_name(bufnr)
-              if not vim.g.vscode and (current_file == "" or vim.bo[bufnr].buftype == "nofile") then
+              vim.print(vim.api.nvim_buf_is_valid(bufnr))
+              if
+                not vim.api.nvim_buf_is_valid(bufnr)
+                or not vim.g.vscode and vim.bo[bufnr].buftype == "nofile"
+              then
                 return
               end
 
