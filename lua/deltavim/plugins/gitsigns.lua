@@ -2,7 +2,7 @@
 return {
   "lewis6991/gitsigns.nvim",
   enabled = vim.fn.executable "git" == 1,
-  event = "User AstroGitFile",
+  event = "User AstroFile",
   opts = function()
     local icon = require("astroui").get_icon
     ---@type Gitsigns.Config

@@ -161,7 +161,7 @@ return {
       file_user_events = {
         {
           event = { "BufReadPost", "BufNewFile", "BufWritePost" },
-          desc = "NeoVim user events for file detection (AstroFile and AstroGitFile)",
+          desc = "NeoVim user events for file detection (AstroFile)",
           callback = function(args)
             local bufnr = args.buf
             if vim.b[bufnr].astrofile_checked then return end
@@ -173,21 +173,10 @@ return {
               if not vim.g.vscode and (current_file == "" or vim.bo[bufnr].buftype == "nofile") then
                 return
               end
-              pcall(vim.api.nvim_del_augroup_by_name, "file_user_events")
 
               -- fire AstroFile
               astro.event "File"
-
-              -- check git repo and fire AstroGitFile
-              if vim.fn.executable "git" == 1 then
-                local folder = vim.fn.fnamemodify(current_file, ":p:h")
-                if vim.fn.has "win32" == 1 then folder = ('"%s"'):format(folder) end
-                if
-                  astro.cmd({ "git", "-C", folder, "rev-parse" }, false) or astro.file_worktree()
-                then
-                  astro.event "GitFile"
-                end
-              end
+              pcall(vim.api.nvim_del_augroup_by_name, "file_user_events")
 
               -- trigger original events
               vim.schedule(function()
