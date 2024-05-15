@@ -168,7 +168,6 @@ return {
             vim.b[bufnr].astrofile_checked = true
 
             vim.schedule(function()
-              vim.print(vim.api.nvim_buf_is_valid(bufnr))
               if
                 not vim.api.nvim_buf_is_valid(bufnr)
                 or not vim.g.vscode and vim.bo[bufnr].buftype == "nofile"
