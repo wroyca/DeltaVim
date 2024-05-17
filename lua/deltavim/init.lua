@@ -23,6 +23,10 @@ function M.init()
     vim.cmd.quit()
   end
 
+  -- TODO: remove these hacks after NeoVim v0.9
+  vim.uv = vim.uv or vim.loop
+  vim.ui.open = vim.ui.open or function(...) require("astrocore").system_open(...) end
+
   if M.did_init then return end
   M.did_init = true
 

@@ -36,8 +36,7 @@ return {
   quit = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
 
   system_open = {
-    -- TODO: remove astro.system_open after NeoVim v0.9
-    vim.ui.open or function() require("astrocore").system_open() end,
+    function() vim.ui.open() end,
     desc = "Open the file under cursor with system app",
   },
 }

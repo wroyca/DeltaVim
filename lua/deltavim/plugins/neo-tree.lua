@@ -22,8 +22,7 @@ return {
                   return true
                 end
 
-                -- TODO: remove vim.loop after NeoVim v0.9
-                local stats = (vim.uv or vim.loop).fs_stat(vim.api.nvim_buf_get_name(0))
+                local stats = vim.uv.fs_stat(vim.api.nvim_buf_get_name(0))
                 if stats and stats.type == "directory" then
                   require("lazy").load { plugins = { "neo-tree.nvim" } }
                   return true
@@ -55,10 +54,7 @@ return {
 
     -- mappings
     local commands = {
-      system_open = function(state)
-        -- TODO: remove astro.system_open after NeoVim v0.9
-        (vim.ui.open or astro.system_open)(state.tree:get_node():get_id())
-      end,
+      system_open = function(state) vim.ui.open(state.tree:get_node():get_id()) end,
 
       parent_or_close = function(state)
         local node = state.tree:get_node()

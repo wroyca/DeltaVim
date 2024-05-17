@@ -107,11 +107,7 @@ end
 ---@param cwd? string the directory to search
 function M.telescope_find_files(cwd)
   cwd = cwd or vim.fn.getcwd()
-  if
-    vim.fn.executable "git" == 1
-    -- TODO: remove vim.loop after NeoVim v0.9
-    and (vim.uv or vim.loop).fs_stat(cwd .. "/.git")
-  then
+  if vim.fn.executable "git" == 1 and vim.uv.fs_stat(cwd .. "/.git") then
     require("telescope.builtin").git_files { cwd = cwd, show_untracked = true }
   else
     require("telescope.builtin").find_files { cwd = cwd }
