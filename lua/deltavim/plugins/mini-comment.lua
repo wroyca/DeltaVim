@@ -12,10 +12,10 @@ return {
     }
   end,
   opts = function()
-    local cms_ok, cms = pcall(require, "ts_context_commentstring")
     return {
       options = {
         custom_commentstring = function()
+          local cms_ok, cms = pcall(require, "ts_context_commentstring")
           return cms_ok and cms.calculate_commentstring() or vim.bo.commentstring
         end,
       },
