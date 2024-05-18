@@ -23,7 +23,7 @@ function M.init()
     vim.cmd.quit()
   end
 
-  -- TODO: remove these hacks in NeoVim v0.10
+  -- TODO: remove these hacks in Neovim v0.10
   vim.uv = vim.uv or vim.loop
 
   if M.did_init then return end

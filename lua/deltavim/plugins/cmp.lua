@@ -42,7 +42,7 @@ return {
           fallback()
         end
       end
-    else -- or fallback to the NeoVim builtin one
+    else -- or fallback to the Neovim builtin one
       snip_expand = function(args) return vim.snippet and vim.snippet.expand(args.body) end
       snip_next = function(fallback)
         if vim.snippet and vim.snippet.active { direction = 1 } then

@@ -130,7 +130,7 @@ return {
     }
 
     -- footer
-    dashboard.section.footer.val = { "Hello, NeoVim!" }
+    dashboard.section.footer.val = { "Hello, Neovim!" }
     dashboard.section.footer.opts.hl = "DashboardFooter"
 
     -- layout
@@ -158,7 +158,7 @@ return {
         local stats = require("lazy").stats()
         local ms = math.floor(stats.startuptime * 100 + 0.5) / 100
         opts.section.footer.val = {
-          "NeoVim loaded "
+          "Neovim loaded "
             .. stats.loaded
             .. "/"
             .. stats.count

@@ -58,7 +58,7 @@ return {
         follow = true,
       }
     end,
-    desc = "Find NeoVim config files",
+    desc = "Find Neovim config files",
   },
 
   find_buffers = {

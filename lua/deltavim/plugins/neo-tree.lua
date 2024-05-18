@@ -55,7 +55,7 @@ return {
     -- mappings
     local commands = {
       system_open = function(state)
-        -- TODO: remove astrocore.system_open in NeoVim v0.10
+        -- TODO: remove astrocore.system_open in Neovim v0.10
         (vim.ui.open or astro.system_open)(state.tree:get_node():get_id())
       end,
 

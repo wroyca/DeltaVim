@@ -33,10 +33,10 @@ return {
   prev_quickfix = { "<Cmd>cprevious<CR>", desc = "Previous quickfix item" },
 
   close_window = { "<Cmd>wincmd q<CR>", desc = "Close current window" },
-  quit = { "<Cmd>confirm qall<CR>", desc = "Quit NeoVim" },
+  quit = { "<Cmd>confirm qall<CR>", desc = "Quit Neovim" },
 
   system_open = {
-    -- TODO: remove astrocore.system_open in NeoVim v0.10
+    -- TODO: remove astrocore.system_open in Neovim v0.10
     vim.ui.open or function(...) require("astrocore").system_open(...) end,
     desc = "Open the file under cursor with system app",
   },

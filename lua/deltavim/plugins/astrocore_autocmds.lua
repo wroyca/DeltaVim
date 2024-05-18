@@ -10,7 +10,7 @@ return {
       auto_quit = {
         {
           event = "WinClosed",
-          desc = "Quit NeoVim if only sidebar windows are list",
+          desc = "Quit Neovim if only sidebar windows are list",
           callback = function()
             local wins = vim.api.nvim_tabpage_list_wins(0)
             if #wins <= 1 then return end
@@ -32,7 +32,7 @@ return {
             if #vim.api.nvim_list_tabpages() > 1 then
               vim.cmd.tabclose() -- close current tab
             else
-              vim.cmd.qall() -- quit NeoVim
+              vim.cmd.qall() -- quit Neovim
             end
           end,
         },
@@ -161,7 +161,7 @@ return {
       file_user_events = {
         {
           event = { "BufNew", "BufReadPost", "BufWritePost" },
-          desc = "NeoVim user events for file detection (AstroFile)",
+          desc = "Neovim user events for file detection (AstroFile)",
           callback = function(args)
             local bufnr = args.buf
             if vim.b[bufnr].astrofile_checked then return end
