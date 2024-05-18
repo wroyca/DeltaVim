@@ -58,8 +58,9 @@ function M.make_mappings(dst, mappings)
     local dst_maps = dst[mode]
     for lhs, rhs in pairs(maps) do
       if type(rhs) == "string" then
-        if loaded_mappings[rhs] == nil then -- lazy load mapping presets
-          local module = vim.split(rhs, ".", { plain = true })[1]
+        local key = rhs
+        if loaded_mappings[key] == nil then -- lazy load mapping presets
+          local module = vim.split(key, ".", { plain = true })[1]
           local existed, preset = pcall(require, "deltavim.mappings." .. module)
           if existed then
             local cond = preset[1] and preset[1].cond
@@ -68,18 +69,18 @@ function M.make_mappings(dst, mappings)
               or type(cond) == "string" and not M.is_available(cond) -- if plugin not is disabled
               or type(cond) == "function" and cond() == false -- if it returns false
             then
-              for key, _ in pairs(preset) do -- disable all presets
-                loaded_mappings[module .. "." .. key] = false
+              for k, _ in pairs(preset) do -- disable all presets
+                loaded_mappings[module .. "." .. k] = false
               end
             else
-              for key, preset_rhs in pairs(preset) do -- insert all presets
-                loaded_mappings[module .. "." .. key] = preset_rhs
+              for k, preset_rhs in pairs(preset) do -- insert all presets
+                loaded_mappings[module .. "." .. k] = preset_rhs
               end
             end
           end
         end
-        rhs = loaded_mappings[rhs]
-        if rhs == nil then table.insert(unknowns, rhs) end
+        rhs = loaded_mappings[key]
+        if rhs == nil then table.insert(unknowns, key) end
       end
 
       if rhs then dst_maps[lhs] = rhs end
