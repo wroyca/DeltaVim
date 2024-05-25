@@ -240,7 +240,8 @@ return {
         if type(user_colors) == "table" then
           utils.merge(colors, user_colors)
         elseif type(user_colors) == "function" then
-          colors = user_colors(colors)
+          local new_colors = user_colors(colors)
+          if new_colors then colors = new_colors end
         end
 
         return colors
