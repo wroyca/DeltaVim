@@ -1,15 +1,18 @@
 ---The default configuration.
 
 ---@class DeltaOptions
-local default = {
-  ---@type string? the leader key to map before setting up Lazy
+local M = {
+  ---@type string the leader key to map before setting up Lazy
   mapleader = " ",
 
-  ---@type string? the local leader key to map before setting up Lazy
+  ---@type string the local leader key to map before setting up Lazy
   maplocalleader = "\\",
 
-  ---@type boolean? whether to enable icons, default to `true`
+  ---@type boolean whether to enable icons, default to `true`
   icons_enabled = true,
+
+  ---@type boolean whether to pin plugins or not, default is true
+  pin_plugins = true,
 
   ---@type table border for popups (hover, signature, etc)
   popup_border = { "", "", "", " ", "", "", "", " " },
@@ -73,4 +76,4 @@ local default = {
   },
 }
 
-return default
+return M

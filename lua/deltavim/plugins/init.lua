@@ -1,7 +1,8 @@
 -- This file is loaded before all submodules under `deltavim/plugins/`, allowing
 -- us to perform some initialization here.
 
-require("deltavim").init()
+local deltavim = require "deltavim"
+deltavim.init()
 
 ---@type LazySpec
 return {
@@ -19,4 +20,6 @@ return {
     optional = true,
     opts = function() return { autocmds = {}, mappings = require("astrocore").empty_map_table() } end,
   },
+
+  { import = "deltavim.snapshot", cond = deltavim.config.pin_plugins },
 }

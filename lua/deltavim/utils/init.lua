@@ -29,11 +29,15 @@ function M.concat(dst, ...)
   return dst
 end
 
+---Returns the specified plugin spec.
+---@param plugin string the plugin name
+---@return LazyPlugin?
+function M.get_plugin(plugin) return require("lazy.core.config").spec.plugins[plugin] end
+
 ---Checks if a plugin is defined and not disabled (both `enabled` and `cond` is true).
 ---@param plugin string the plugin name
 function M.is_available(plugin)
-  local lazy_ok, lazy = pcall(require, "lazy.core.config")
-  local plug = lazy_ok and lazy.spec.plugins[plugin] or nil
+  local plug = M.get_plugin(plugin)
   if not plug then return false end
 
   local enabled, cond = plug.enabled, plug.cond
