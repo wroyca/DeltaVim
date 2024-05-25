@@ -40,6 +40,7 @@ return {
         },
       },
       rooter = {
+        enabled = true,
         detector = {
           "lsp",
           { ".git", "_darcs", ".hg", ".bzr", ".svn" },
