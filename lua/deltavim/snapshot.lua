@@ -18,7 +18,7 @@ return {
   { "gitsigns.nvim", optional = true, version = "^0.8" },
   { "guess-indent.nvim", optional = true, commit = "b8ae749fce17aa4c267eec80a6984130b94f80b2" },
   { "heirline.nvim", optional = true, version = "^1" },
-  { "indent-blankline.nvim", optional = true, version = "^3" },
+  { "indent-blankline.nvim", optional = true, version = vim.fn.has "nvim-0.10" ~= 1 and "~3.5" or "^3" },
   { "lazy.nvim", optional = true, version = "^10" },
   { "LuaSnip", optional = true, version = "^2" },
   { "mini.ai", optional = true, commit = "55e9b7217f29e62f734e239bfeed5731a065d801" },
