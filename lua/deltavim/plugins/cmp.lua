@@ -12,54 +12,6 @@ return {
   opts = function()
     local cmp, astro = require "cmp", require "astrocore"
 
-    local sources = {}
-    for plug, source in pairs {
-      ["cmp-buffer"] = { name = "buffer", priority = 500, group_index = 2 },
-      ["cmp-nvim-lsp"] = { name = "nvim_lsp", priority = 1000 },
-      ["cmp-path"] = { name = "path", priority = 250 },
-      ["cmp_luasnip"] = { name = "luasnip", priority = 750 },
-    } do
-      if astro.is_available(plug) then table.insert(sources, source) end
-    end
-
-    -- snippet integration
-    local snip_expand, snip_next, snip_prev
-    if astro.is_available "LuaSnip" then -- use LuaSnip as the backend
-      snip_expand = function(args) return require("luasnip").lsp_expand(args.body) end
-      snip_next = function(fallback)
-        local luasnip = require "luasnip"
-        if luasnip.locally_jumpable(1) then
-          luasnip.jump(1)
-        else
-          fallback()
-        end
-      end
-      snip_prev = function(fallback)
-        local luasnip = require "luasnip"
-        if luasnip.locally_jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end
-    else -- or fallback to the Neovim builtin one
-      snip_expand = function(args) return vim.snippet and vim.snippet.expand(args.body) end
-      snip_next = function(fallback)
-        if vim.snippet and vim.snippet.active { direction = 1 } then
-          vim.schedule(function() vim.snippet.jump(1) end)
-        else
-          fallback()
-        end
-      end
-      snip_prev = function(fallback)
-        if vim.snippet and vim.snippet.active { direction = -1 } then
-          vim.schedule(function() vim.snippet.jump(-1) end)
-        else
-          fallback()
-        end
-      end
-    end
-
     local mapping = {
       ["<C-Y>"] = cmp.config.disable,
 
@@ -75,8 +27,20 @@ return {
       ["<CR>"] = cmp.mapping.confirm { select = false },
       ["<C-E>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
 
-      ["<Tab>"] = cmp.mapping(snip_next, { "i", "s" }),
-      ["<S-Tab>"] = cmp.mapping(snip_prev, { "i", "s" }),
+      ["<Tab>"] = cmp.mapping(function(fallback)
+        if vim.snippet and vim.snippet.active { direction = 1 } then
+          vim.schedule(function() vim.snippet.jump(1) end)
+        else
+          fallback()
+        end
+      end, { "i", "s" }),
+      ["<S-Tab>"] = cmp.mapping(function(fallback)
+        if vim.snippet and vim.snippet.active { direction = -1 } then
+          vim.schedule(function() vim.snippet.jump(-1) end)
+        else
+          fallback()
+        end
+      end, { "i", "s" }),
     }
 
     local icon = require("astroui").get_icon
@@ -87,7 +51,11 @@ return {
         ---@diagnostic disable-next-line: undefined-field
         return vim.b.cmp_enabled ~= false or astro.config.features.cmp ~= false
       end,
-      snippet = { expand = snip_expand },
+      snippet = {
+        expand = function(args)
+          if vim.snippet then vim.snippet.expand(args.body) end
+        end,
+      },
       formatting = {
         expandable_indicator = true,
         fields = { "kind", "abbr" },
@@ -113,8 +81,12 @@ return {
           winhighlight = "Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel,Search:None",
         },
       },
+      sources = {
+        { name = "buffer", priority = 500, group_index = 2 },
+        { name = "nvim_lsp", priority = 1000 },
+        { name = "path", priority = 250 },
+      },
       mapping = mapping,
-      sources = sources,
     }
   end,
 
