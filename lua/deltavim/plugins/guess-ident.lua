@@ -1,2 +1,2 @@
 ---@type LazyPluginSpec
-return { "NMAC427/guess-indent.nvim", event = "User AstroFile" }
+return { "NMAC427/guess-indent.nvim", event = "User AstroFile", opts = {} }
