@@ -29,7 +29,7 @@ return {
           i = {
             ["<C-J>"] = actions.cycle_history_next,
             ["<C-K>"] = actions.cycle_history_prev,
-            ["<C-X>"] = actions.send_to_qflist + actions.open_qflist,
+            ["<C-T>"] = actions.send_to_qflist + actions.open_qflist,
           },
           n = {
             q = actions.close,

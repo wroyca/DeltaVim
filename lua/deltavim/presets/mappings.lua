@@ -49,7 +49,6 @@ return {
           ["]x"] = "common.next_quickfix",
           ["[x"] = "common.prev_quickfix",
 
-          ["<C-X>"] = "common.open_quickfix",
           ["<Leader>x"] = "common.open_quickfix",
           ["<Leader>X"] = "common.clear_quickfix",
 
