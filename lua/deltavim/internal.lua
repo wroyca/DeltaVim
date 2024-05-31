@@ -57,13 +57,8 @@ function M.update_snapshot(path)
   for _, snap in ipairs(new_snapshot) do
     file:write(("  { %q, optional = true"):format(snap[1]))
 
-    if snap[1] == "indent-blankline.nvim" then
-      -- TODO: remove this limitation after Neovim 0.10
-      file:write [[, version = vim.fn.has "nvim-0.10" ~= 1 and "~3.5" or "^3"]]
-    else
-      if snap.commit then file:write((", commit = %q"):format(snap.commit)) end
-      if snap.version then file:write((", version = %q"):format(snap.version)) end
-    end
+    if snap.commit then file:write((", commit = %q"):format(snap.commit)) end
+    if snap.version then file:write((", version = %q"):format(snap.version)) end
 
     file:write " },\n"
   end
