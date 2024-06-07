@@ -5,7 +5,7 @@ return {
   search_current_word = {
     function()
       vim.fn.setreg("/", "\\<" .. vim.fn.expand "<cword>" .. "\\>")
-      vim.o.hlsearch = true
+      vim.opt_local.hlsearch = true
     end,
     desc = "Search current word",
   },
