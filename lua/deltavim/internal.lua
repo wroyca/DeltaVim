@@ -1,7 +1,21 @@
 local M = {}
 
-local function git_commit(dir)
-  return vim.trim(assert(vim.fn.system { "git", "-C", dir, "rev-parse", "HEAD" }))
+local git, semver = require "lazy.manage.git", require "lazy.manage.semver"
+
+local function get_version(plugin)
+  local ver = semver.last(git.get_versions(plugin.dir))
+  if ver then return ("^%d.%d"):format(ver.major, ver.minor) end
+end
+
+local function get_commit(plugin)
+  local branch = assert(git.get_branch(plugin))
+  return git.get_commit(plugin.dir, branch)
+end
+
+local function get_snapshot(plugin)
+  local version, commit = get_version(plugin)
+  if not version then commit = get_commit(plugin) end
+  return { plugin.name, version = version, commit = commit }
 end
 
 ---Generate a snapshot to pin plugins.
@@ -10,14 +24,14 @@ end
 -- credit: https://github.com/AstroNvim/AstroNvim/blob/62a0a7a/lua/astronvim/dev.lua
 function M.generate_snapshot(current)
   local snapshots = {}
-  if not current then
+  if not current then -- generate snashot for all plugins
     local plugins = require("lazy").plugins()
     table.sort(plugins, function(a, b) return a.name < b.name end)
 
     for _, plugin in pairs(plugins) do
-      table.insert(snapshots, { plugin.name, commit = git_commit(plugin.dir) })
+      table.insert(snapshots, get_snapshot(plugin))
     end
-  else
+  else -- only generate for defined plugins
     ---@type table<string,LazyPlugin>
     local plugins = {}
     for _, plugin in ipairs(require("lazy").plugins()) do
@@ -27,15 +41,7 @@ function M.generate_snapshot(current)
     for _, snap in ipairs(current) do
       local plugin = plugins[snap[1]] --[[@as LazyPluginSpec]]
       if not plugin then error(("spec for plugin %q not found"):format(snap[1])) end
-
-      local new_snap = { snap[1] }
-      if snap.version then -- preserve manually pinned versions
-        new_snap.version = snap.version
-      else -- pin by commit
-        new_snap.commit = git_commit(plugin.dir)
-      end
-
-      table.insert(snapshots, new_snap)
+      table.insert(snapshots, get_snapshot(plugin))
     end
   end
 
