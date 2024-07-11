@@ -215,23 +215,11 @@ return {
           -- git integration
           ------------------
 
-          ["[g"] = "gitsigns.prev_hunk",
-          ["]g"] = "gitsigns.next_hunk",
-
           ["<Leader>g"] = { desc = icon("Git", 1) .. "Git" },
           ["<Leader>ga"] = "telescope.git_status",
           ["<Leader>gb"] = "telescope.git_branches",
           ["<Leader>gc"] = "telescope.git_buffer_commits",
           ["<Leader>gC"] = "telescope.git_global_commits",
-          ["<Leader>gk"] = "gitsigns.hover_blame",
-          ["<Leader>gK"] = "gitsigns.hover_full_blame",
-          ["<Leader>gP"] = "gitsigns.hover_diff",
-          ["<Leader>gp"] = "gitsigns.hover_hunk",
-          ["<Leader>gr"] = "gitsigns.reset_hunk",
-          ["<Leader>gR"] = "gitsigns.reset_buffer",
-          ["<Leader>gs"] = "gitsigns.stage_hunk",
-          ["<Leader>gS"] = "gitsigns.stage_buffer",
-          ["<Leader>gu"] = "gitsigns.undo_stage_hunk",
 
           ------------
           -- utilities
@@ -295,6 +283,7 @@ return {
 
   {
     "astrolsp",
+    optional = true,
     opts = function(_, opts)
       local utils = require "deltavim.utils"
       utils.make_mappings(opts.mappings, {
@@ -343,6 +332,35 @@ return {
           ["<Leader>lG"] = "telescope.find_workspace_symbols",
         },
       })
+    end,
+  },
+
+  {
+    "gitsigns.nvim",
+    optional = true,
+    opts = function(_, opts)
+      local prev_on_attach = opts.on_attach
+      opts.on_attach = function(...)
+        if prev_on_attach then prev_on_attach(...) end
+        local astro = require "astrocore"
+        local map = require("deltavim.utils").make_mappings(astro.empty_map_table(), {
+          n = {
+            ["[g"] = "gitsigns.prev_hunk",
+            ["]g"] = "gitsigns.next_hunk",
+
+            ["<Leader>gk"] = "gitsigns.hover_blame",
+            ["<Leader>gK"] = "gitsigns.hover_full_blame",
+            ["<Leader>gP"] = "gitsigns.hover_diff",
+            ["<Leader>gp"] = "gitsigns.hover_hunk",
+            ["<Leader>gr"] = "gitsigns.reset_hunk",
+            ["<Leader>gR"] = "gitsigns.reset_buffer",
+            ["<Leader>gs"] = "gitsigns.stage_hunk",
+            ["<Leader>gS"] = "gitsigns.stage_buffer",
+            ["<Leader>gu"] = "gitsigns.undo_stage_hunk",
+          },
+        })
+        require("astrocore").set_mappings(map)
+      end
     end,
   },
 }
