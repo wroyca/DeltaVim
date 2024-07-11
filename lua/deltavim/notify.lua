@@ -12,18 +12,18 @@ local M = {}
 local notifications = {}
 local paused = false
 
---- Check if notifications are paused
+---Check if notifications are paused
 ---@return boolean # whether or not the notifications are paused
 function M.is_paused() return paused end
 
---- Check now many notifications are pending
+---Check now many notifications are pending
 ---@return table[] # the number of pending notifications
 function M.pending() return notifications end
 
---- Pause notifications
+---Pause notifications
 function M.pause() paused = true end
 
---- Resume paused notifications
+---Resume paused notifications
 function M.resume()
   paused = false
   vim.schedule(function()
@@ -32,7 +32,7 @@ function M.resume()
   end)
 end
 
---- A pausable `vim.notify` function
+---A pausable `vim.notify` function
 ---@param message string|string[] Notification message
 ---@param level string|number Log level. See vim.log.levels
 ---@param opts notify.Options Notification options
@@ -49,7 +49,7 @@ function M.notify(message, level, opts)
   end
 end
 
---- Set `vim.notify` to extend it to be pause-able
+---Set `vim.notify` to extend it to be pause-able
 ---@param notify function|notify? the original notification function (defaults to `vim.notify`)
 function M.setup(notify)
   if not notify then notify = vim.notify end
@@ -57,13 +57,13 @@ function M.setup(notify)
   M._original, vim.notify = notify, M.notify
 end
 
---- Remove `astronvim.notify` utilities and restore original `vim.notify`
+---Remove `astronvim.notify` utilities and restore original `vim.notify`
 function M.restore()
   M.notify = M._original
   if M.is_paused() then M.resume() end
 end
 
---- Pause notifications for a 500ms delay or until `vim.notify` changes
+---Pause notifications for a 500ms delay or until `vim.notify` changes
 function M.defer_startup()
   M.pause()
 

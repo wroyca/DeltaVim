@@ -4,7 +4,7 @@ local astro = require "astrocore"
 local status, config = require "astroui.status", assert(require("astroui").config.status)
 local hl, component, extend_tbl = status.hl, status.component, astro.extend_tbl
 
---- A function to build a component for automatic sidebar padding with a title.
+---A function to build a component for automatic sidebar padding with a title.
 ---@param opts? table options for configuring builder settings
 ---@return table # The Heirline component table
 function M.sidebar_title(opts)
@@ -13,7 +13,7 @@ function M.sidebar_title(opts)
       ---@cast config +{sidebar_titles?:table<string,string>}
       local sidebar_titles = config.sidebar_titles or {}
 
-      --- traverse windows from left to right,
+      ---traverse windows from left to right,
       local all_titles = ""
       for _, winid in ipairs(vim.api.nvim_tabpage_list_wins(0)) do
         -- if a window is configured as a sidebar,

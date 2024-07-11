@@ -19,9 +19,10 @@ local function get_snapshot(plugin)
 end
 
 ---Generate a snapshot to pin plugins.
+---
+---Credit: https://github.com/AstroNvim/AstroNvim/blob/62a0a7a/lua/astronvim/dev.lua
 ---@param current? LazyPluginSpec[] previous snapshot
 ---@return LazyPluginSpec[]
--- credit: https://github.com/AstroNvim/AstroNvim/blob/62a0a7a/lua/astronvim/dev.lua
 function M.generate_snapshot(current)
   local snapshots = {}
   if not current then -- generate snashot for all plugins

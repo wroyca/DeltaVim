@@ -4,7 +4,7 @@ return {
   event = "BufEnter",
 
   opts = function()
-    -- credit: https://github.com/AstroNvim/astrocommunity/blob/41f7a6a/lua/astrocommunity/recipes/heirline-nvchad-statusline/init.lua#
+    -- Credit: https://github.com/AstroNvim/astrocommunity/blob/41f7a6a/lua/astrocommunity/recipes/heirline-nvchad-statusline/init.lua#
 
     local status, icon = require "astroui.status", require("astroui").get_icon
     local hl, component, condition = status.hl, status.component, status.condition
