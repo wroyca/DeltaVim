@@ -2,8 +2,8 @@
 return {
   "L3MON4D3/LuaSnip",
   lazy = true,
-  dependencies = {
-    { "rafamadriz/friendly-snippets", lazy = true },
+  dependencies = { { "rafamadriz/friendly-snippets", lazy = true } },
+  specs = {
     {
       "nvim-cmp",
       dependencies = { { "saadparwaiz1/cmp_luasnip", lazy = true } },
@@ -34,6 +34,7 @@ return {
       end,
     },
   },
+
   opts = {
     history = true,
     delete_check_events = "TextChanged",

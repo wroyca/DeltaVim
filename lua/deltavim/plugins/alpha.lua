@@ -3,7 +3,7 @@ return {
   "goolord/alpha-nvim",
   cmd = "Alpha",
 
-  dependencies = {
+  specs = {
     {
       "astrocore",
       ---@param opts AstroCoreOpts

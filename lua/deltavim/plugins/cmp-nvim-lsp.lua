@@ -2,7 +2,7 @@
 return {
   "hrsh7th/cmp-nvim-lsp",
   lazy = true,
-  dependencies = {
+  specs = {
     {
       "astrolsp",
       optional = true,

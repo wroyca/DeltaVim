@@ -4,7 +4,7 @@ return {
   "stevearc/conform.nvim",
   event = "User AstroFile",
   cmd = { "Format", "ConformInfo" },
-  dependencies = {
+  specs = {
     {
       "astrocore",
       opts = {
