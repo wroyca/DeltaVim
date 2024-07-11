@@ -16,7 +16,7 @@ return {
 
         local highlights = {
           -- NvChad style telescope theme
-          -- credit: https://github.com/AstroNvim/astrocommunity/blob/23d141b/lua/astrocommunity/recipes/telescope-nvchad-theme/init.lua#L21-L32
+          -- Credit: https://github.com/AstroNvim/astrocommunity/blob/23d141b/lua/astrocommunity/recipes/telescope-nvchad-theme/init.lua#L21-L32
           TelescopeBorder = { fg = bg_alt, bg = bg },
           TelescopeNormal = { bg = bg },
           TelescopePreviewBorder = { fg = bg, bg = bg },
@@ -32,7 +32,7 @@ return {
         }
 
         -- Atom style completion menu
-        -- credit: https://github.com/NvChad/base46/blob/adb64a6/lua/base46/integrations/cmp.lua#L100-L108
+        -- Credit: https://github.com/NvChad/base46/blob/adb64a6/lua/base46/integrations/cmp.lua#L100-L108
         for kind, _ in pairs(lspkind) do
           local hlname = "CmpItemKind" .. kind
           local hl = hlgroup(hlname)

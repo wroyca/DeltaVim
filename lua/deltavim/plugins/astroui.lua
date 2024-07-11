@@ -5,7 +5,7 @@ return {
   ---@param opts AstroUIOpts
   opts = function(_, opts)
     require("deltavim.utils").merge(opts, {
-      colorscheme = "astrodark",
+      colorscheme = "astrotheme",
       text_icons = {
         ActiveLSP = "LSP:",
         ArrowLeft = "<",

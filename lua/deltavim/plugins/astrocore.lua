@@ -10,7 +10,7 @@ return {
 
     require("deltavim.utils").merge(opts, {
       features = {
-        large_buf = { size = 1024 * 500, lines = 10000 }, -- set global limits for large files
+        large_buf = { size = 1024 * 256, lines = 10000 }, -- set global limits for large files
         autopairs = true, -- enable autopairs at start
         cmp = true, -- enable completion at start
         diagnostics_mode = 3, -- enable diagnostics by default

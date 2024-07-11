@@ -3,8 +3,8 @@ return {
   "nvim-neo-tree/neo-tree.nvim",
   cmd = "Neotree",
 
-  dependencies = {
-    { "MunifTanjim/nui.nvim", lazy = true },
+  dependencies = { { "MunifTanjim/nui.nvim", lazy = true } },
+  specs = {
     {
       "astrocore",
       ---@param opts AstroCoreOpts

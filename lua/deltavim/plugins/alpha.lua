@@ -3,7 +3,7 @@ return {
   "goolord/alpha-nvim",
   cmd = "Alpha",
 
-  dependencies = {
+  specs = {
     {
       "astrocore",
       ---@param opts AstroCoreOpts
@@ -100,7 +100,7 @@ return {
     end
 
     -- header
-    -- credit: https://github.com/MaximilianLloyd/ascii.nvim/blob/c1a315e/lua/ascii/text/neovim.lua#L224-L235
+    -- Credit: https://github.com/MaximilianLloyd/ascii.nvim/blob/c1a315e/lua/ascii/text/neovim.lua#L224-L235
     dashboard.section.header.val = {
       [[                                                                     ]],
       [[       ████ ██████           █████      ██                     ]],

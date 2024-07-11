@@ -1,5 +1,5 @@
 return {
-  -- credit: https://github.com/NvChad/ui/blob/1e0e198/lua/nvchad/icons/lspkind.lua
+  -- Credit: https://github.com/NvChad/ui/blob/1e0e198/lua/nvchad/icons/lspkind.lua
   Array = "",
   Boolean = "",
   Calendar = "",

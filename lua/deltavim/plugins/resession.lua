@@ -2,7 +2,7 @@
 return {
   "stevearc/resession.nvim",
   lazy = true,
-  dependencies = {
+  specs = {
     {
       "astrocore",
       opts = function(_, opts)

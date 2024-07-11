@@ -37,7 +37,9 @@ return {
 
   system_open = {
     -- TODO: remove astrocore.system_open in Neovim v0.10
-    vim.ui.open or function(...) require("astrocore").system_open(...) end,
+    function(range)
+      (vim.ui.open or require("astrocore").system_open)(range or vim.fn.expand "<cfile>")
+    end,
     desc = "Open the file under cursor with system app",
   },
 }

@@ -2,16 +2,14 @@
 return {
   "kevinhwang91/nvim-ufo",
   event = { "User AstroFile", "InsertEnter" },
-  dependencies = {
-    { "kevinhwang91/promise-async", lazy = true },
-    {
-      "astrolsp",
-      optional = true,
-      opts = {
-        capabilities = {
-          textDocument = {
-            foldingRange = { dynamicRegistration = false, lineFoldingOnly = true },
-          },
+  dependencies = { { "kevinhwang91/promise-async", lazy = true } },
+  specs = {
+    "astrolsp",
+    optional = true,
+    opts = {
+      capabilities = {
+        textDocument = {
+          foldingRange = { dynamicRegistration = false, lineFoldingOnly = true },
         },
       },
     },

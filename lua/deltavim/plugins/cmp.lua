@@ -12,30 +12,51 @@ return {
   opts = function()
     local cmp, astro = require "cmp", require "astrocore"
 
+    local cmapping = cmp.mapping
     local mapping = {
       ["<C-Y>"] = cmp.config.disable,
 
-      ["<Up>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
-      ["<Down>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select },
-      ["<C-P>"] = cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
-      ["<C-N>"] = cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+      ["<Up>"] = cmapping(
+        cmapping.select_prev_item { behavior = cmp.SelectBehavior.Select },
+        { "i", "c" }
+      ),
+      ["<Down>"] = cmapping(
+        cmapping.select_next_item { behavior = cmp.SelectBehavior.Select },
+        { "i", "c" }
+      ),
+      ["<C-P>"] = cmapping(
+        cmapping.select_prev_item { behavior = cmp.SelectBehavior.Insert },
+        { "i", "c" }
+      ),
+      ["<C-N>"] = cmapping(
+        cmapping.select_next_item { behavior = cmp.SelectBehavior.Insert },
+        { "i", "c" }
+      ),
 
-      ["<C-U>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
-      ["<C-D>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
+      ["<C-U>"] = cmapping(cmapping.scroll_docs(-4), { "i", "c" }),
+      ["<C-D>"] = cmapping(cmapping.scroll_docs(4), { "i", "c" }),
 
-      ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
-      ["<CR>"] = cmp.mapping.confirm { select = false },
-      ["<C-E>"] = cmp.mapping { i = cmp.mapping.abort(), c = cmp.mapping.close() },
+      ["<C-Space>"] = cmapping(cmapping.complete(), { "i", "c" }),
+      ["<CR>"] = cmapping(cmapping.confirm { select = false }, { "i", "c" }),
+      ["<C-E>"] = cmapping { i = cmapping.abort(), c = cmp.mapping.close() },
 
-      ["<Tab>"] = cmp.mapping(function(fallback)
-        if vim.snippet and vim.snippet.active { direction = 1 } then
+      ["<Tab>"] = cmapping(function(fallback)
+        if
+          vim.api.nvim_get_mode() ~= "c"
+          and vim.snippet
+          and vim.snippet.active { direction = 1 }
+        then
           vim.schedule(function() vim.snippet.jump(1) end)
         else
           fallback()
         end
       end, { "i", "s" }),
-      ["<S-Tab>"] = cmp.mapping(function(fallback)
-        if vim.snippet and vim.snippet.active { direction = -1 } then
+      ["<S-Tab>"] = cmapping(function(fallback)
+        if
+          vim.api.nvim_get_mode() ~= "c"
+          and vim.snippet
+          and vim.snippet.active { direction = -1 }
+        then
           vim.schedule(function() vim.snippet.jump(-1) end)
         else
           fallback()

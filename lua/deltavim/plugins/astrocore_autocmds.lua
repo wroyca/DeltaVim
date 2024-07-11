@@ -190,14 +190,6 @@ return {
         },
       },
 
-      highlighturl = {
-        {
-          event = { "VimEnter", "FileType", "BufEnter", "WinEnter" },
-          desc = "URL Highlighting",
-          callback = function() astro.set_url_match() end,
-        },
-      },
-
       highlightyank = {
         {
           event = "TextYankPost",
