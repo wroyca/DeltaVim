@@ -16,6 +16,7 @@ return {
         changedelete = { text = icon "GitSign" },
         untracked = { text = icon "GitSign" },
       },
+      signs_staged_enable = false,
       current_line_blame = true,
       preview_config = { border = require("deltavim").get_border "popup_border" },
       worktrees = require("astrocore").config.git_worktrees,
