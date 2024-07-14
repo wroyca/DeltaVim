@@ -13,7 +13,7 @@ return {
   },
   ---@type ibl.config
   opts = {
-    indent = { char = "▏", tab_char = "▏" },
+    indent = { char = "▏", tab_char = ">" },
     scope = {
       enabled = true,
       show_start = false,
