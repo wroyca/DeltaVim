@@ -102,7 +102,7 @@ return {
           ["<Leader>uN"] = "toggles.toggle_notifications",
           ["<Leader>uS"] = "toggles.toggle_conceal",
 
-          ["<Leader>ua"] = "autopairs.toggle_global",
+          ["<Leader>ua"] = "mini-pairs.toggle_buffer",
           ["<Leader>uc"] = "cmp.toggle_buffer",
           ["<Leader>uC"] = "cmp.toggle_global",
           ["<Leader>uf"] = "conform.toggle_buffer",
