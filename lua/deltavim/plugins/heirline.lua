@@ -171,8 +171,8 @@ return {
             surround = { separator = "right", color = "nav_icon_bg" },
           },
           component.nav {
-            percentage = { padding = false },
-            ruler = false,
+            percentage = false,
+            ruler = { padding = false },
             scrollbar = false,
             padding = { left = 1, right = 1 },
             surround = { separator = "none", color = "button_bg" },
