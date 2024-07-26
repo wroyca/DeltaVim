@@ -62,11 +62,15 @@ return {
           ["[d"] = "diagnostic.prev_diagnostic",
           ["]e"] = "diagnostic.next_error",
           ["[e"] = "diagnostic.prev_error",
+          ["]w"] = "diagnostic.next_warning",
+          ["[w"] = "diagnostic.prev_warning",
 
           ["<Leader>ld"] = "diagnostic.list_document_diagnostics",
           ["<Leader>lD"] = "diagnostic.list_workspace_diagnostics",
           ["<Leader>le"] = "diagnostic.list_document_errors",
           ["<Leader>lE"] = "diagnostic.list_workspace_errors",
+          ["<Leader>lw"] = "diagnostic.list_document_warnings",
+          ["<Leader>lW"] = "diagnostic.list_workspace_warnings",
           ["<Leader>ls"] = "aerial.toggle",
 
           --------------------
