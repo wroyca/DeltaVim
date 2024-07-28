@@ -30,7 +30,7 @@ return {
     format_on_save = function(bufnr)
       local autoformat = vim.b[bufnr].autoformat
       if autoformat == nil then autoformat = vim.g.autoformat end
-      if autoformat ~= false then return { timeout_ms = 500, lsp_fallback = true } end
+      if autoformat ~= false then return { lsp_fallback = true } end
     end,
     formatters_by_ft = {
       lua = { "stylua" },
