@@ -14,6 +14,7 @@ return {
           i = { "@block.inner", "@conditional.inner", "@loop.inner" },
         },
       },
+      search_method = "cover_or_next",
     }
   end,
   config = function(_, opts)
