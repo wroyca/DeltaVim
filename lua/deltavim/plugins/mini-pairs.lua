@@ -3,7 +3,7 @@ return {
   "echasnovski/mini.pairs",
   event = "User AstroFile",
   opts = {
-    modes = { insert = true, command = true, terminal = false },
+    modes = { insert = true, command = false, terminal = false },
     -- skip autopair when the cursor is inside these treesitter nodes
     skip_ts = { "string" },
     -- skip autopair when next character is closing pair
