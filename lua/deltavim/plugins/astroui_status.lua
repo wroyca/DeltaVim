@@ -92,10 +92,9 @@ return {
       setup_colors = function()
         local astroui, utils = require "astroui", require "deltavim.utils"
         local status, config = require "astroui.status", assert(astroui.config.status)
-        local error_hl = { fg = "red", bg = "red" }
 
         local function hlgroup(name, fallback)
-          return astroui.get_hlgroup(name, fallback or error_hl)
+          return astroui.get_hlgroup(name, fallback or { fg = "NONE", bg = "NONE" })
         end
 
         local function lualine_hl(name, mode, fallback)
