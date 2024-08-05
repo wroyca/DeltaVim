@@ -25,13 +25,17 @@ function M.generate_snapshot(current)
     table.sort(plugins, function(a, b) return a.name < b.name end)
 
     for _, plugin in pairs(plugins) do
-      table.insert(snapshots, get_snapshot(plugin))
+      if not (plugin.name:match "^mini%." and plugin.name ~= "mini.nvim") then
+        table.insert(snapshots, get_snapshot(plugin))
+      end
     end
   else -- only generate for defined plugins
     ---@type table<string,LazyPlugin>
     local plugins = {}
     for _, plugin in ipairs(require("lazy").plugins()) do
-      plugins[plugin.name] = plugin
+      if not (plugin.name:match "^mini%." and plugin.name ~= "mini.nvim") then
+        plugins[plugin.name] = plugin
+      end
     end
 
     for _, snap in ipairs(current) do

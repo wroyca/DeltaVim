@@ -1,6 +1,6 @@
 -- stylua: ignore
 return {
-  { "DeltaVim", optional = true, commit = "5c7bb5d4bf0cf309ffbf97a3b5fe5c06d17576d0" },
+  { "DeltaVim", optional = true, commit = "ece0d2b7b6a54781fc897c99abad2d19cf31584e" },
   { "LuaSnip", optional = true, commit = "7552e6504ee95a9c8cfc6db53e389122ded46cd4" },
   { "aerial.nvim", optional = true, commit = "e75a3df2c20b3a98c786f5e61587d74a7a6b61d6" },
   { "alpha-nvim", optional = true, commit = "41283fb402713fc8b327e60907f74e46166f4cfd" },
@@ -24,10 +24,7 @@ return {
   { "lazy.nvim", optional = true, commit = "077102c5bfc578693f12377846d427f49bc50076" },
   { "lazydev.nvim", optional = true, commit = "491452cf1ca6f029e90ad0d0368848fac717c6d2" },
   { "luvit-meta", optional = true, commit = "ce76f6f6cdc9201523a5875a4471dcfe0186eb60" },
-  { "mini.ai", optional = true, commit = "45587078f323eaf41b9f701bbc04f8d1ab008979" },
-  { "mini.bufremove", optional = true, commit = "1ee294a97e091d3cf967974df622c0d887890dc2" },
-  { "mini.comment", optional = true, commit = "03c13e37318bdb18481311c0ac1adc9ed731caf1" },
-  { "mini.pairs", optional = true, commit = "927d19cbdd0e752ab1c7eed87072e71d2cd6ff51" },
+  { "mini.nvim", optional = true, commit = "af673d8523c5c2c5ff0a53b1e42a296ca358dcc7" },
   { "neo-tree.nvim", optional = true, commit = "206241e451c12f78969ff5ae53af45616ffc9b72" },
   { "neoconf.nvim", optional = true, commit = "17a3367bc4751859cd50e05f38fea0b7a4b7ed42" },
   { "nui.nvim", optional = true, commit = "61574ce6e60c815b0a0c4b5655b8486ba58089a1" },
