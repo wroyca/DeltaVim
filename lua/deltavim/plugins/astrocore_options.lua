@@ -14,7 +14,9 @@ return {
     local opt = {}
     opt.backspace = utils.concat(vim.opt.backspace:get(), { "nostop" }) -- don't stop backspace at insert
     opt.breakindent = true -- wrap indent to match  line start
-    opt.clipboard = "unnamed" -- connection to the system clipboard
+    if not vim.env.SSH_TTY or vim.fn.has "nvim-0.10" ~= 1 then -- only set `clipboard` if in SSH session and in neovim 0.10+
+      opt.clipboard = "unnamedplus" -- connection to the system clipboard
+    end
     opt.cmdheight = 0 -- hide command line unless needed
     opt.completeopt = { "menu", "menuone", "noselect" } -- Options for insert mode completion
     opt.conceallevel = 3 -- hide * markup for bold and italic

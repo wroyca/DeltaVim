@@ -24,21 +24,21 @@ return {
     if require("deltavim.utils").is_available "which-key.nvim" then
       local whichkey_ok, whichkey = pcall(require, "which-key")
       if not whichkey_ok then return end
-      whichkey.register {
+      whichkey.add {
         mode = { "o", "x" },
-        ["aa"] = { desc = "around parameter" },
-        ["ia"] = { desc = "inside parameter" },
-        ["ac"] = { desc = "around class" },
-        ["ic"] = { desc = "inside class" },
-        ["af"] = { desc = "around function" },
-        ["if"] = { desc = "inside function" },
-        ["ak"] = { desc = "around block/conditional/loop" },
-        ["ik"] = { desc = "inside block/conditional/loop" },
+        { "aa", desc = "around parameter" },
+        { "ia", desc = "inside parameter" },
+        { "ac", desc = "around class" },
+        { "ic", desc = "inside class" },
+        { "af", desc = "around function" },
+        { "if", desc = "inside function" },
+        { "ak", desc = "around block/conditional/loop" },
+        { "ik", desc = "inside block/conditional/loop" },
 
-        ["al"] = { desc = "around last textobject" },
-        ["il"] = { desc = "inside last textobject" },
-        ["an"] = { desc = "around next textobject" },
-        ["in"] = { desc = "inside next textobject" },
+        { "al", desc = "around last textobject" },
+        { "il", desc = "inside last textobject" },
+        { "an", desc = "around next textobject" },
+        { "in", desc = "inside next textobject" },
       }
     end
   end,

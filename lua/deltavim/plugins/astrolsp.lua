@@ -35,6 +35,7 @@ return {
         ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
           border = require("deltavim").get_border "popup_border",
           silent = true,
+          focusable = false,
         }),
       },
       servers = { "lua_ls" },

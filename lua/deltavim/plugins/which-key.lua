@@ -4,13 +4,13 @@ return {
   event = "VeryLazy",
   opts = function()
     return {
+      preset = "classic",
       icons = {
         group = vim.g.icons_enabled ~= false and "" or "+",
         separator = "-",
+        rules = false,
       },
-      operators = { gc = "Comment toggle" },
-      disable = { filetypes = { "TelescopePrompt" } },
-      window = { border = require("deltavim").get_border "popup_border" },
+      disable = { ft = { "TelescopePrompt" } },
     }
   end,
 }
