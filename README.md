@@ -7,6 +7,9 @@ DeltaVim is a personalized fork of [AstroNvim](https://github.com/AstroNvim/Astr
 > Currently, this project is mainly focused on my personal use, so it might frequently introduce
 > breaking changes. In the future, it may be maintained as a Neovim distribution for public use.
 > Nevertheless, any suggestions and contributions are sincerely appreciated!
+>
+> BTW, you might want to check out
+> [my Neovim configuration](https://github.com/loichyan/nvim) for more details.
 
 ## ⭐ Credits
 

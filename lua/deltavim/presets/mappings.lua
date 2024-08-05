@@ -12,11 +12,15 @@ return {
           ------------------
 
           ["<Esc>"] = { "<Cmd>noh<CR><Esc>" },
+          --          ^^^^^^^^^^^^^^^^^^^^^^^ You can configure mappings with a
+          --                                  which-key compatible spec.
 
           ["j"] = "common.j",
           ["k"] = "common.k",
           ["gw"] = "common.search_current_word",
           ["gx"] = "common.system_open",
+          --       ^^^^^^^^^^^^^^^^^^^^ Or use a pre-defined mapping in
+          --                            `deltavim/mappings/<module>.lua`.
 
           ["<C-H>"] = "common.left_window",
           ["<C-J>"] = "common.down_window",
