@@ -2,20 +2,15 @@ local M = {}
 
 local git, semver = require "lazy.manage.git", require "lazy.manage.semver"
 
-local function get_version(plugin)
-  local ver = semver.last(git.get_versions(plugin.dir))
-  if ver then return ("^%d.%d"):format(ver.major, ver.minor) end
-end
-
 local function get_commit(plugin)
   local branch = assert(git.get_branch(plugin))
   return git.get_commit(plugin.dir, branch)
 end
 
 local function get_snapshot(plugin)
-  local version, commit = get_version(plugin)
-  if not version then commit = get_commit(plugin) end
-  return { plugin.name, version = version, commit = commit }
+  local commit = get_commit(plugin)
+  if not commit then error(("commit for plugin %q not found"):format(plugin)) end
+  return { plugin.name, commit = commit }
 end
 
 ---Generate a snapshot to pin plugins.
@@ -65,7 +60,6 @@ function M.update_snapshot(path)
     file:write(("  { %q, optional = true"):format(snap[1]))
 
     if snap.commit then file:write((", commit = %q"):format(snap.commit)) end
-    if snap.version then file:write((", version = %q"):format(snap.version)) end
 
     file:write " },\n"
   end
