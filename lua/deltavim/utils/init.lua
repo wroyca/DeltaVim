@@ -66,6 +66,10 @@ function M.make_mappings(dst, mappings)
         if loaded_mappings[key] == nil then -- lazy load mapping presets
           local module = vim.split(key, ".", { plain = true })[1]
           local existed, preset = pcall(require, "deltavim.mappings." .. module)
+          if not existed then
+            -- search in user's configuration directory
+            existed, preset = pcall(require, "pde.mappings." .. module)
+          end
           if existed then
             local cond = preset[1] and preset[1].cond
             if
