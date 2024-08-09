@@ -54,7 +54,7 @@ local loaded_mappings = {}
 
 ---A handy function to bind mapping presets.
 ---@param dst table the table to be set
----@param mappings table<string,table<string,string|table>>
+---@param mappings table<string,table<string,string|table|false>>
 ---@return table # return `dst`
 function M.make_mappings(dst, mappings)
   local unknowns = {}
@@ -91,7 +91,7 @@ function M.make_mappings(dst, mappings)
         if rhs == nil then table.insert(unknowns, key) end
       end
 
-      if rhs then dst_maps[lhs] = rhs end
+      if rhs ~= nil then dst_maps[lhs] = rhs end
     end
   end
 
