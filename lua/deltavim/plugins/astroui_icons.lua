@@ -57,6 +57,7 @@ return {
       Search = "",
       Selected = "❯",
       Session = "󰓅",
+      Package = "",
       Prompt = "➤",
       Setting = "",
       Sort = "󰒺",
