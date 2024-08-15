@@ -40,7 +40,10 @@ return {
     },
     custom_highlights = function(c)
       return {
-        HeirlineNormal = { bg = c.blue },
+        NormalFloat = { fg = c.text, bg = c.surface0 },
+        FloatBorder = { fg = c.text, bg = c.surface0 },
+
+        HeirlineNormal = { fg = c.surface0, bg = c.blue },
         HeirlineInsert = { bg = c.green },
         HeirlineTerminal = { bg = c.green },
         HeirlineCommand = { bg = c.peach },

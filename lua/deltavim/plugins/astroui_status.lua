@@ -186,7 +186,7 @@ return {
           fg = StatusLine.fg,
           bg = StatusLine.bg,
 
-          mode_fg = StatusLine.bg,
+          mode_fg = HeirlineNormal.fg or StatusLine.bg,
           button_fg = HeirlineButton.fg,
           button_bg = HeirlineButton.bg,
 
@@ -208,9 +208,9 @@ return {
           diag_HINT = DiagnosticHint.fg,
 
           scrollbar = TypeDef.fg,
-          nav_icon_bg = String.fg,
-          folder_icon_bg = Error.fg,
-          virtual_env_icon_bg = Function.fg,
+          nav_icon_bg = HeirlineInsert.bg,
+          folder_icon_bg = HeirlineReplace.bg,
+          virtual_env_icon_bg = HeirlineNormal.bg,
         }
 
         -- statusline button componments
