@@ -111,6 +111,7 @@ return {
           ["<Leader>uS"] = "toggles.toggle_conceal",
 
           ["<Leader>ua"] = "mini-pairs.toggle_buffer",
+          ["<Leader>uU"] = "mini-hipatterns.toggle_buffer",
           ["<Leader>uc"] = "cmp.toggle_buffer",
           ["<Leader>uC"] = "cmp.toggle_global",
           ["<Leader>uf"] = "conform.toggle_buffer",
@@ -118,7 +119,6 @@ return {
           ["<Leader>un"] = "notify.dismiss",
           ["<Leader>ur"] = "illuminate.toggle_buffer",
           ["<Leader>uR"] = "illuminate.toggle_global",
-          ["<Leader>uU"] = "colorizer.toggle_buffer",
           ["<Leader>u|"] = "indent-blankline.toggle_global",
 
           --------------------
