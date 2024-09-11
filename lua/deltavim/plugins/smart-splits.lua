@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "mrjones2014/smart-splits.nvim",
   event = "VeryLazy",
   opts = {
@@ -8,3 +8,5 @@ return {
     ignored_buftypes = { "nofile" },
   },
 }
+
+return Spec

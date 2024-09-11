@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "windwp/nvim-ts-autotag",
   event = "User AstroFile",
   dependencies = { "nvim-treesitter" },
@@ -14,3 +14,5 @@ return {
       })
   end,
 }
+
+return Spec

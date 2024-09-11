@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "andymass/vim-matchup",
   lazy = true,
   event = "User AstroFile",
@@ -28,3 +28,5 @@ return {
     vim.g.matchup_matchparen_offscreen = opts.matchparen_offscreen
   end,
 }
+
+return Spec

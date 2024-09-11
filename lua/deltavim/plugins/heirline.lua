@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "rebelot/heirline.nvim",
   event = "BufEnter",
 
@@ -241,3 +241,5 @@ return {
     })
   end,
 }
+
+return Spec

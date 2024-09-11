@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "NMAC427/guess-indent.nvim",
   cmd = "GuessIndent",
   specs = {
@@ -35,3 +35,5 @@ return {
   },
   opts = { auto_cmd = false },
 }
+
+return Spec

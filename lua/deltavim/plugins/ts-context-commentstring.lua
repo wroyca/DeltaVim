@@ -1,6 +1,8 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "JoosepAlviste/nvim-ts-context-commentstring",
   lazy = true,
   opts = { enable_autocmd = false },
 }
+
+return Spec

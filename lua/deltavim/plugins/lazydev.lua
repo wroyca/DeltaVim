@@ -1,6 +1,6 @@
 -- Credit: https://github.com/AstroNvim/AstroNvim/blob/0126d447633a/lua/astronvim/plugins/lazydev.lua#L1
 
-return {
+local Spec = {
   "folke/lazydev.nvim",
   ft = "lua",
   cmd = "LazyDev",
@@ -34,3 +34,5 @@ return {
     },
   },
 }
+
+return Spec

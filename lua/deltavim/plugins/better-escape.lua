@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "max397574/better-escape.nvim",
   event = "VeryLazy",
   opts = {
@@ -10,3 +10,5 @@ return {
     },
   },
 }
+
+return Spec

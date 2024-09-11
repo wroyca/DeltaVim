@@ -1,6 +1,6 @@
 ---@diagnostic disable: missing-fields
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "lewis6991/gitsigns.nvim",
   enabled = vim.fn.executable "git" == 1,
   event = "User AstroFile",
@@ -23,3 +23,5 @@ return {
     }
   end,
 }
+
+return Spec

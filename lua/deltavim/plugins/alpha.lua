@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "goolord/alpha-nvim",
   cmd = "Alpha",
 
@@ -171,3 +171,5 @@ return {
     })
   end,
 }
+
+return Spec

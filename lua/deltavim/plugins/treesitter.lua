@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "nvim-treesitter/nvim-treesitter",
   event = "User AstroFile",
   cmd = {
@@ -52,3 +52,5 @@ return {
   opts_extend = { "ensure_installed" },
   config = function(_, opts) require("nvim-treesitter.configs").setup(opts) end,
 }
+
+return Spec

@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "RRethy/vim-illuminate",
   event = "User AstroFile",
   opts = function()
@@ -15,3 +15,5 @@ return {
   end,
   config = function(_, opts) require("illuminate").configure(opts) end,
 }
+
+return Spec

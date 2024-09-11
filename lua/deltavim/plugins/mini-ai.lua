@@ -1,4 +1,4 @@
-return {
+local Spec = {
   "echasnovski/mini.ai",
   event = "User AstroFile",
   dependencies = { "nvim-treesitter-textobjects" },
@@ -43,3 +43,5 @@ return {
     end
   end,
 }
+
+return Spec
