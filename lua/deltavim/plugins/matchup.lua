@@ -1,3 +1,5 @@
+---@module "vim-matchup"
+
 ---@type LazyPluginSpec
 return {
   "andymass/vim-matchup",

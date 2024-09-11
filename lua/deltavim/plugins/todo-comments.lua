@@ -1,3 +1,5 @@
+---@module "todo-comments"
+
 ---@type LazyPluginSpec
 return {
   "folke/todo-comments.nvim",

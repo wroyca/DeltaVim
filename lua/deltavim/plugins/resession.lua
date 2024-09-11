@@ -1,3 +1,5 @@
+---@module "resession"
+
 ---@type LazyPluginSpec
 return {
   "stevearc/resession.nvim",

@@ -1,3 +1,5 @@
+---@module "nvim-ufo"
+
 ---@type LazyPluginSpec
 return {
   "kevinhwang91/nvim-ufo",

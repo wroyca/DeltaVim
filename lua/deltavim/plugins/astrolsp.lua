@@ -1,3 +1,5 @@
+---@module "astrocore"
+
 ---@type LazyPluginSpec
 return {
   "AstroNvim/astrolsp",

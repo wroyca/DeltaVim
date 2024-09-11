@@ -1,3 +1,6 @@
+---@module "telescope-fzf-native"
+
+---@type LazyPluginSpec
 return {
   "nvim-telescope/telescope-fzf-native.nvim",
   lazy = true,

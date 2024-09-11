@@ -1,4 +1,5 @@
--- Credit: https://github.com/AstroNvim/astrocommunity/blob/c547c9e/lua/astrocommunity/editing-support/conform-nvim/init.lua
+---@module "conform"
+
 ---@type LazyPluginSpec
 return {
   "stevearc/conform.nvim",
