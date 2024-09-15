@@ -1,3 +1,5 @@
+---@module "mini.comment"
+
 ---@type LazyPluginSpec
 return {
   "echasnovski/mini.comment",

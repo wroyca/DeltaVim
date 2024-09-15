@@ -1,3 +1,6 @@
+---@module "alpha"
+
+
 ---@type LazyPluginSpec
 return {
   "goolord/alpha-nvim",

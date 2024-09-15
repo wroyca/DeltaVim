@@ -1,3 +1,5 @@
+---@module "mini.pairs"
+
 ---@type LazyPluginSpec
 return {
   "echasnovski/mini.pairs",

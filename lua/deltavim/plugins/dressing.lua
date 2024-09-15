@@ -1,3 +1,5 @@
+---@module "dressing"
+
 ---@type LazyPluginSpec
 return {
   "stevearc/dressing.nvim",

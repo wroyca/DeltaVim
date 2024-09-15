@@ -1,3 +1,5 @@
+---@module "nvim-ts-autotag"
+
 ---@type LazyPluginSpec
 return {
   "windwp/nvim-ts-autotag",

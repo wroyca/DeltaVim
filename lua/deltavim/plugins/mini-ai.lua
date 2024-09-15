@@ -1,3 +1,5 @@
+---@module "mini.ai"
+
 return {
   "echasnovski/mini.ai",
   event = "User AstroFile",

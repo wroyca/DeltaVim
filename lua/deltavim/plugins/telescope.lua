@@ -1,3 +1,5 @@
+---@module "telescope"
+
 ---@type LazyPluginSpec
 return {
   "nvim-telescope/telescope.nvim",

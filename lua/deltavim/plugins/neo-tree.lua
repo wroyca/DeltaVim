@@ -1,3 +1,5 @@
+---@module "neo-tree"
+
 ---@type LazyPluginSpec
 return {
   "nvim-neo-tree/neo-tree.nvim",

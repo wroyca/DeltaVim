@@ -1,3 +1,5 @@
+---@module "aerial"
+
 ---@type LazyPluginSpec
 return {
   "stevearc/aerial.nvim",

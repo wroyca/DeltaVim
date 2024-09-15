@@ -1,3 +1,5 @@
+---@module "astrolsp"
+
 ---@type LazyPluginSpec
 return {
   "AstroNvim/astrotheme",
