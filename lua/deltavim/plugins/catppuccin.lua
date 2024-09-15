@@ -1,7 +1,7 @@
 ---@module "catppuccin"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "catppuccin/nvim",
   name = "catppuccin",
   lazy = true,
@@ -60,3 +60,5 @@ return {
     end,
   },
 }
+
+return Spec

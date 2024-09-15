@@ -1,7 +1,7 @@
 ---@module "nvim-ufo"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "kevinhwang91/nvim-ufo",
   event = { "User AstroFile", "InsertEnter" },
   dependencies = { { "kevinhwang91/promise-async", lazy = true } },
@@ -62,3 +62,5 @@ return {
     map("n", "zp", ufo.peekFoldedLinesUnderCursor)
   end,
 }
+
+return Spec

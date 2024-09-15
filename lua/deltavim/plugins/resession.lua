@@ -1,7 +1,7 @@
 ---@module "resession"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "stevearc/resession.nvim",
   lazy = true,
   specs = {
@@ -38,3 +38,5 @@ return {
     extensions = { astrocore = { enable_in_tab = true } },
   },
 }
+
+return Spec

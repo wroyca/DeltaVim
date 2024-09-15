@@ -1,7 +1,7 @@
 ---@module "astrocore"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "AstroNvim/astrolsp",
   lazy = true,
   ---@param opts AstroLSPOpts
@@ -45,3 +45,5 @@ return {
     })
   end,
 }
+
+return Spec

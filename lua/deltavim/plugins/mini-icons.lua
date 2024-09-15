@@ -1,7 +1,7 @@
 ---@module "mini.icons"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "echasnovski/mini.icons",
   event = "VeryLazy",
   config = function(_, opts)
@@ -10,3 +10,5 @@ return {
     icons.mock_nvim_web_devicons()
   end,
 }
+
+return Spec

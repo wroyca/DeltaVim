@@ -1,7 +1,7 @@
 ---@module "mini.pairs"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "echasnovski/mini.pairs",
   event = "User AstroFile",
   opts = {
@@ -45,3 +45,5 @@ return {
     end
   end,
 }
+
+return Spec

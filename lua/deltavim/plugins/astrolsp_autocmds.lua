@@ -1,7 +1,7 @@
 ---@module "astrolsp"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "astrolsp",
   ---@param opts AstroLSPOpts
   opts = function(_, opts)
@@ -22,3 +22,5 @@ return {
     })
   end,
 }
+
+return Spec

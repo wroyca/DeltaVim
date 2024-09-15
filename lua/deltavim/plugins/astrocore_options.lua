@@ -1,7 +1,7 @@
 ---@module "astrocore"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "astrocore",
   ---@param opts AstroCoreOpts
   opts = function(_, opts)
@@ -89,3 +89,5 @@ return {
     opts.options = { opt = opt, g = g }
   end,
 }
+
+return Spec

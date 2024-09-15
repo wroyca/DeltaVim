@@ -1,4 +1,8 @@
 ---@module "neoconf"
 
 ---@type LazyPluginSpec
-return { "folke/neoconf.nvim", lazy = true, opts = {} }
+local Spec = {
+  "folke/neoconf.nvim", lazy = true, opts = {}
+}
+
+return Spec

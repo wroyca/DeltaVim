@@ -1,7 +1,7 @@
 ---@module "neo-tree"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "nvim-neo-tree/neo-tree.nvim",
   cmd = "Neotree",
 
@@ -181,3 +181,5 @@ return {
     }
   end,
 }
+
+return Spec

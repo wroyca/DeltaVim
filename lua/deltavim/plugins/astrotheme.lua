@@ -1,9 +1,11 @@
 ---@module "astrolsp"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "AstroNvim/astrotheme",
   lazy = true,
   ---@type AstroThemeOpts
   opts = { plugins = { ["dashboard-nvim"] = true } },
 }
+
+return Spec

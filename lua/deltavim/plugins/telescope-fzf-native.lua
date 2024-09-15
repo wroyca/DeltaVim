@@ -1,9 +1,11 @@
 ---@module "telescope-fzf-native"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "nvim-telescope/telescope-fzf-native.nvim",
   lazy = true,
   enabled = vim.fn.executable "make" == 1,
   build = "make",
 }
+
+return Spec

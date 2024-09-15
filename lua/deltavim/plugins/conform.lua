@@ -1,7 +1,7 @@
 ---@module "conform"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "stevearc/conform.nvim",
   event = "User AstroFile",
   cmd = { "Format", "ConformInfo" },
@@ -38,3 +38,5 @@ return {
     },
   },
 }
+
+return Spec

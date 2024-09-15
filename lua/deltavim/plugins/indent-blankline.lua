@@ -1,7 +1,7 @@
 ---@module "indent-blankline"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "lukas-reineke/indent-blankline.nvim",
   main = "ibl",
   event = "User AstroFile",
@@ -46,3 +46,5 @@ return {
     },
   },
 }
+
+return Spec

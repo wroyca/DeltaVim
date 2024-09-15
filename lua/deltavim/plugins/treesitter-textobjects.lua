@@ -1,7 +1,7 @@
 ---@module "treesitter-textobjects"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "nvim-treesitter/nvim-treesitter-textobjects",
   event = "User AstroFile",
   dependencies = {
@@ -51,3 +51,5 @@ return {
     },
   },
 }
+
+return Spec

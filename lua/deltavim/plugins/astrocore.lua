@@ -1,7 +1,7 @@
 ---@module "astrocore"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "AstroNvim/astrocore",
   lazy = false,
   priority = 10000,
@@ -67,3 +67,5 @@ return {
     })
   end,
 }
+
+return Spec

@@ -1,7 +1,7 @@
 ---@module "aerial"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "stevearc/aerial.nvim",
   event = "User AstroFile",
   opts = function()
@@ -38,3 +38,5 @@ return {
     return opts
   end,
 }
+
+return Spec

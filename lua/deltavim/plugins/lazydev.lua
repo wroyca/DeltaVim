@@ -1,6 +1,6 @@
 ---@module "lazydev"
 
-return {
+local Spec = {
   "folke/lazydev.nvim",
   ft = "lua",
   cmd = "LazyDev",
@@ -34,3 +34,5 @@ return {
     },
   },
 }
+
+return Spec

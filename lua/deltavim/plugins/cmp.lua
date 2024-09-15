@@ -1,7 +1,7 @@
 ---@module "cmp"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "hrsh7th/nvim-cmp",
   event = "InsertEnter",
 
@@ -122,3 +122,5 @@ return {
     require("cmp").setup(opts)
   end,
 }
+
+return Spec

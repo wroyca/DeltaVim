@@ -5,7 +5,7 @@ local deltavim = require "deltavim"
 deltavim.init()
 
 ---@type LazySpec
-return {
+local Spec = {
   { "folke/lazy.nvim", dir = vim.env.LAZY },
   { "loichyan/DeltaVim", lazy = false, priority = 10000 },
 
@@ -23,3 +23,5 @@ return {
 
   { import = "deltavim.snapshot", cond = deltavim.config.pin_plugins },
 }
+
+return Spec

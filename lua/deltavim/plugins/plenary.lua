@@ -1,4 +1,9 @@
 ---@module "plenary"
 
 ---@type LazyPluginSpec
-return { "nvim-lua/plenary.nvim", lazy = true }
+local Spec = {
+  "nvim-lua/plenary.nvim", lazy = true
+}
+
+return Spec
+

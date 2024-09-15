@@ -1,7 +1,7 @@
 ---@module "lint"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "mfussenegger/nvim-lint",
   event = "User AstroFile",
   opts = {
@@ -36,3 +36,5 @@ return {
     })
   end,
 }
+
+return Spec

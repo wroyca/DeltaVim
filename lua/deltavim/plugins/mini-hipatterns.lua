@@ -1,7 +1,7 @@
 ---@module "mini.hipatterns"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "echasnovski/mini.hipatterns",
   event = "VeryLazy",
   opts = function()
@@ -13,3 +13,5 @@ return {
     }
   end
 }
+
+return Spec

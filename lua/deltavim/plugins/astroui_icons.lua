@@ -1,7 +1,7 @@
 ---@module "astroui"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "astroui",
   ---@param opts AstroUIOpts
   opts = function(_, opts)
@@ -74,3 +74,5 @@ return {
     }
   end,
 }
+
+return Spec

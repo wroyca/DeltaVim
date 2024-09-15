@@ -1,7 +1,7 @@
 ---@module "notify"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "rcarriga/nvim-notify",
   lazy = true,
   init = function() require("astrocore").load_plugin_with_func("nvim-notify", vim, "notify") end,
@@ -42,3 +42,5 @@ return {
     require("deltavim.notify").setup(notify)
   end,
 }
+
+return Spec

@@ -1,7 +1,7 @@
 ---@module "nvim-window-picker"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "s1n7ax/nvim-window-picker",
   lazy = true,
   opts = {
@@ -10,3 +10,5 @@ return {
     },
   },
 }
+
+return Spec

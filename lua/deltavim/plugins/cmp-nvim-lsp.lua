@@ -1,7 +1,7 @@
 ---@module "cmp"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "hrsh7th/cmp-nvim-lsp",
   lazy = true,
   specs = {
@@ -32,3 +32,5 @@ return {
     },
   },
 }
+
+return Spec

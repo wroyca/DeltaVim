@@ -1,7 +1,7 @@
 ---@module "luasnip"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "L3MON4D3/LuaSnip",
   lazy = true,
   dependencies = { { "rafamadriz/friendly-snippets", lazy = true } },
@@ -50,3 +50,5 @@ return {
     require("luasnip.loaders.from_lua").lazy_load()
   end,
 }
+
+return Spec

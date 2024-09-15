@@ -1,7 +1,7 @@
 ---@module "dressing"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "stevearc/dressing.nvim",
   lazy = true,
   init = function()
@@ -14,3 +14,5 @@ return {
     }
   end,
 }
+
+return Spec

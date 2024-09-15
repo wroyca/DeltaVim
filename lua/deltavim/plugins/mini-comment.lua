@@ -1,7 +1,7 @@
 ---@module "mini.comment"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "echasnovski/mini.comment",
   dependencies = { { "nvim-ts-context-commentstring", optional = true } },
   keys = function(self)
@@ -30,3 +30,5 @@ return {
     }
   end,
 }
+
+return Spec

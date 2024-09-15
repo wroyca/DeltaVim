@@ -1,5 +1,5 @@
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "neovim/nvim-lspconfig",
   event = "User AstroFile",
   cmd = { "LspInfo", "LspLog", "LspStart" },
@@ -17,3 +17,5 @@ return {
     require("astrocore").event "LspSetup"
   end,
 }
+
+return Spec

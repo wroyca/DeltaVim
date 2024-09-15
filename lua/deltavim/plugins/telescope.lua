@@ -1,7 +1,7 @@
 ---@module "telescope"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "nvim-telescope/telescope.nvim",
   cmd = "Telescope",
   dependencies = { { "telescope-fzf-native.nvim", optional = true } },
@@ -51,3 +51,5 @@ return {
     if is_available "telescope-fzf-native.nvim" then telescope.load_extension "fzf" end
   end,
 }
+
+return Spec

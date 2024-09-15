@@ -1,4 +1,9 @@
 ---@module "mini.bufremove"
 
 ---@type LazyPluginSpec
-return { "echasnovski/mini.bufremove", lazy = true }
+local Spec = {
+  "echasnovski/mini.bufremove",
+  lazy = true
+}
+
+return Spec

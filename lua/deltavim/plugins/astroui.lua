@@ -1,7 +1,7 @@
 ---@module "astroui"
 
 ---@type LazyPluginSpec
-return {
+local Spec = {
   "AstroNvim/astroui",
   lazy = true,
   ---@param opts AstroUIOpts
@@ -54,3 +54,5 @@ return {
     })
   end,
 }
+
+return Spec
