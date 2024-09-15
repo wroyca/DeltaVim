@@ -1,3 +1,5 @@
+---@module "mini.pairs"
+
 ---@type LazyPluginSpec
 local Spec = {
   "echasnovski/mini.pairs",

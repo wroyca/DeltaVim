@@ -1,6 +1,5 @@
--- Credit:
---   https://github.com/AstroNvim/astrocommunity/blob/c547c9e/lua/astrocommunity/lsp/nvim-lint/init.lua
---   https://github.com/LazyVim/LazyVim/blob/07923f3/lua/lazyvim/plugins/linting.lua
+---@module "lint"
+
 ---@type LazyPluginSpec
 local Spec = {
   "mfussenegger/nvim-lint",

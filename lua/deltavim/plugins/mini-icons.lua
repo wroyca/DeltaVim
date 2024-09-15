@@ -1,3 +1,5 @@
+---@module "mini.icons"
+
 ---@type LazyPluginSpec
 local Spec = {
   "echasnovski/mini.icons",

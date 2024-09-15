@@ -1,3 +1,5 @@
+---@module "vim-illuminate"
+
 ---@type LazyPluginSpec
 local Spec = {
   "RRethy/vim-illuminate",

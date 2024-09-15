@@ -1,3 +1,5 @@
+---@module "better-escape"
+
 ---@type LazyPluginSpec
 local Spec = {
   "max397574/better-escape.nvim",

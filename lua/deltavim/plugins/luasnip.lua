@@ -1,3 +1,5 @@
+---@module "luasnip"
+
 ---@type LazyPluginSpec
 local Spec = {
   "L3MON4D3/LuaSnip",

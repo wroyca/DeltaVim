@@ -1,3 +1,5 @@
+---@module "notify"
+
 ---@type LazyPluginSpec
 local Spec = {
   "rcarriga/nvim-notify",

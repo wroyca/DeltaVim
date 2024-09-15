@@ -1,3 +1,5 @@
+---@module "treesitter"
+
 ---@type LazyPluginSpec
 local Spec = {
   "nvim-treesitter/nvim-treesitter",

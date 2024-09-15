@@ -1,3 +1,5 @@
+---@module "todo-comments"
+
 ---@type LazyPluginSpec
 local Spec = {
   "folke/todo-comments.nvim",

@@ -1,3 +1,5 @@
+---@module "nvim-ufo"
+
 ---@type LazyPluginSpec
 local Spec = {
   "kevinhwang91/nvim-ufo",

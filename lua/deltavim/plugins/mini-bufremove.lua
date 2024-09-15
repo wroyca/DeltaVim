@@ -1,3 +1,5 @@
+---@module "mini.bufremove"
+
 ---@type LazyPluginSpec
 local Spec = {
   "echasnovski/mini.bufremove",

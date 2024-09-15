@@ -1,3 +1,5 @@
+---@module "mini.comment"
+
 ---@type LazyPluginSpec
 local Spec = {
   "echasnovski/mini.comment",

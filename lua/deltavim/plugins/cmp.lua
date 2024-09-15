@@ -1,3 +1,5 @@
+---@module "cmp"
+
 ---@type LazyPluginSpec
 local Spec = {
   "hrsh7th/nvim-cmp",

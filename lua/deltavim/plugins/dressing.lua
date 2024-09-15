@@ -1,3 +1,5 @@
+---@module "dressing"
+
 ---@type LazyPluginSpec
 local Spec = {
   "stevearc/dressing.nvim",

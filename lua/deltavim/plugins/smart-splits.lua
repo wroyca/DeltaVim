@@ -1,3 +1,5 @@
+---@module "smart-splits"
+
 ---@type LazyPluginSpec
 local Spec = {
   "mrjones2014/smart-splits.nvim",

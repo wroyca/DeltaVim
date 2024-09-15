@@ -1,3 +1,5 @@
+---@module "alpha"
+
 ---@type LazyPluginSpec
 local Spec = {
   "goolord/alpha-nvim",

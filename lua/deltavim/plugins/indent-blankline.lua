@@ -1,3 +1,5 @@
+---@module "indent-blankline"
+
 ---@type LazyPluginSpec
 local Spec = {
   "lukas-reineke/indent-blankline.nvim",

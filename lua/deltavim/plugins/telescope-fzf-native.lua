@@ -1,3 +1,5 @@
+---@module "telescope-fzf-native"
+
 ---@type LazyPluginSpec
 local Spec = {
   "nvim-telescope/telescope-fzf-native.nvim",

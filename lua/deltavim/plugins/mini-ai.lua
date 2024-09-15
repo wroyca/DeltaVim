@@ -1,3 +1,5 @@
+---@module "mini.ai"
+
 local Spec = {
   "echasnovski/mini.ai",
   event = "User AstroFile",

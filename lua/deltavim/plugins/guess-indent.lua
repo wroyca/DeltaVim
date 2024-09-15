@@ -1,3 +1,5 @@
+---@module "guess-indent"
+
 ---@type LazyPluginSpec
 local Spec = {
   "NMAC427/guess-indent.nvim",

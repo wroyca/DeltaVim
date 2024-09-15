@@ -1,3 +1,5 @@
+---@module "astrolsp"
+
 ---@type LazyPluginSpec
 local Spec = {
   "astrolsp",

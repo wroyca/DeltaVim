@@ -1,4 +1,4 @@
--- Credit: https://github.com/AstroNvim/AstroNvim/blob/0126d447633a/lua/astronvim/plugins/lazydev.lua#L1
+---@module "lazydev"
 
 local Spec = {
   "folke/lazydev.nvim",

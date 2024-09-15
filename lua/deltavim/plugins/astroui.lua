@@ -1,3 +1,5 @@
+---@module "astroui"
+
 ---@type LazyPluginSpec
 local Spec = {
   "AstroNvim/astroui",

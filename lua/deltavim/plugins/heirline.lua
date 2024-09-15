@@ -1,3 +1,5 @@
+---@module "herline"
+
 ---@type LazyPluginSpec
 local Spec = {
   "rebelot/heirline.nvim",
